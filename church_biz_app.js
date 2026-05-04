@@ -1,4 +1,73 @@
 
+// ── Firebase REST API 동기화 ───────────────────────
+var FIREBASE_URL = 'https://firestore.googleapis.com/v1/projects/church-biz/databases/(default)/documents/data/main';
+
+async function saveToFirebase(){
+  try{
+    var dataStr = JSON.stringify({members:S.members, biz:S.biz, bizDB:S.bizDB, reviews:S.reviews, likes:S.likes});
+    var body = {fields: {json: {stringValue: dataStr}}};
+    var res = await fetch(FIREBASE_URL + '?updateMask.fieldPaths=json', {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    if(res.ok) console.log('저장완료');
+    else console.error('저장실패', res.status);
+  }catch(e){ console.error('저장오류:', e); }
+}
+
+async function loadFromFirebase(){
+  try{
+    var res = await fetch(FIREBASE_URL);
+    if(res.status === 404){ console.log('데이터없음'); return; }
+    var doc = await res.json();
+    var jsonStr = doc.fields && doc.fields.json && doc.fields.json.stringValue;
+    if(!jsonStr){ return; }
+    var data = JSON.parse(jsonStr);
+    S.members = data.members || [];
+    S.biz = data.biz || [];
+    S.bizDB = data.bizDB || [];
+    S.reviews = data.reviews || [];
+    S.likes = data.likes || [];
+    console.log('로드완료 - 회원:'+S.members.length+' 사업체:'+S.biz.length);
+    doFilter(); renderAllRv();
+  }catch(e){ console.error('로드오류:', e); }
+}
+
+// ── Firebase 동기화 ───────────────────────
+async function saveToFirebase(){
+  try{
+    await db.collection('data').doc('main').set({
+      members: S.members,
+      biz: S.biz,
+      bizDB: S.bizDB,
+      reviews: S.reviews,
+      likes: S.likes,
+      updatedAt: new Date().toISOString()
+    });
+    console.log('Firebase 저장 완료');
+  }catch(e){ console.error('Firebase 저장 실패:', e); }
+}
+
+async function loadFromFirebase(){
+  try{
+    var doc = await db.collection('data').doc('main').get();
+    if(doc.exists){
+      var data = doc.data();
+      S.members = data.members || [];
+      S.biz = data.biz || [];
+      S.bizDB = data.bizDB || [];
+      S.reviews = data.reviews || [];
+      S.likes = data.likes || [];
+      console.log('Firebase 데이터 로드 완료');
+      doFilter();
+      renderAllRv();
+    } else {
+      console.log('저장된 데이터 없음');
+    }
+  }catch(e){ console.error('Firebase 로드 실패:', e); }
+}
+
 
 
 const EM = {'간판/광고':'📢','건축/건설':'🏗️','교육':'📚','꽃집':'🌸','렌탈':'🔧','병원/의료':'🏥','보험':'🛡️','부동산':'🏠','서비스':'💼','스포츠':'⚽','숙박':'🏨','식품/음식점':'🍽️','온라인판매':'🛒','요양시설':'❤️','유통':'📦','이미용':'✂️','인테리어':'🛋️','자동차':'🚗','정보통신/컴퓨터':'💻','제조':'⚙️','카페':'☕','판매':'🏪','법률/세무':'⚖️','설비':'🔩','농업/임업/축산업':'🌾','귀금속/예물':'💍','운수':'🚚','그 외':'🔮','기타':'📌'};
@@ -606,6 +675,8 @@ function doJoin(){
   });
   closeM('joinM');
   resetTerms();
+  saveToFirebase();
+  saveToFirebase();
   var msg='가입 완료! '+name+' '+role+'님 환영합니다!';
   if(linked>0) msg+='\n\n🏪 사업체 '+linked+'개가 자동으로 연결되었습니다!';
   alert(msg);
@@ -860,7 +931,7 @@ function saveBiz(){
       b.kw=document.getElementById('bKw').value.trim();b.desc=document.getElementById('bDesc').value.trim();
       b.photos=bizPhotosTemp.slice();
     }
-    closeM('addBizM');doFilter();renderMypage();alert('사업체 정보가 수정되었습니다!');
+    closeM('addBizM');doFilter();renderMypage();saveToFirebase();alert('사업체 정보가 수정되었습니다!');
   } else {
     S.biz.push({id:Date.now(),name:name,cat:cat,type:document.getElementById('bType').value,
       owner:S.user.name,ownerName:S.user.name,ownerRole:S.user.role,ownerChurch:S.user.church,
@@ -868,7 +939,7 @@ function saveBiz(){
       regNo:document.getElementById('bRegNo').value.trim(),addr:addr,
       web:document.getElementById('bWeb').value.trim(),kw:document.getElementById('bKw').value.trim(),
       desc:document.getElementById('bDesc').value.trim(),photos:bizPhotosTemp.slice()});
-    closeM('addBizM');doFilter();renderMypage();alert('사업체가 등록되었습니다!');
+    closeM('addBizM');doFilter();renderMypage();saveToFirebase();alert('사업체가 등록되었습니다!');
   }
 }
 function deleteBiz(bizId){
@@ -890,7 +961,7 @@ function addReview(){
   closeM('addRvM');
   // 상세페이지가 열려있으면 해당 업체 상세 새로고침
   if(S.curBiz===bizId) showDetail(bizId);
-  renderAllRv();document.getElementById('rvText').value='';alert('후기가 등록되었습니다!');
+  renderAllRv();document.getElementById('rvText').value='';saveToFirebase();alert('후기가 등록되었습니다!');
 }
 
 // ── CSV 처리 ─────────────────────────────
@@ -1023,6 +1094,6 @@ try{
 
 var _pfx=document.getElementById('logoData').getAttribute('data-pfx');document.getElementById('churchLogo').src=_pfx+document.getElementById('logoData').value;
 initSelects();
-doFilter();
+loadFromFirebase();
 
 
