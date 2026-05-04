@@ -206,6 +206,22 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 .tc-box.on::after{content:'✓';color:#fff;font-size:12px;font-weight:800}
 .terms-content{font-size:12px;color:var(--t2);line-height:1.8;max-height:55vh;overflow-y:auto;padding:4px 2px;white-space:pre-wrap}
 </style>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwbzl-zkuv1cH5c3Lu6ucrnYQuoJ97c8Q",
+      authDomain: "church-biz.firebaseapp.com",
+      projectId: "church-biz",
+      storageBucket: "church-biz.firebasestorage.app",
+      messagingSenderId: "913903248333",
+      appId: "1:913903248333:web:92e694cbf45c5358221a84"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
 <div class="app">
@@ -519,6 +535,40 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 <script type="text/javascript">
 //<![CDATA[
 
+// ── Firebase 동기화 ───────────────────────
+async function saveToFirebase(){
+  try{
+    await db.collection('data').doc('main').set({
+      members: S.members,
+      biz: S.biz,
+      bizDB: S.bizDB,
+      reviews: S.reviews,
+      likes: S.likes,
+      updatedAt: new Date().toISOString()
+    });
+    console.log('Firebase 저장 완료');
+  }catch(e){ console.error('Firebase 저장 실패:', e); }
+}
+
+async function loadFromFirebase(){
+  try{
+    var doc = await db.collection('data').doc('main').get();
+    if(doc.exists){
+      var data = doc.data();
+      S.members = data.members || [];
+      S.biz = data.biz || [];
+      S.bizDB = data.bizDB || [];
+      S.reviews = data.reviews || [];
+      S.likes = data.likes || [];
+      console.log('Firebase 데이터 로드 완료');
+      doFilter();
+      renderAllRv();
+    } else {
+      console.log('저장된 데이터 없음');
+    }
+  }catch(e){ console.error('Firebase 로드 실패:', e); }
+}
+
 
 
 const EM = {'간판/광고':'📢','건축/건설':'🏗️','교육':'📚','꽃집':'🌸','렌탈':'🔧','병원/의료':'🏥','보험':'🛡️','부동산':'🏠','서비스':'💼','스포츠':'⚽','숙박':'🏨','식품/음식점':'🍽️','온라인판매':'🛒','요양시설':'❤️','유통':'📦','이미용':'✂️','인테리어':'🛋️','자동차':'🚗','정보통신/컴퓨터':'💻','제조':'⚙️','카페':'☕','판매':'🏪','법률/세무':'⚖️','설비':'🔩','농업/임업/축산업':'🌾','귀금속/예물':'💍','운수':'🚚','그 외':'🔮','기타':'📌'};
@@ -564,7 +614,11 @@ function formatPhone(input) {
 }
 
 function initSelects() {
-  // jChurch/epChurch 옵션 HTML에 하드코딩됨
+  ['jChurch','epChurch'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    REGIONS.forEach(function(r){ var o=document.createElement('option'); o.value=o.textContent=r; el.appendChild(o); });
+  });
   ['catSel','bCat'].forEach(function(id) {
     var el = document.getElementById(id);
     if (!el) return;
@@ -962,8 +1016,8 @@ function renderAdmin(){
           '📁 백업 파일 선택 (.json)<input type="file" accept=".json" style="display:none" onchange="doRestore(this.files[0])">'+
         '</label>'+
       '</div>';
-  }
   el.innerHTML=tabs+body;
+}
 }
 
 function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});renderAdmin();}
@@ -998,7 +1052,10 @@ function doRestore(file){
     try{
       var data=JSON.parse(e.target.result);
       if(!data.version||!data.members){alert('올바른 백업 파일이 아닙니다');return;}
-      if(!confirm('백업 데이터를 복원하시겠어요?\n회원 '+data.members.length+'명, 사업체 '+data.biz.length+'개, 후기 '+data.reviews.length+'개\n\n현재 데이터와 병합됩니다.'))return;
+      if(!confirm('백업 데이터를 복원하시겠어요?
+회원 '+data.members.length+'명, 사업체 '+data.biz.length+'개, 후기 '+data.reviews.length+'개
+
+현재 데이터와 병합됩니다.'))return;
       // 병합 (중복 제외)
       var added={m:0,b:0,r:0};
       data.members.forEach(function(m){
@@ -1014,7 +1071,8 @@ function doRestore(file){
         if(!S.reviews.find(function(x){return x.id===r.id;})){S.reviews.push(r);added.r++;}
       });
       renderAdmin();doFilter();
-      alert('복원 완료!\n회원 '+added.m+'명, 사업체 '+added.b+'개, 후기 '+added.r+'개 추가되었습니다.');
+      alert('복원 완료!
+회원 '+added.m+'명, 사업체 '+added.b+'개, 후기 '+added.r+'개 추가되었습니다.');
     }catch(err){alert('파일을 읽을 수 없어요: '+err);}
   };
   reader.readAsText(file,'UTF-8');
@@ -1045,15 +1103,51 @@ function checkBizMatch(){
 var TERMS_TEXT = {
   use: {
     title: '이용약관',
-    content: '제1조 (목적)\n본 약관은 사랑하는교회 성도 비즈니스 네트워크(이하 "서비스")의 이용 조건 및 절차, 이용자와 운영자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.\n\n제2조 (서비스 이용)\n본 서비스는 사랑하는교회 성도를 대상으로 하며, 성도 간 사업체 정보를 공유하고 소개하는 플랫폼입니다.\n\n제3조 (회원의 의무)\n회원은 허위 정보를 등록하거나 타인의 정보를 도용해서는 안 됩니다. 사업체 정보는 실제 운영 중이거나 추천할 수 있는 업체만 등록할 수 있습니다.\n\n제4조 (서비스 제한)\n운영자는 서비스의 원활한 운영을 위해 사전 고지 없이 서비스 내용을 변경하거나 중단할 수 있습니다.\n\n제5조 (면책)\n서비스를 통해 이루어진 성도 간 거래에 대해 교회 및 운영자는 책임을 지지 않습니다.'
+    content: '제1조 (목적)
+본 약관은 사랑하는교회 성도 비즈니스 네트워크(이하 "서비스")의 이용 조건 및 절차, 이용자와 운영자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
+
+제2조 (서비스 이용)
+본 서비스는 사랑하는교회 성도를 대상으로 하며, 성도 간 사업체 정보를 공유하고 소개하는 플랫폼입니다.
+
+제3조 (회원의 의무)
+회원은 허위 정보를 등록하거나 타인의 정보를 도용해서는 안 됩니다. 사업체 정보는 실제 운영 중이거나 추천할 수 있는 업체만 등록할 수 있습니다.
+
+제4조 (서비스 제한)
+운영자는 서비스의 원활한 운영을 위해 사전 고지 없이 서비스 내용을 변경하거나 중단할 수 있습니다.
+
+제5조 (면책)
+서비스를 통해 이루어진 성도 간 거래에 대해 교회 및 운영자는 책임을 지지 않습니다.'
   },
   privacy: {
     title: '개인정보 수집·이용 동의',
-    content: '수집 항목\n· 필수: 이름, 전화번호, 소속 교회, 직분\n· 선택: 교번, 사업체 정보\n\n수집 목적\n· 성도 인증 및 회원 관리\n· 사업체 정보 연동 및 표시\n· 서비스 이용 내역 관리\n\n보유 기간\n· 회원 탈퇴 시 즉시 삭제\n· 단, 관련 법령에 따라 일정 기간 보관이 필요한 경우 해당 기간 동안 보관\n\n제3자 제공\n수집된 개인정보는 외부에 제공되지 않으며, 서비스 운영 목적 내에서만 사용됩니다.'
+    content: '수집 항목
+· 필수: 이름, 전화번호, 소속 교회, 직분
+· 선택: 교번, 사업체 정보
+
+수집 목적
+· 성도 인증 및 회원 관리
+· 사업체 정보 연동 및 표시
+· 서비스 이용 내역 관리
+
+보유 기간
+· 회원 탈퇴 시 즉시 삭제
+· 단, 관련 법령에 따라 일정 기간 보관이 필요한 경우 해당 기간 동안 보관
+
+제3자 제공
+수집된 개인정보는 외부에 제공되지 않으며, 서비스 운영 목적 내에서만 사용됩니다.'
   },
   marketing: {
     title: '마케팅·알림 수신 동의',
-    content: '수신 동의 항목\n· 새로운 성도 사업체 등록 알림\n· 교회 행사 및 공지사항\n· 서비스 업데이트 안내\n\n수신 방법\n· 문자(SMS), 카카오톡 알림\n\n동의 철회\n본 동의는 선택사항으로, 동의하지 않으셔도 서비스 이용에 불이익이 없습니다. 수신 동의 후에도 마이페이지에서 언제든 철회하실 수 있습니다.'
+    content: '수신 동의 항목
+· 새로운 성도 사업체 등록 알림
+· 교회 행사 및 공지사항
+· 서비스 업데이트 안내
+
+수신 방법
+· 문자(SMS), 카카오톡 알림
+
+동의 철회
+본 동의는 선택사항으로, 동의하지 않으셔도 서비스 이용에 불이익이 없습니다. 수신 동의 후에도 마이페이지에서 언제든 철회하실 수 있습니다.'
   }
 };
 function toggleTerm(id){
@@ -1122,8 +1216,11 @@ function doJoin(){
   });
   closeM('joinM');
   resetTerms();
+  saveToFirebase();
   var msg='가입 완료! '+name+' '+role+'님 환영합니다!';
-  if(linked>0) msg+='\n\n🏪 사업체 '+linked+'개가 자동으로 연결되었습니다!';
+  if(linked>0) msg+='
+
+🏪 사업체 '+linked+'개가 자동으로 연결되었습니다!';
   alert(msg);
   renderMypage(); doFilter();
 }
@@ -1376,7 +1473,7 @@ function saveBiz(){
       b.kw=document.getElementById('bKw').value.trim();b.desc=document.getElementById('bDesc').value.trim();
       b.photos=bizPhotosTemp.slice();
     }
-    closeM('addBizM');doFilter();renderMypage();alert('사업체 정보가 수정되었습니다!');
+    closeM('addBizM');doFilter();renderMypage();saveToFirebase();alert('사업체 정보가 수정되었습니다!');
   } else {
     S.biz.push({id:Date.now(),name:name,cat:cat,type:document.getElementById('bType').value,
       owner:S.user.name,ownerName:S.user.name,ownerRole:S.user.role,ownerChurch:S.user.church,
@@ -1384,7 +1481,7 @@ function saveBiz(){
       regNo:document.getElementById('bRegNo').value.trim(),addr:addr,
       web:document.getElementById('bWeb').value.trim(),kw:document.getElementById('bKw').value.trim(),
       desc:document.getElementById('bDesc').value.trim(),photos:bizPhotosTemp.slice()});
-    closeM('addBizM');doFilter();renderMypage();alert('사업체가 등록되었습니다!');
+    closeM('addBizM');doFilter();renderMypage();saveToFirebase();alert('사업체가 등록되었습니다!');
   }
 }
 function deleteBiz(bizId){
@@ -1406,12 +1503,13 @@ function addReview(){
   closeM('addRvM');
   // 상세페이지가 열려있으면 해당 업체 상세 새로고침
   if(S.curBiz===bizId) showDetail(bizId);
-  renderAllRv();document.getElementById('rvText').value='';alert('후기가 등록되었습니다!');
+  renderAllRv();document.getElementById('rvText').value='';saveToFirebase();alert('후기가 등록되었습니다!');
 }
 
 // ── CSV 처리 ─────────────────────────────
 function parseCSV(text){
-  return text.split(/\r?\n/).map(function(line){
+  return text.split(/?
+/).map(function(line){
     var cols=[],cur='',inQ=false;
     for(var i=0;i<=line.length-1;i++){
       var ch=line[i];
@@ -1511,7 +1609,11 @@ function doUpload(){
     }
   });
   closeM('csvM');S.csvParsed=[];document.getElementById('csvPreview').style.display='none';document.getElementById('csvInput').value='';
-  alert('업로드 완료!\n\n회원 '+addedM+'명 등록\n사업체 '+addedB+'개 등록'+(skipped?'\n('+skipped+'건 건너뜀)':''));
+  alert('업로드 완료!
+
+회원 '+addedM+'명 등록
+사업체 '+addedB+'개 등록'+(skipped?'
+('+skipped+'건 건너뜀)':''));
   doFilter();renderMypage();
 }
 
@@ -1539,7 +1641,7 @@ try{
 
 var _pfx=document.getElementById('logoData').getAttribute('data-pfx');document.getElementById('churchLogo').src=_pfx+document.getElementById('logoData').value;
 initSelects();
-doFilter();
+loadFromFirebase();
 
 
 
