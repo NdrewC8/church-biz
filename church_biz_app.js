@@ -34,7 +34,7 @@ async function loadFromFirebase(){
 
 
 
-const EM = {'간판/광고':'📢','건축/건설':'🏗️','교육':'📚','꽃집':'🌸','렌탈':'🔧','병원/의료':'🏥','보험':'🛡️','부동산':'🏠','서비스':'💼','스포츠':'⚽','숙박':'🏨','식품/음식점':'🍽️','온라인판매':'🛒','요양시설':'❤️','유통':'📦','이미용':'✂️','인테리어':'🛋️','자동차':'🚗','정보통신/컴퓨터':'💻','제조':'⚙️','카페':'☕','판매':'🏪','법률/세무':'⚖️','설비':'🔩','농업/임업/축산업':'🌾','귀금속/예물':'💍','운수':'🚚','그 외':'🔮','기타':'📌'};
+const EM = {'간판/광고':'📢','건축/건설':'🏗️','교육':'📚','꽃집':'🌸','렌탈':'🔧','병원/의료':'🏥','보험':'🛡️','부동산':'🏠','서비스':'💼','스포츠':'⚽','숙박':'🏨','식품/음식점':'🍽️','온라인판매':'🛒','요양시설':'❤️','유통':'📦','이미용':'✂️','인테리어':'🛋️','자동차':'🚗','정보통신/컴퓨터':'💻','제조':'⚙️','카페':'☕','판매':'🏪','법률/세무':'⚖️','설비':'🔩','농업/임업/축산업':'🌾','귀금속/예물':'💍','운수':'🚚','그 외':'🔮','기타':'📌','종교':'⛪'};
 const REGIONS = ['강릉','경주','광주','구미','남양주','대구','대전','목포','부산','부천','서산','서울','수원','순천','안동','안산','안양','양산','용인','울산','원주','의정부','익산','인천','일산','전주','제주','제천','창원','천안','청주','춘천','통영','평택','포항','화성'];
 const CATS = Object.keys(EM);
 const PASTOR = ['목사','전도사'];
@@ -82,11 +82,7 @@ function initSelects() {
     if (!el) return;
     REGIONS.forEach(function(r){ var o=document.createElement('option'); o.value=o.textContent=r; el.appendChild(o); });
   });
-  ['catSel','bCat'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    CATS.forEach(function(c){ var o=document.createElement('option'); o.value=o.textContent=c; el.appendChild(o); });
-  });
+  // catSel/bCat 옵션은 HTML에 하드코딩됨
 }
 
 // ── 로딩 ─────────────────────────────────
@@ -301,6 +297,7 @@ function doFilter(){
     var mr=!region||((b.addr||'').toLowerCase().includes(region)||(b.ownerChurch||'').toLowerCase().includes(region));
     return mk&&mr&&(!cat||b.cat===cat);
   });
+  list.sort(function(a,b){return (a.name||'').localeCompare(b.name||'','ko');});
   document.getElementById('bizList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">검색 결과가 없어요<br><small style="font-size:11px">키워드·업종·지역을 변경해보세요</small></div>';
   var chips='';
   if(kw) chips+='<div class="chip">🔍 "'+kw+'" <span class="cx" onclick="clKw()">×</span></div>';
@@ -392,7 +389,7 @@ function renderMypage(){
 
 // ── 관리자 ───────────────────────────────
 var adminSection='stats';
-function isAdmin(){return S.user&&(S.user.phone==='010-8388-0848'||S.user.role==='목사'||S.user.role==='장로');}
+function isAdmin(){return S.user&&S.user.phone==='010-8388-0848';}
 function checkAdminTab(){
   var t=document.getElementById('adminTab');
   if(t) t.style.display=isAdmin()?'block':'none';
