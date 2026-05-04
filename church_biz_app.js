@@ -17,12 +17,16 @@ async function saveToFirebase(){
 }
 
 async function loadFromFirebase(){
+  // 로딩 표시
+  var bl = document.getElementById('bizList');
+  if(bl) bl.innerHTML = '<div class="empty">데이터 불러오는 중...</div>';
   try{
     var res = await fetch(FIREBASE_URL);
-    if(res.status === 404){ console.log('데이터없음'); return; }
+    if(res.status === 404){ console.log('데이터없음'); doFilter(); return; }
+    if(!res.ok){ console.error('로드실패', res.status); doFilter(); return; }
     var doc = await res.json();
     var jsonStr = doc.fields && doc.fields.json && doc.fields.json.stringValue;
-    if(!jsonStr){ return; }
+    if(!jsonStr){ doFilter(); return; }
     var data = JSON.parse(jsonStr);
     S.members = data.members || [];
     S.biz = data.biz || [];
@@ -30,8 +34,23 @@ async function loadFromFirebase(){
     S.reviews = data.reviews || [];
     S.likes = data.likes || [];
     console.log('로드완료 - 회원:'+S.members.length+' 사업체:'+S.biz.length);
-    doFilter(); renderAllRv();
-  }catch(e){ console.error('로드오류:', e); }
+    // 로그인 상태 복원 (저장된 로그인 정보로)
+    try{
+      var saved = localStorage.getItem('savedLogin');
+      if(saved){
+        var d = JSON.parse(saved);
+        var m = S.members.find(function(x){return x.phone===d.phone&&x.pw===d.pw;});
+        if(m){
+          S.user = m;
+          var btn = document.getElementById('loginBtn');
+          if(btn) btn.textContent = m.name+' '+m.role;
+          checkAdminTab();
+        }
+      }
+    }catch(e2){}
+    doFilter();
+    renderAllRv();
+  }catch(e){ console.error('로드오류:', e); doFilter(); }
 }
 
 // ── Firebase 동기화 ───────────────────────
@@ -1087,12 +1106,7 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.ov.op').forEach(function(el){el.classList.remove('op');});});
 
-try{
-  var saved=localStorage.getItem('savedLogin');
-  if(saved){var d=JSON.parse(saved);var m=S.members.find(function(x){return x.phone===d.phone&&x.pw===d.pw;});if(m){S.user=m;document.getElementById('loginBtn').textContent=m.name+' '+m.role;checkAdminTab();}}
-}catch(e){}
 
-var _pfx=document.getElementById('logoData').getAttribute('data-pfx');document.getElementById('churchLogo').src=_pfx+document.getElementById('logoData').value;
 initSelects();
 loadFromFirebase();
 
