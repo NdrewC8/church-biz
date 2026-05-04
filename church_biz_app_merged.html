@@ -317,7 +317,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
       <div style="font-size:11px;color:#0f6e56;margin-top:6px">가입 완료 후 해당 사업체가 자동으로 연결됩니다.</div>
     </div>
     <div class="fg"><label class="fl">비밀번호 <span class="req">필수</span></label><input class="fi" id="jPw" placeholder="비밀번호 (6자 이상)" type="password"></div>
-    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="jChurch"><option value="">선택해주세요</option></select></div>
+    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="jChurch"><option value="">선택해주세요</option><option value="강릉">강릉</option><option value="경주">경주</option><option value="광주">광주</option><option value="구미">구미</option><option value="남양주">남양주</option><option value="대구">대구</option><option value="대전">대전</option><option value="목포">목포</option><option value="부산">부산</option><option value="부천">부천</option><option value="서산">서산</option><option value="서울">서울</option><option value="수원">수원</option><option value="순천">순천</option><option value="안동">안동</option><option value="안산">안산</option><option value="안양">안양</option><option value="양산">양산</option><option value="용인">용인</option><option value="울산">울산</option><option value="원주">원주</option><option value="의정부">의정부</option><option value="익산">익산</option><option value="인천">인천</option><option value="일산">일산</option><option value="전주">전주</option><option value="제주">제주</option><option value="제천">제천</option><option value="창원">창원</option><option value="천안">천안</option><option value="청주">청주</option><option value="춘천">춘천</option><option value="통영">통영</option><option value="평택">평택</option><option value="포항">포항</option><option value="화성">화성</option></select></div>
     <div class="fg"><label class="fl">직분 <span class="req">필수</span></label>
       <select class="fs" id="jRole"><option value="">직분 선택</option><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select>
     </div>
@@ -388,7 +388,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <div class="mt">회원정보 수정</div><div class="ms">정보를 수정 후 저장해주세요</div>
     <div class="fg"><label class="fl">이름 <span class="req">필수</span></label><input class="fi" id="epName"></div>
     <div class="fg"><label class="fl">전화번호</label><input class="fi" id="epPhone" type="tel" oninput="formatPhone(this)"></div>
-    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="epChurch"></select></div>
+    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="epChurch"><option value="">선택해주세요</option><option value="강릉">강릉</option><option value="경주">경주</option><option value="광주">광주</option><option value="구미">구미</option><option value="남양주">남양주</option><option value="대구">대구</option><option value="대전">대전</option><option value="목포">목포</option><option value="부산">부산</option><option value="부천">부천</option><option value="서산">서산</option><option value="서울">서울</option><option value="수원">수원</option><option value="순천">순천</option><option value="안동">안동</option><option value="안산">안산</option><option value="안양">안양</option><option value="양산">양산</option><option value="용인">용인</option><option value="울산">울산</option><option value="원주">원주</option><option value="의정부">의정부</option><option value="익산">익산</option><option value="인천">인천</option><option value="일산">일산</option><option value="전주">전주</option><option value="제주">제주</option><option value="제천">제천</option><option value="창원">창원</option><option value="천안">천안</option><option value="청주">청주</option><option value="춘천">춘천</option><option value="통영">통영</option><option value="평택">평택</option><option value="포항">포항</option><option value="화성">화성</option></select></div>
     <div class="fg"><label class="fl">직분</label><select class="fs" id="epRole"><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select></div>
     <div class="fg"><label class="fl">교번 <span class="opt-l">선택</span></label><input class="fi" id="epNo"></div>
     <button class="bp" onclick="saveProfile()">저장하기</button>
@@ -564,11 +564,7 @@ function formatPhone(input) {
 }
 
 function initSelects() {
-  ['jChurch','epChurch'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    REGIONS.forEach(function(r){ var o=document.createElement('option'); o.value=o.textContent=r; el.appendChild(o); });
-  });
+  // jChurch/epChurch 옵션 HTML에 하드코딩됨
   ['catSel','bCat'].forEach(function(id) {
     var el = document.getElementById(id);
     if (!el) return;
