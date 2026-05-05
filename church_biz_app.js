@@ -1,15 +1,24 @@
 
 function catColor(cat){
   var c={
-    '법률/세무':'--cat1','보험':'--cat1','부동산':'--cat1','정보통신/컴퓨터':'--cat5',
-    '병원/의료':'--cat2','식품/음식점':'--cat2','농업/임업/축산업':'--cat2','요양시설':'--cat2','카페':'--cat2',
-    '건축/건설':'--cat3','제조':'--cat3','설비':'--cat3','자동차':'--cat3','인테리어':'--cat3',
-    '교육':'--cat4','서비스':'--cat4','종교':'--cat4','스포츠':'--cat4',
-    '간판/광고':'--cat5','온라인판매':'--cat5','유통':'--cat5','판매':'--cat5',
+    '법률/세무':'#2563eb','보험':'#2563eb','부동산':'#2563eb',
+    '병원/의료':'#16a34a','식품/음식점':'#16a34a','농업/임업/축산업':'#16a34a','요양시설':'#16a34a','카페':'#16a34a',
+    '건축/건설':'#d97706','제조':'#d97706','설비':'#d97706','자동차':'#d97706','인테리어':'#d97706',
+    '교육':'#7c3aed','서비스':'#7c3aed','종교':'#7c3aed','스포츠':'#7c3aed',
+    '정보통신/컴퓨터':'#0891b2','간판/광고':'#0891b2','온라인판매':'#0891b2','유통':'#0891b2','판매':'#0891b2',
   };
-  return c[cat]||'--cat6';
+  return c[cat]||'#C8185A';
 }
-function catColorLight(cat){return catColor(cat).replace('--cat','--cat')+'l';}
+function catColorLight(cat){
+  var c={
+    '법률/세무':'#dbeafe','보험':'#dbeafe','부동산':'#dbeafe',
+    '병원/의료':'#dcfce7','식품/음식점':'#dcfce7','농업/임업/축산업':'#dcfce7','요양시설':'#dcfce7','카페':'#dcfce7',
+    '건축/건설':'#fef3c7','제조':'#fef3c7','설비':'#fef3c7','자동차':'#fef3c7','인테리어':'#fef3c7',
+    '교육':'#ede9fe','서비스':'#ede9fe','종교':'#ede9fe','스포츠':'#ede9fe',
+    '정보통신/컴퓨터':'#cffafe','간판/광고':'#cffafe','온라인판매':'#cffafe','유통':'#cffafe','판매':'#cffafe',
+  };
+  return c[cat]||'#fce8f0';
+}
 // ── Firebase 동기화 ───────────────────────
 async function saveToFirebase(){
   try{
@@ -163,7 +172,7 @@ function bizCardHtml(b) {
     '<div class="bh">'+cardThumb+
     '<div style="flex:1">'+
       '<div class="bn">'+b.name+'</div>'+
-      '<div class="bct" style="color:var('+catColor(b.cat)+');background:var('+catColor(b.cat)+'l)">'+b.cat+'</div>'+
+      '<div class="bct" style="color:'+catColor(b.cat)+';background:'+catColorLight(b.cat)+'">'+b.cat+'</div>'+
       '<div class="bow">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</div>'+
     '</div></div>'+
     (b.addr ? '<div style="font-size:13px;color:var(--t2);margin-top:6px">📍 '+b.addr+'</div>' : '')+
