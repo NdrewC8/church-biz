@@ -647,9 +647,9 @@ function renderAdmin(){
   el.innerHTML=tabs+body;
 }
 
-function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});renderAdmin();}
-function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});renderAdmin();doFilter();}
-function adminDelReview(id){if(!confirm('후기를 삭제하시겠어요?'))return;S.reviews=S.reviews.filter(function(r){return r.id!==id;});renderAdmin();}
+function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});saveToFirebase();renderAdmin();}
+function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});saveToFirebase();renderAdmin();doFilter();}
+function adminDelReview(id){if(!confirm('후기를 삭제하시겠어요?'))return;S.reviews=S.reviews.filter(function(r){return r.id!==id;});saveToFirebase();renderAdmin();renderAllRv();}
 
 function doBackup(){
   var data={
