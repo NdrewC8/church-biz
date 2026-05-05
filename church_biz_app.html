@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사랑하는교회 사업소개</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p:#1a5c3a;--pl:#e8f4ee;--ac:#f0a500;--t:#1a1a1a;--t2:#6b7280;--bg:#fff;--bg2:#f9fafb;--bd:#e5e7eb}
+body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgun Gothic',sans-serif;background:#f3f4f6;display:flex;justify-content:center;padding:20px;min-height:100vh}
+.app{width:100%;max-width:460px;background:var(--bg);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.10)}
+.hd{background:var(--p);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.hd-t{color:#fff;font-size:15px;font-weight:600}.hd-s{color:rgba(255,255,255,.7);font-size:11px}
+.hd-btn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:20px;padding:6px 13px;font-size:12px;cursor:pointer;font-weight:500}
+.hd-btn:hover{background:rgba(255,255,255,.28)}
+.nav{display:flex;border-bottom:1px solid var(--bd);overflow-x:auto}
+.nav::-webkit-scrollbar{display:none}
+.nb{flex:1;min-width:60px;padding:10px 4px;border:none;background:transparent;font-size:12px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.nb.on{color:var(--p);border-bottom-color:var(--p);font-weight:600}
+.sc{display:none}.sc.on{display:block}
+/* 검색 */
+.sw{background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 12px}
+.kwr{display:flex;gap:6px;margin-bottom:8px}
+.kwi{flex:1;padding:8px 13px;border:1px solid var(--bd);border-radius:20px;font-size:13px;background:var(--bg);color:var(--t);outline:none}
+.kwi:focus{border-color:var(--p)}
+.kbtn{padding:8px 13px;background:var(--p);color:#fff;border:none;border-radius:20px;font-size:12px;cursor:pointer}
+.fr{display:flex;gap:6px}
+.fsel{flex:1;padding:7px 9px;border:1px solid var(--bd);border-radius:20px;font-size:12px;background:var(--bg);color:var(--t);outline:none;cursor:pointer}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.chip{display:flex;align-items:center;gap:3px;padding:3px 9px;background:var(--p);color:#fff;border-radius:12px;font-size:11px}
+.cx{cursor:pointer;font-size:14px}
+.bl{padding:10px}
+/* 업체카드 */
+.bc{position:relative;background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:13px;margin-bottom:9px;cursor:pointer}
+.bc:hover{border-color:var(--p);box-shadow:0 2px 12px rgba(26,92,58,.08)}
+/* 운영/추천 뱃지 - 우측상단 */
+.type-badge{position:absolute;top:10px;right:10px;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700}
+.badge-own{background:#dbeafe;color:#1d4ed8}
+.badge-rec{background:#fee2e2;color:#dc2626}
+.bh{display:flex;gap:11px;align-items:flex-start}
+.bi{width:42px;height:42px;border-radius:11px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.bn{font-size:14px;font-weight:600;color:var(--t);padding-right:50px}
+.bct{font-size:11px;color:var(--p);margin:2px 0;font-weight:500}
+.bow{font-size:12px;color:var(--t2);margin-top:2px}
+.bf{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)}
+.tgs{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
+.tg{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--pl);color:#0f6e56;font-weight:500}
+.biz-desc{font-size:12px;color:var(--t2);margin-top:7px;line-height:1.6;white-space:pre-line}
+.badge-p{font-size:10px;padding:2px 6px;border-radius:8px;background:#fff3cd;color:#633806;margin-left:4px}
+.empty{text-align:center;padding:32px 16px;color:var(--t2);font-size:13px;line-height:2}
+.fab{position:sticky;bottom:16px;right:16px;float:right;margin-right:16px;margin-bottom:16px;width:46px;height:46px;border-radius:50%;background:var(--p);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 14px rgba(26,92,58,.35)}
+/* 상세 */
+.det-hd{background:var(--p);padding:13px 16px;display:flex;align-items:center;gap:10px}
+.back-btn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.det-title{color:#fff;font-size:15px;font-weight:600;flex:1}
+.det-body{padding:13px}
+.det-card{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:11px}
+.det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--bd)}
+.det-row:last-child{border-bottom:none}
+.dl{font-size:12px;color:var(--t2);flex-shrink:0;margin-right:8px;white-space:nowrap}
+.dv{font-size:12px;color:var(--t);text-align:right;word-break:break-all;white-space:pre-line}
+.call-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--p);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none}
+.call-btn:hover{background:#155230}
+/* 후기 */
+.rv{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:13px;margin-bottom:9px}
+.rv.ppick{border-color:var(--ac);background:#fffdf5}
+.rv-hd{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.av{width:30px;height:30px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.av-p{background:#854f0b}
+.rn{font-size:13px;font-weight:600;color:var(--t)}
+.rt{font-size:12px;color:var(--t2);line-height:1.6}
+.rd{font-size:11px;color:var(--t2);margin-top:5px}
+.del-btn{background:none;border:none;color:var(--t2);font-size:11px;cursor:pointer;padding:2px 6px;border-radius:4px}
+.del-btn:hover{background:#fee2e2;color:#a32d2d}
+/* 쿠팡 */
+.cpn{padding:13px;background:var(--bg2);border-top:1px solid var(--bd)}
+.cpn-g{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cc{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:11px;cursor:pointer}
+.cc:hover{border-color:var(--ac)}
+.cb{font-size:9px;background:#fff3cd;color:#633806;padding:2px 6px;border-radius:8px;display:inline-block;margin-bottom:5px;font-weight:600}
+.cn2{font-size:12px;font-weight:600;color:var(--t);margin-bottom:2px}
+.cpr{font-size:13px;font-weight:700;color:#a32d2d}
+.co{font-size:10px;color:var(--t2);text-decoration:line-through}
+/* 모달 */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
+.ov.op{display:flex}
+.modal{background:var(--bg);border-radius:22px 22px 0 0;padding:22px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto}
+.mh{width:38px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 18px}
+.mt{font-size:17px;font-weight:700;margin-bottom:4px}
+.ms{font-size:12px;color:var(--t2);margin-bottom:18px}
+.fg{margin-bottom:12px}
+.fl{font-size:12px;color:var(--t2);margin-bottom:5px;display:flex;align-items:center;gap:4px;font-weight:500}
+.req{font-size:10px;color:#a32d2d;font-weight:600}
+.opt-l{font-size:10px;color:var(--t2);border:1px solid var(--bd);padding:1px 6px;border-radius:4px}
+.fi{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;font-size:14px;background:var(--bg);color:var(--t);outline:none;font-family:inherit}
+.fi:focus{border-color:var(--p)}
+.fs{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;font-size:14px;background:var(--bg);color:var(--t);outline:none;font-family:inherit;cursor:pointer}
+.err{font-size:12px;color:#a32d2d;margin-top:5px;display:none;padding:8px 12px;background:#fff5f5;border-radius:8px}
+.bp{width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;margin-top:9px;font-family:inherit}
+.bp:hover{background:#155230}
+.bs{width:100%;padding:10px;background:transparent;color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:13px;cursor:pointer;margin-top:7px;font-weight:500;font-family:inherit}
+.bs:hover{background:var(--pl)}
+.sdiv{font-size:11px;font-weight:600;color:var(--t2);padding:4px 0 9px;border-bottom:1px solid var(--bd);margin-bottom:12px}
+/* 마이페이지 */
+.pc{background:var(--pl);border-radius:14px;padding:15px;margin-bottom:15px}
+.prow{display:flex;align-items:center;gap:13px;margin-bottom:11px}
+.pav{width:48px;height:48px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;flex-shrink:0}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.pi{background:var(--bg);border-radius:10px;padding:9px 11px}
+.pl2{font-size:10px;color:var(--t2);font-weight:500}
+.pv{font-size:13px;font-weight:600;color:var(--t);margin-top:2px}
+.gate{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:24px;margin:13px;text-align:center}
+.rem-row{display:flex;align-items:center;gap:9px;margin-top:10px}
+.rem-row input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--p)}
+.rem-row label{font-size:12px;color:var(--t2);cursor:pointer}
+.drop-zone{border:2px dashed var(--bd);border-radius:12px;padding:28px;text-align:center;cursor:pointer;margin-bottom:12px}
+.drop-zone:hover{border-color:var(--p)}
+.pw-warn{background:#fff3cd;border:1px solid #f0c040;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#633806}
+/* 매칭 박스 */
+.match-box{background:#e8f4ee;border:1.5px solid var(--p);border-radius:12px;padding:14px;margin-bottom:14px}
+.match-box h4{font-size:14px;font-weight:700;color:var(--p);margin-bottom:8px}
+.match-item{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+/* 찜 */
+.like-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;line-height:1;transition:transform .15s}
+.like-btn:hover{transform:scale(1.2)}
+/* 관리자 */
+.admin-tab{display:flex;border-bottom:1px solid var(--bd);margin-bottom:12px}
+.at{flex:1;padding:8px;border:none;background:transparent;font-size:12px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent}
+.at.on{color:var(--p);border-bottom-color:var(--p);font-weight:600}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.stat-card{background:var(--pl);border-radius:12px;padding:13px;text-align:center}
+.stat-num{font-size:26px;font-weight:700;color:var(--p)}
+.stat-label{font-size:11px;color:var(--t2);margin-top:3px}
+.admin-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:11px;margin-bottom:7px}
+.admin-row-info{flex:1}
+.admin-row-name{font-size:13px;font-weight:600}
+.admin-row-sub{font-size:11px;color:var(--t2);margin-top:2px}
+.admin-del{padding:4px 10px;background:transparent;color:#a32d2d;border:1px solid #a32d2d;border-radius:7px;font-size:11px;cursor:pointer;flex-shrink:0}
+.admin-del:hover{background:#fee2e2}
+/* 로딩 */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;gap:12px}
+.spinner{width:36px;height:36px;border:3px solid var(--pl);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:12px;color:var(--t2)}
+.sk-card{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:13px;margin-bottom:9px}
+.skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bd) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-line{height:12px;margin-bottom:8px}
+.sk-line.w100{width:100%}.sk-line.w70{width:70%}.sk-line.w50{width:50%}.sk-line.w30{width:30%}
+</style>
+  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xy1r6dv1u1&submodules=geocoder"></script>
+</head>
+<body>
+<div class="app">
+  <div class="hd">
+    <div><div class="hd-t">사랑하는교회 사업소개</div><div class="hd-s">성도 비즈니스 네트워크</div></div>
+    <button class="hd-btn" id="loginBtn" onclick="onHdBtn()">로그인</button>
+  </div>
+  <div class="nav">
+    <button class="nb on" onclick="showTab('list',this)">목록</button>
+    <button class="nb" onclick="showTab('rec',this)">추천</button>
+    <button class="nb" onclick="showTab('map',this)">지도</button>
+    <button class="nb" onclick="showTab('reviews',this)">후기</button>
+    <button class="nb" onclick="showTab('mypage',this)">마이페이지</button>
+    <button class="nb" id="adminTab" style="display:none" onclick="showTab('admin',this)">관리자</button>
+  </div>
+
+  <!-- 목록 -->
+  <div class="sc on" id="sc-list">
+    <div class="sw">
+      <div class="kwr">
+        <input class="kwi" id="kwInput" placeholder="키워드 검색..." oninput="doFilter()">
+        <button class="kbtn" onclick="clearAll()">초기화</button>
+      </div>
+      <div class="fr">
+        <select class="fsel" id="catSel" onchange="doFilter()"><option value="">업종 전체</option></select>
+        <input class="fsel" id="regionInput" placeholder="지역 검색 (예: 경기도, 군포)" oninput="doFilter()" style="cursor:text">
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="bl" id="bizList"></div>
+    <button class="fab" onclick="requireLogin('biz')">+</button>
+    <div class="cpn">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:9px;font-weight:600">🛒 쿠팡 추천 상품</div>
+      <div class="cpn-g">
+        <div class="cc"><div class="cb">로켓배송</div><div class="cn2">꽃 보존액 500ml</div><div class="cpr">12,900원</div><div class="co">18,000원</div></div>
+        <div class="cc"><div class="cb">특가</div><div class="cn2">명함 100매</div><div class="cpr">3,500원</div><div class="co">8,000원</div></div>
+        <div class="cc"><div class="cb">로켓배송</div><div class="cn2">소상공인 POS기</div><div class="cpr">89,000원</div><div class="co">120,000원</div></div>
+        <div class="cc"><div class="cb">베스트</div><div class="cn2">업소용 앞치마</div><div class="cpr">7,200원</div><div class="co">12,000원</div></div>
+      </div>
+      <p style="font-size:10px;color:var(--t2);margin-top:9px;text-align:center">이 링크를 통한 구매 시 교회 방송선교 후원에 도움이 됩니다</p>
+    </div>
+  </div>
+
+  <!-- 추천 사업체 -->
+  <div class="sc" id="sc-rec">
+    <div class="bl" id="recList"></div>
+    <button class="fab" onclick="requireLogin('rec')">+</button>
+  </div>
+
+  <!-- 상세 -->
+  <div class="sc" id="sc-detail">
+    <div class="det-hd">
+      <button class="back-btn" onclick="goBack()">&#8592;</button>
+      <div class="det-title" id="det-title">업체 상세</div>
+      <button id="det-like-btn" class="like-btn" style="color:#fff;font-size:22px">🤍</button>
+      <div id="det-edit-btns"></div>
+    </div>
+    <div class="det-body" id="det-body"></div>
+  </div>
+
+  <!-- 지도 -->
+  <div class="sc" id="sc-map">
+    <div style="padding:10px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center">
+      <input id="mapSearchInput" class="kwi" placeholder="업체명, 업종, 지역..." oninput="filterMap()" style="flex:1;font-size:15px;padding:7px 12px">
+      <select id="mapCatFilter" class="fsel" onchange="filterMap()" style="max-width:120px;font-size:14px;padding:7px 8px"></select>
+    </div>
+    <div id="naverMap" style="width:100%;height:400px"></div>
+    <div style="padding:9px;max-height:300px;overflow-y:auto" id="mapList"></div>
+  </div>
+
+<!-- 로그인선택 -->
+<div class="ov" id="choiceM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">로그인 / 회원가입</div>
+    <div class="ms">성도 비즈니스 네트워크에 오신 것을 환영합니다</div>
+    <button class="bp" onclick="closeM('choiceM');openM('loginM')">로그인</button>
+    <button class="bs" onclick="closeM('choiceM');openM('joinM')">회원가입</button>
+    <button class="bs" style="color:var(--t2);border-color:var(--bd)" onclick="closeM('choiceM')">닫기</button>
+  </div>
+</div>
+
+<!-- 회원가입 -->
+<div class="ov" id="joinM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">회원가입</div><div class="ms">성도 인증 정보를 입력해주세요</div>
+    <div class="fg"><label class="fl">이름 <span class="req">필수</span></label><input class="fi" id="jName" placeholder="홍길동" oninput="checkBizMatch()"></div>
+    <div class="fg"><label class="fl">전화번호 <span class="req">필수</span></label><input class="fi" id="jPhone" placeholder="010-0000-0000" type="tel" oninput="formatPhone(this);checkBizMatch()"></div>
+    <div id="matchBox" style="display:none" class="match-box">
+      <h4>🏪 등록된 사업체가 있습니다!</h4>
+      <div id="matchList"></div>
+      <div style="font-size:11px;color:#0f6e56;margin-top:6px">가입 완료 후 해당 사업체가 자동으로 연결됩니다.</div>
+    </div>
+    <div class="fg"><label class="fl">비밀번호 <span class="req">필수</span></label><input class="fi" id="jPw" placeholder="비밀번호 (6자 이상)" type="password"></div>
+    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="jChurch"><option value="">선택해주세요</option></select></div>
+    <div class="fg"><label class="fl">직분 <span class="req">필수</span></label>
+      <select class="fs" id="jRole"><option value="">선택해주세요</option><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select>
+    </div>
+    <div class="fg"><label class="fl">교번 <span class="opt-l">선택</span></label><input class="fi" id="jNo" placeholder="예: 2024-0001"></div>
+    <div id="joinErr" class="err"></div>
+    <button class="bp" onclick="doJoin()">가입하기</button>
+    <button class="bs" onclick="closeM('joinM');openM('choiceM')">뒤로가기</button>
+  </div>
+</div>
+
+<!-- 로그인 -->
+<div class="ov" id="loginM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">로그인</div><div class="ms">전화번호와 비밀번호로 로그인</div>
+    <div class="fg"><label class="fl">전화번호 <span class="req">필수</span></label><input class="fi" id="lPhone" placeholder="010-0000-0000" type="tel" oninput="formatPhone(this)"></div>
+    <div class="fg"><label class="fl">비밀번호 <span class="req">필수</span></label><input class="fi" id="lPw" placeholder="비밀번호" type="password"></div>
+    <div class="rem-row"><input type="checkbox" id="rememberMe"><label for="rememberMe">로그인 상태 유지</label></div>
+    <div id="loginErr" class="err"></div>
+    <button class="bp" onclick="doLogin()">로그인</button>
+    <button class="bs" onclick="closeM('loginM');openM('joinM')">회원가입하기</button>
+    <button class="bs" style="color:var(--t2);border-color:var(--bd)" onclick="closeM('loginM')">닫기</button>
+  </div>
+</div>
+
+<!-- 프로필수정 -->
+<div class="ov" id="editM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">회원정보 수정</div><div class="ms">정보를 수정 후 저장해주세요</div>
+    <div class="fg"><label class="fl">이름 <span class="req">필수</span></label><input class="fi" id="epName"></div>
+    <div class="fg"><label class="fl">전화번호</label><input class="fi" id="epPhone" type="tel" oninput="formatPhone(this)"></div>
+    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="epChurch"></select></div>
+    <div class="fg"><label class="fl">직분</label><select class="fs" id="epRole"><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select></div>
+    <div class="fg"><label class="fl">교번 <span class="opt-l">선택</span></label><input class="fi" id="epNo"></div>
+    <button class="bp" onclick="saveProfile()">저장하기</button>
+    <button class="bs" onclick="closeM('editM')">취소</button>
+  </div>
+</div>
+
+<!-- 비밀번호변경 -->
+<div class="ov" id="changePwM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">비밀번호 변경</div><div class="ms">새 비밀번호를 입력해주세요</div>
+    <div class="fg"><label class="fl">현재 비밀번호 <span class="req">필수</span></label><input class="fi" id="cpOld" type="password" placeholder="현재 비밀번호"></div>
+    <div class="fg"><label class="fl">새 비밀번호 <span class="req">필수</span></label><input class="fi" id="cpNew" type="password" placeholder="새 비밀번호 (6자 이상)"></div>
+    <div class="fg"><label class="fl">새 비밀번호 확인 <span class="req">필수</span></label><input class="fi" id="cpNew2" type="password" placeholder="새 비밀번호 재입력"></div>
+    <div id="cpErr" class="err"></div>
+    <button class="bp" onclick="doChangePw()">변경하기</button>
+    <button class="bs" onclick="closeM('changePwM')">취소</button>
+  </div>
+</div>
+
+<!-- 사업체 등록/수정 -->
+<div class="ov" id="addBizM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt" id="bizModalTitle">사업체 등록</div>
+    <div class="ms">내 사업을 성도들에게 소개해요</div>
+    <input type="hidden" id="editBizId" value="">
+    <div class="fg"><label class="fl">등록 유형 <span class="req">필수</span></label>
+      <select class="fs" id="bType"><option value="own">운영 사업체</option><option value="rec">추천 사업체</option></select>
+    </div>
+    <div class="sdiv">필수 정보</div>
+    <div class="fg"><label class="fl">상호명 <span class="req">필수</span></label><input class="fi" id="bName" placeholder="예: 은혜 꽃집"></div>
+    <div class="fg"><label class="fl">업종 <span class="req">필수</span></label><select class="fs" id="bCat"><option value="">선택해주세요</option></select></div>
+    <div class="fg"><label class="fl">연락처 <span class="req">필수</span></label><input class="fi" id="bPhone" placeholder="010-0000-0000" oninput="formatPhone(this)"></div>
+    <div class="fg"><label class="fl">주소 <span class="req">필수</span></label><input class="fi" id="bAddr" placeholder="주소를 입력해주세요"></div>
+    <div class="sdiv">선택 정보</div>
+    <div class="fg"><label class="fl">사업자등록번호 <span class="opt-l">선택</span></label><input class="fi" id="bRegNo" placeholder="000-00-00000"></div>
+    <div class="fg"><label class="fl">홈페이지 <span class="opt-l">선택</span></label><input class="fi" id="bWeb" placeholder="https://..."></div>
+    <div class="fg"><label class="fl">키워드 <span class="opt-l">선택</span></label><input class="fi" id="bKw" placeholder="성도할인, 24시간, 무료상담"></div>
+    <div class="fg"><label class="fl">소개 <span class="opt-l">선택</span></label><textarea class="fi" id="bDesc" placeholder="사업체 소개를 입력해주세요" rows="3" style="resize:none"></textarea></div>
+    <div id="bizErr" class="err"></div>
+    <button class="bp" onclick="saveBiz()">저장하기</button>
+    <button class="bs" onclick="closeM('addBizM')">닫기</button>
+  </div>
+</div>
+
+<!-- 후기작성 -->
+<div class="ov" id="addRvM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">후기 작성</div><div class="ms">이용한 사업체에 후기를 남겨주세요</div>
+    <div class="fg"><label class="fl">사업체 <span class="req">필수</span></label><select class="fs" id="rvBiz"></select></div>
+    <div class="fg"><label class="fl">별점 <span class="req">필수</span></label>
+      <select class="fs" id="rvStars"><option value="5">⭐⭐⭐⭐⭐ 최고예요</option><option value="4">⭐⭐⭐⭐ 좋아요</option><option value="3">⭐⭐⭐ 보통이에요</option><option value="2">⭐⭐ 별로예요</option><option value="1">⭐ 나빠요</option></select>
+    </div>
+    <div class="fg"><label class="fl">후기 내용 <span class="req">필수</span></label><input class="fi" id="rvText" placeholder="이용 경험을 공유해주세요"></div>
+    <button class="bp" onclick="addReview()">등록하기</button>
+    <button class="bs" onclick="closeM('addRvM')">닫기</button>
+  </div>
+</div>
+
+<!-- CSV업로드 (관리자용) -->
+<div class="ov" id="csvM">
+  <div class="modal"><div class="mh"></div>
+    <div class="mt">회원/사업체 CSV 업로드</div>
+    <div class="ms">CSV 파일로 회원과 사업체를 일괄 등록해요</div>
+    <div style="background:var(--pl);border-radius:11px;padding:13px;margin-bottom:14px;font-size:12px;color:#0f6e56;line-height:1.9">
+      <strong>📋 파일 형식</strong><br>
+      이름 / 전화번호 / 비밀번호 / 등록교회 / 직분 / 업종 / 상호 / 주소 / 비고<br>
+      2행은 안내행으로 자동 건너뜀 · 초기 비밀번호: <strong>1111</strong>
+    </div>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--p)'" ondragleave="this.style.borderColor=''" ondrop="handleDrop(event)">
+      <div style="font-size:28px;margin-bottom:8px">📂</div>
+      <div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:4px">클릭하거나 파일을 드래그하세요</div>
+      <div style="font-size:11px;color:var(--t2)">.csv 파일만 지원</div>
+    </div>
+    <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
+    <div id="csvPreview" style="display:none">
+      <div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:8px" id="csvCount"></div>
+      <div style="max-height:220px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;font-size:11px" id="csvTable"></div>
+      <button class="bp" onclick="doUpload()" style="margin-top:12px">등록하기</button>
+    </div>
+    <button class="bs" style="color:var(--t2);border-color:var(--bd);margin-top:8px" onclick="closeM('csvM')">닫기</button>
+  </div>
+</div>
+
+<!-- 로그인필요 -->
+<div class="ov" id="gateM">
+  <div class="modal"><div class="mh"></div>
+    <div style="text-align:center;font-size:32px;margin-bottom:10px">🔒</div>
+    <div style="text-align:center;font-size:15px;font-weight:700;margin-bottom:8px" id="gateTx"></div>
+    <div style="text-align:center;font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:20px" id="gateDesc"></div>
+    <button class="bp" onclick="closeM('gateM');openM('joinM')">회원가입하기</button>
+    <button class="bs" onclick="closeM('gateM');openM('loginM')">이미 가입됐어요 → 로그인</button>
+    <button class="bs" style="color:var(--t2);border-color:var(--bd)" onclick="closeM('gateM')">닫기</button>
+  </div>
+</div>
+
+<script>
+const EM = {'간판/광고':'📢','건축/건설':'🏗️','교육':'📚','꽃집':'🌸','렌탈':'🔧','병원/의료':'🏥','보험':'🛡️','부동산':'🏠','서비스':'💼','스포츠':'⚽','숙박':'🏨','식품/음식점':'🍽️','온라인판매':'🛒','요양시설':'❤️','유통':'📦','이미용':'✂️','인테리어':'🛋️','자동차':'🚗','정보통신/컴퓨터':'💻','제조':'⚙️','카페':'☕','판매':'🏪','법률/세무':'⚖️','설비':'🔩','농업/임업/축산업':'🌾','귀금속/예물':'💍','운수':'🚚','그 외':'🔮','기타':'📌'};
+const REGIONS = ['강릉','경주','광주','구미','남양주','대구','대전','목포','부산','부천','서울','순천','안동','안산','안양','양산','용인','울산','의정부','익산','인천','일산','전주','제주','제천','창원','천안','춘천','통영','포항','평택','화성','수원'];
+const CATS = Object.keys(EM);
+const PASTOR = ['목사','전도사'];
+const CL = ['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
+
+let S = { user:null, members:[], biz:[], bizDB:[], reviews:[], csvParsed:[], likes:[] };
+let prevTab = 'list';
+
+
+function formatPhone(input) {
+  var v = input.value.replace(/[^0-9]/g,'');
+  // 02 (서울) - 2자리 지역코드
+  if(v.startsWith('02')){
+    if(v.length<=2) input.value=v;
+    else if(v.length<=6) input.value='02-'+v.slice(2);
+    else if(v.length<=9) input.value='02-'+v.slice(2,5)+'-'+v.slice(5);  // 02-xxx-xxxx (7자리)
+    else input.value='02-'+v.slice(2,6)+'-'+v.slice(6,10); // 02-xxxx-xxxx (8자리)
+  }
+  // 010,011,016,017,018,019 (휴대폰)
+  else if(/^01[016789]/.test(v)){
+    if(v.length<=3) input.value=v;
+    else if(v.length<=7) input.value=v.slice(0,3)+'-'+v.slice(3);
+    else input.value=v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7,11);
+  }
+  // 030,031~099 (일반 지역번호 3자리)
+  else if(v.length>0){
+    if(v.length<=3) input.value=v;
+    else if(v.length<=6) input.value=v.slice(0,3)+'-'+v.slice(3);
+    else if(v.length<=9) input.value=v.slice(0,3)+'-'+v.slice(3,6)+'-'+v.slice(6);
+    else input.value=v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7,11);
+  }
+}
+
+function initSelects() {
+  ['jChurch','epChurch'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    REGIONS.forEach(function(r){ var o=document.createElement('option'); o.value=o.textContent=r; el.appendChild(o); });
+  });
+  ['catSel','bCat'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    CATS.forEach(function(c){ var o=document.createElement('option'); o.value=o.textContent=c; el.appendChild(o); });
+  });
+}
+
+// ── 로딩 ─────────────────────────────────
+function showLoading(id, txt) {
+  var el=document.getElementById(id);
+  if(el) el.innerHTML='<div class="loading"><div class="spinner"></div><div class="loading-text">'+(txt||'불러오는 중...')+'</div></div>';
+}
+function showSkeletons(id, n) {
+  var el=document.getElementById(id); if(!el) return;
+  var h='';
+  for(var i=0;i<(n||4);i++){
+    h+='<div class="sk-card"><div style="display:flex;gap:11px"><div class="skeleton" style="width:42px;height:42px;border-radius:11px;flex-shrink:0"></div>';
+    h+='<div style="flex:1"><div class="skeleton sk-line w70"></div><div class="skeleton sk-line w50"></div><div class="skeleton sk-line w30"></div></div></div>';
+    h+='<div style="margin-top:8px"><div class="skeleton sk-line w100"></div></div></div>';
+  }
+  el.innerHTML=h;
+}
+
+// ── 탭 ───────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('sc-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name!=='detail') prevTab=name;
+  if(name==='list'){ showSkeletons('bizList',4); setTimeout(function(){doFilter();},200); }
+  if(name==='rec'){ showSkeletons('recList',4); setTimeout(function(){renderRec();},200); }
+  if(name==='map'){ showLoading('mapList','지도 불러오는 중...'); setTimeout(function(){renderMap();},200); }
+  if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
+  if(name==='mypage') renderMypage();
+  if(name==='admin') renderAdmin();
+}
+
+function goBack() {
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('sc-'+prevTab).classList.add('on');
+  document.querySelectorAll('.nb').forEach(function(b){
+    if(b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+prevTab+"'")) b.classList.add('on');
+  });
+  if(prevTab==='list') doFilter();
+  else if(prevTab==='rec') renderRec();
+}
+
+// ── 업체 카드 HTML ───────────────────────
+function bizCardHtml(b) {
+  var rvs = S.reviews.filter(function(r){return r.bizId===b.id;});
+  var avg = rvs.length ? Math.round(rvs.reduce(function(s,r){return s+r.stars;},0)/rvs.length*10)/10 : 0;
+  var kws = b.kw ? b.kw.split(',').filter(function(k){return k;}).map(function(k){return '<span class="tg">'+k.trim()+'</span>';}).join('') : '';
+  var tel = (b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+  var liked = isLiked(b.id);
+  var typeBadge = b.type==='own'
+    ? '<span class="type-badge badge-own">운영</span>'
+    : '<span class="type-badge badge-rec">추천</span>';
+  var desc = b.desc ? '<div class="biz-desc">'+b.desc+'</div>' : '';
+  return '<div class="bc" onclick="showDetail('+b.id+')">'+
+    typeBadge+
+    '<div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div>'+
+    '<div style="flex:1">'+
+      '<div class="bn">'+b.name+'</div>'+
+      '<div class="bct">'+b.cat+'</div>'+
+      '<div class="bow">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</div>'+
+    '</div></div>'+
+    (b.addr ? '<div style="font-size:11px;color:var(--t2);margin-top:6px">📍 '+b.addr+'</div>' : '')+
+    (kws ? '<div class="tgs">'+kws+'</div>' : '')+
+    desc+
+    '<div class="bf">'+
+      '<span style="color:var(--ac);font-size:12px">'+('⭐'.repeat(Math.round(avg))||'☆☆☆☆☆')+' <span style="font-size:11px;color:var(--t2)">'+rvs.length+'개 후기</span></span>'+
+      '<div style="display:flex;align-items:center;gap:6px">'+
+        (tel ? '<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>' : '')+
+        '<button id="like-'+b.id+'" class="like-btn'+(liked?' on':'')+'" onclick="toggleLike('+b.id+',event)">'+(liked?'❤️':'🤍')+'</button>'+
+      '</div>'+
+    '</div></div>';
+}
+
+// ── 상세 ─────────────────────────────────
+function showDetail(bizId) {
+  var b=S.biz.find(function(x){return x.id===bizId;});
+  if(!b) return;
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('sc-detail').classList.add('on');
+  document.getElementById('det-title').textContent=b.name;
+  // 찜 버튼
+  var lb=document.getElementById('det-like-btn');
+  if(lb){
+    lb.textContent=isLiked(b.id)?'❤️':'🤍';
+    lb.onclick=function(e){toggleLike(b.id,e);lb.textContent=isLiked(b.id)?'❤️':'🤍';};
+  }
+  // 수정/삭제 버튼
+  var eb=document.getElementById('det-edit-btns');
+  if(S.user&&S.user.phone===b.phone){
+    eb.innerHTML='<button onclick="openEditBiz('+bizId+')" style="background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;margin-right:4px">수정</button>'+
+      '<button onclick="deleteBiz('+bizId+')" style="background:rgba(255,0,0,.25);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer">삭제</button>';
+  } else { eb.innerHTML=''; }
+
+  var rvs=sortRv(S.reviews.filter(function(r){return r.bizId===bizId;}));
+  var avg=rvs.length?Math.round(rvs.reduce(function(s,r){return s+r.stars;},0)/rvs.length*10)/10:0;
+  var kws=b.kw?b.kw.split(',').filter(function(k){return k;}).map(function(k){return '<span class="tg">'+k.trim()+'</span>';}).join(''):'';
+  var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+  var tp=b.type==='own'?'<span class="type-badge badge-own" style="position:static;display:inline-block;margin-left:6px">운영</span>':'<span class="type-badge badge-rec" style="position:static;display:inline-block;margin-left:6px">추천</span>';
+
+  var html='<div class="det-card">'+
+    '<div style="display:flex;align-items:center;gap:13px;margin-bottom:13px">'+
+      '<div style="width:52px;height:52px;border-radius:13px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px">'+(EM[b.cat]||'🏪')+'</div>'+
+      '<div><div style="font-size:17px;font-weight:700">'+b.name+tp+'</div>'+
+      '<div style="font-size:12px;color:var(--p);margin-top:3px">'+b.cat+'</div>'+
+      '<div style="font-size:12px;color:var(--ac)">'+'⭐'.repeat(Math.round(avg))+(avg?'<span style="color:var(--t2);font-size:11px"> '+avg+'점 ('+rvs.length+'개)</span>':'<span style="color:var(--t2);font-size:11px"> 후기없음</span>')+'</div>'+
+    '</div></div>'+
+    '<div class="det-row"><span class="dl">담당자</span><span class="dv">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</span></div>'+
+    (b.addr?'<div class="det-row"><span class="dl">주소</span><span class="dv">'+b.addr+'</span></div>':'')+
+    (b.regNo?'<div class="det-row"><span class="dl">사업자번호</span><span class="dv">'+b.regNo+'</span></div>':'')+
+    (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+b.web+'" target="_blank" style="font-size:12px;color:#185fa5;text-align:right;word-break:break-all">'+b.web+'</a></div>':'')+
+    (kws?'<div style="margin-top:9px;display:flex;gap:4px;flex-wrap:wrap">'+kws+'</div>':'')+
+    (b.desc?'<div style="margin-top:10px;font-size:12px;color:var(--t2);line-height:1.7;white-space:pre-line;padding-top:10px;border-top:1px solid var(--bd)">'+b.desc+'</div>':'')+
+  '</div>';
+
+  if(tel){
+    html+='<a class="call-btn" href="tel:'+tel+'">📞 전화걸기</a>';
+  }
+
+  html+='<div style="font-size:13px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
+    (rvs.length?rvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty">아직 후기가 없어요</div>')+
+    '<button onclick="requireLogin(\'review\')" style="width:100%;padding:11px;background:var(--pl);color:var(--p);border:1px solid var(--bd);border-radius:11px;font-size:13px;cursor:pointer;margin-top:5px;font-weight:600">✏️ 후기 작성하기</button>';
+
+  document.getElementById('det-body').innerHTML=html;
+}
+
+// ── 후기 ────────────────────────────────
+function isPastor(r){return PASTOR.includes(r);}
+function sortRv(rvs){
+  return rvs.slice().sort(function(a,b){
+    var ap=isPastor(a.role)?1:0,bp=isPastor(b.role)?1:0;
+    return ap!==bp?bp-ap:new Date(b.date)-new Date(a.date);
+  });
+}
+function rvHtml(r,showDel){
+  var p=isPastor(r.role);
+  var del=(showDel&&S.user&&S.user.name===r.reviewer)?'<button class="del-btn" onclick="deleteReview('+r.id+')">삭제</button>':'';
+  return '<div class="rv'+(p?' ppick':'')+'" id="rv-'+r.id+'">'+
+    '<div class="rv-hd">'+
+      '<div class="av'+(p?' av-p':'')+'">'+r.reviewer[0]+'</div>'+
+      '<div style="flex:1"><div class="rn">'+(p?'★ ':'')+r.reviewer+(p?'<span class="badge-p">'+r.role+'님 추천</span>':'')+'</div>'+
+      '<div style="font-size:11px;color:var(--t2)">'+r.bizName+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:4px"><span style="font-size:13px;color:var(--ac)">'+'⭐'.repeat(r.stars)+'</span>'+del+'</div>'+
+    '</div><div class="rt">'+r.text+'</div><div class="rd">'+r.date+'</div></div>';
+}
+function deleteReview(id){
+  if(!confirm('후기를 삭제하시겠어요?')) return;
+  S.reviews=S.reviews.filter(function(r){return r.id!==id;});
+  var el=document.getElementById('rv-'+id); if(el) el.remove();
+}
+
+// ── 찜 ──────────────────────────────────
+function isLiked(bizId){
+  if(!S.user) return false;
+  return S.likes.indexOf(S.user.phone+'_'+bizId)>=0;
+}
+function toggleLike(bizId,e){
+  if(e) e.stopPropagation();
+  if(!S.user){openM('choiceM');return;}
+  var key=S.user.phone+'_'+bizId;
+  var idx=S.likes.indexOf(key);
+  if(idx>=0) S.likes.splice(idx,1); else S.likes.push(key);
+  var btn=document.getElementById('like-'+bizId);
+  if(btn){btn.textContent=isLiked(bizId)?'❤️':'🤍';}
+}
+function getLikedBiz(){
+  if(!S.user) return [];
+  return S.biz.filter(function(b){return S.likes.indexOf(S.user.phone+'_'+b.id)>=0;});
+}
+
+// ── 필터/렌더 ────────────────────────────
+function doFilter(){
+  var kw=document.getElementById('kwInput').value.trim().toLowerCase();
+  var cat=document.getElementById('catSel').value;
+  var region=document.getElementById('regionInput').value.trim().toLowerCase();
+  var list=S.biz.filter(function(b){
+    // 운영+추천 모두 표시
+    var mk=!kw||(b.name.toLowerCase().includes(kw)||(b.kw||'').toLowerCase().includes(kw)||(b.addr||'').toLowerCase().includes(kw)||(b.desc||'').toLowerCase().includes(kw)||(b.owner||'').toLowerCase().includes(kw));
+    var mr=!region||((b.addr||'').toLowerCase().includes(region));
+    return mk&&mr&&(!cat||b.cat===cat);
+  });
+  document.getElementById('bizList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">검색 결과가 없어요<br><small style="font-size:11px">키워드·업종·지역을 변경해보세요</small></div>';
+  var chips='';
+  if(kw) chips+='<div class="chip">🔍 "'+kw+'" <span class="cx" onclick="clKw()">×</span></div>';
+  if(cat) chips+='<div class="chip">📂 '+cat+' <span class="cx" onclick="clCat()">×</span></div>';
+  if(region) chips+='<div class="chip">📍 '+region+' <span class="cx" onclick="clReg()">×</span></div>';
+  document.getElementById('chips').innerHTML=chips;
+}
+function clKw(){document.getElementById('kwInput').value='';doFilter();}
+function clCat(){document.getElementById('catSel').value='';doFilter();}
+function clReg(){document.getElementById('regionInput').value='';doFilter();}
+function clearAll(){document.getElementById('kwInput').value='';document.getElementById('catSel').value='';document.getElementById('regionInput').value='';doFilter();}
+
+function renderRec(){
+  var list=S.biz.filter(function(b){return b.type==='rec';});
+  document.getElementById('recList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">추천 사업체가 없어요<br><small>사업체 등록 시 "추천 사업체"로 등록해주세요</small></div>';
+}
+
+function renderMap(){
+  var CLS=['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
+  document.getElementById('mapPins').innerHTML=S.biz.slice(0,20).map(function(b,i){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:11px;height:11px;border-radius:50%;background:'+CLS[i%CLS.length]+';border:2px solid #fff"></div><div style="font-size:10px;color:var(--t2)">'+b.name+'</div></div>';
+  }).join('');
+  document.getElementById('mapList').innerHTML=S.biz.slice(0,30).map(function(b,i){
+    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;margin-bottom:7px;cursor:pointer" onclick="showDetail('+b.id+')">'+
+      '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
+      '<div style="flex:1"><div style="font-size:13px;font-weight:600">'+b.name+'</div>'+
+      '<div style="font-size:11px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:11px;text-decoration:none">📞</a>':'')+
+    '</div>';
+  }).join('');
+}
+
+function renderAllRv(){
+  var sorted=sortRv(S.reviews.slice());
+  document.getElementById('rvListAll').innerHTML=sorted.length?sorted.map(function(r){return rvHtml(r,false);}).join(''):'<div class="empty">아직 후기가 없어요</div>';
+}
+
+// ── 마이페이지 ───────────────────────────
+function renderMypage(){
+  var el=document.getElementById('mypageContent');
+  if(!S.user){
+    el.innerHTML='<div class="gate"><div style="font-size:32px;margin-bottom:10px">👤</div><div style="font-size:16px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:18px">성도 비즈니스 네트워크의<br>모든 기능을 이용하려면 로그인해주세요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
+    return;
+  }
+  var myBiz=S.biz.filter(function(b){return b.phone===S.user.phone;});
+  var myRvs=S.reviews.filter(function(r){return r.reviewer===S.user.name;});
+  var liked=getLikedBiz();
+  var warn=S.user.pw==='1111'?'<div class="pw-warn">⚠️ 초기 비밀번호(1111) 사용 중 <button onclick="openM(\'changePwM\')" style="background:#854f0b;color:#fff;border:none;border-radius:8px;padding:3px 10px;font-size:11px;cursor:pointer;margin-left:6px">변경하기</button></div>':'';
+  var html=warn+
+    '<div class="pc"><div class="prow">'+
+      '<div class="pav">'+S.user.name[0]+'</div>'+
+      '<div style="flex:1"><div style="font-size:16px;font-weight:700">'+S.user.name+'</div><div style="font-size:12px;color:var(--t2);margin-top:3px">'+S.user.role+' · 사랑하는교회 '+S.user.church+'</div></div>'+
+      '<div style="display:flex;gap:5px">'+
+        '<button onclick="loadEdit();openM(\'editM\')" style="padding:5px 10px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-weight:600">편집</button>'+
+        '<button onclick="openM(\'changePwM\')" style="padding:5px 10px;background:#854f0b;color:#fff;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-weight:600">🔑</button>'+
+      '</div></div>'+
+      '<div class="pgrid">'+
+        '<div class="pi"><div class="pl2">전화번호</div><div class="pv">'+S.user.phone+'</div></div>'+
+        '<div class="pi"><div class="pl2">등록교회</div><div class="pv">'+S.user.church+'</div></div>'+
+        (S.user.no?'<div class="pi"><div class="pl2">교번</div><div class="pv">'+S.user.no+'</div></div>':'')+
+        '<div class="pi"><div class="pl2">직분</div><div class="pv">'+S.user.role+'</div></div>'+
+      '</div></div>'+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:9px">내 사업체 ('+myBiz.length+'개)</div>'+
+    (myBiz.length?myBiz.map(function(b){
+      return '<div class="bc" onclick="showDetail('+b.id+')">'+
+        '<div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div>'+
+        '<div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div>'+
+        '<button onclick="event.stopPropagation();openEditBiz('+b.id+')" style="padding:5px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:8px;font-size:11px;cursor:pointer;flex-shrink:0">수정</button>'+
+      '</div></div>';
+    }).join(''):'<div class="empty" style="padding:10px">등록된 사업체 없음</div>')+
+    '<div style="display:flex;gap:8px;margin-top:8px;margin-bottom:4px">'+
+      '<button onclick="openAddBiz(\'own\')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:12px;cursor:pointer;font-weight:600">🏪 운영업체 추가</button>'+
+      '<button onclick="openAddBiz(\'rec\')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:12px;cursor:pointer;font-weight:600">⭐ 추천업체 추가</button>'+
+    '</div>'+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin:13px 0 9px">❤️ 찜한 사업체 ('+liked.length+'개)</div>'+
+    (liked.length?liked.map(function(b){return '<div class="bc" onclick="showDetail('+b.id+')"><div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div><div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div></div></div>';}).join(''):'<div class="empty" style="padding:10px">찜한 사업체 없음</div>')+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin:13px 0 9px">내 후기 ('+myRvs.length+'개)</div>'+
+    (myRvs.length?myRvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty" style="padding:13px">작성한 후기 없음</div>')+
+    '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:13px;cursor:pointer;margin-top:15px;font-weight:500">로그아웃</button>';
+  el.innerHTML=html;
+}
+
+// ── 관리자 ───────────────────────────────
+var adminSection='stats';
+function isAdmin(){return S.user&&(S.user.phone==='010-8388-0848'||S.user.role==='목사'||S.user.role==='장로');}
+function checkAdminTab(){
+  var t=document.getElementById('adminTab');
+  if(t) t.style.display=isAdmin()?'block':'none';
+}
+
+function renderAdmin(){
+  if(!isAdmin()){document.getElementById('adminContent').innerHTML='<div class="empty">관리자 권한이 없습니다</div>';return;}
+  var el=document.getElementById('adminContent');
+  var secs=[['stats','📊 통계'],['members','👥 회원'],['biz','🏪 사업체'],['reviews','💬 후기'],['csv','📥 업로드']];
+  var tabs='<div class="admin-tab">';
+  secs.forEach(function(s){
+    tabs+='<button class="at'+(adminSection===s[0]?' on':'')+'" onclick="adminSection=\''+s[0]+'\';renderAdmin()">'+s[1]+'</button>';
+  });
+  tabs+='</div>';
+
+  var body='';
+  if(adminSection==='stats'){
+    body+='<div class="stat-grid">'+
+      '<div class="stat-card"><div class="stat-num">'+S.members.length+'</div><div class="stat-label">전체 회원</div></div>'+
+      '<div class="stat-card"><div class="stat-num">'+S.biz.length+'</div><div class="stat-label">등록 사업체</div></div>'+
+      '<div class="stat-card"><div class="stat-num">'+S.reviews.length+'</div><div class="stat-label">전체 후기</div></div>'+
+      '<div class="stat-card"><div class="stat-num">'+S.likes.length+'</div><div class="stat-label">찜 횟수</div></div>'+
+    '</div>';
+    body+='<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:9px">업종별 사업체</div>';
+    var cc={};
+    S.biz.forEach(function(b){cc[b.cat]=(cc[b.cat]||0)+1;});
+    Object.entries(cc).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){
+      body+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;margin-bottom:6px">'+
+        '<span style="font-size:16px">'+(EM[e[0]]||'📌')+'</span>'+
+        '<span style="flex:1;font-size:13px;font-weight:500">'+e[0]+'</span>'+
+        '<span style="font-size:13px;font-weight:700;color:var(--p)">'+e[1]+'개</span></div>';
+    });
+  } else if(adminSection==='members'){
+    body='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">총 '+S.members.length+'명</div>';
+    S.members.forEach(function(m){
+      body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+' <span style="font-size:11px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
+        '<button class="admin-del" onclick="adminDelMember(\''+m.phone+'\')">삭제</button></div>';
+    });
+  } else if(adminSection==='biz'){
+    body='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">총 '+S.biz.length+'개</div>';
+    S.biz.forEach(function(b){
+      body+='<div class="admin-row"><div style="font-size:18px;margin-right:4px">'+(EM[b.cat]||'🏪')+'</div>'+
+        '<div class="admin-row-info"><div class="admin-row-name">'+b.name+' <span style="font-size:10px;color:var(--p)">'+b.cat+'</span></div><div class="admin-row-sub">'+b.owner+' · '+(b.addr||b.region||'')+'</div></div>'+
+        '<button class="admin-del" onclick="adminDelBiz('+b.id+')">삭제</button></div>';
+    });
+  } else if(adminSection==='reviews'){
+    var sorted=sortRv(S.reviews.slice());
+    body='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">총 '+sorted.length+'개</div>';
+    sorted.forEach(function(r){
+      body+='<div class="admin-row" style="align-items:flex-start"><div class="admin-row-info">'+
+        '<div class="admin-row-name">'+r.reviewer+' → '+r.bizName+' '+'⭐'.repeat(r.stars)+'</div>'+
+        '<div class="admin-row-sub" style="margin-top:4px;line-height:1.5">'+r.text+'</div></div>'+
+        '<button class="admin-del" onclick="adminDelReview('+r.id+')">삭제</button></div>';
+    });
+  } else if(adminSection==='csv'){
+    body='<p style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.7">CSV 파일로 회원과 사업체를 일괄 등록할 수 있어요.</p>'+
+      '<button class="bp" onclick="closeM(\'skip\');openM(\'csvM\')">📥 CSV 업로드 열기</button>';
+  }
+  el.innerHTML=tabs+body;
+}
+
+function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});renderAdmin();}
+function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});renderAdmin();doFilter();}
+function adminDelReview(id){if(!confirm('후기를 삭제하시겠어요?'))return;S.reviews=S.reviews.filter(function(r){return r.id!==id;});renderAdmin();}
+
+// ── 회원가입/로그인 ──────────────────────
+function onHdBtn(){S.user?(loadEdit(),openM('editM')):openM('choiceM');}
+
+function checkBizMatch(){
+  var name=document.getElementById('jName').value.trim();
+  var phone=document.getElementById('jPhone').value.trim();
+  var mb=document.getElementById('matchBox');
+  var ml=document.getElementById('matchList');
+  if(!name||phone.length<9){mb.style.display='none';return;}
+  var np=phone.replace(/[^0-9]/g,'');
+  var matches=S.bizDB.filter(function(b){
+    var bp=(b.ownerPhone||b.phone||'').replace(/[^0-9]/g,'');
+    return b.ownerName===name&&bp===np;
+  });
+  if(!matches.length){mb.style.display='none';return;}
+  ml.innerHTML=matches.map(function(b){
+    return '<div class="match-item"><div><div style="font-size:13px;font-weight:600">'+b.name+'</div><div style="font-size:11px;color:var(--t2)">'+b.cat+'</div></div></div>';
+  }).join('');
+  mb.style.display='block';
+}
+
+function doJoin(){
+  var name=document.getElementById('jName').value.trim();
+  var phone=document.getElementById('jPhone').value.trim();
+  var pw=document.getElementById('jPw').value;
+  var church=document.getElementById('jChurch').value;
+  var role=document.getElementById('jRole').value;
+  var no=document.getElementById('jNo').value.trim();
+  var err=document.getElementById('joinErr');
+  if(!name||!phone||!pw||!church||!role){err.textContent='필수 항목을 모두 입력해주세요';err.style.display='block';return;}
+  if(pw.length<6){err.textContent='비밀번호는 6자 이상이어야 해요';err.style.display='block';return;}
+  if(S.members.find(function(m){return m.phone===phone;})){err.textContent='이미 가입된 전화번호입니다';err.style.display='block';return;}
+  err.style.display='none';
+  var m={name:name,phone:phone,pw:pw,church:church,role:role,no:no};
+  S.members.push(m); S.user=m;
+  document.getElementById('loginBtn').textContent=name+' '+role;
+  checkAdminTab();
+  var np=phone.replace(/[^0-9]/g,'');
+  var matched=S.bizDB.filter(function(b){
+    var bp=(b.ownerPhone||b.phone||'').replace(/[^0-9]/g,'');
+    return b.ownerName===name&&bp===np;
+  });
+  var linked=0;
+  matched.forEach(function(b){
+    if(!S.biz.find(function(x){return x.id===b.id;})){
+      b.phone=phone;b.ownerRole=role;b.ownerChurch=church;b.type='own';
+      S.biz.push(b);linked++;
+    } else {
+      var ex=S.biz.find(function(x){return x.id===b.id;});
+      ex.phone=phone;ex.ownerRole=role;ex.ownerChurch=church;ex.type='own';
+    }
+  });
+  closeM('joinM');
+  var msg='가입 완료! '+name+' '+role+'님 환영합니다!';
+  if(linked>0) msg+='\n\n🏪 사업체 '+linked+'개가 자동으로 연결되었습니다!';
+  alert(msg);
+  renderMypage(); doFilter();
+}
+
+function doLogin(){
+  var phone=document.getElementById('lPhone').value.trim();
+  var pw=document.getElementById('lPw').value;
+  var err=document.getElementById('loginErr');
+  if(!phone||!pw){err.textContent='전화번호와 비밀번호를 입력해주세요';err.style.display='block';return;}
+  var m=S.members.find(function(x){return x.phone===phone&&x.pw===pw;});
+  if(!m){err.textContent='전화번호 또는 비밀번호가 맞지 않아요';err.style.display='block';return;}
+  err.style.display='none';
+  S.user=m;
+  if(document.getElementById('rememberMe').checked){try{localStorage.setItem('savedLogin',JSON.stringify({phone:phone,pw:pw}));}catch(e){}}
+  document.getElementById('loginBtn').textContent=m.name+' '+m.role;
+  checkAdminTab();
+  closeM('loginM'); renderMypage();
+}
+
+function loadEdit(){
+  if(!S.user) return;
+  document.getElementById('epName').value=S.user.name;
+  document.getElementById('epPhone').value=S.user.phone;
+  document.getElementById('epChurch').value=S.user.church;
+  document.getElementById('epRole').value=S.user.role;
+  document.getElementById('epNo').value=S.user.no||'';
+}
+function saveProfile(){
+  var name=document.getElementById('epName').value.trim();
+  if(!name){alert('이름은 필수입니다');return;}
+  S.user.name=name;S.user.phone=document.getElementById('epPhone').value.trim();
+  S.user.church=document.getElementById('epChurch').value;S.user.role=document.getElementById('epRole').value;
+  S.user.no=document.getElementById('epNo').value.trim();
+  document.getElementById('loginBtn').textContent=name+' '+S.user.role;
+  closeM('editM');renderMypage();alert('저장되었습니다');
+}
+function doChangePw(){
+  var old=document.getElementById('cpOld').value;
+  var n1=document.getElementById('cpNew').value;
+  var n2=document.getElementById('cpNew2').value;
+  var err=document.getElementById('cpErr');
+  if(!old||!n1||!n2){err.textContent='모든 항목을 입력해주세요';err.style.display='block';return;}
+  if(S.user.pw!==old){err.textContent='현재 비밀번호가 맞지 않아요';err.style.display='block';return;}
+  if(n1.length<6){err.textContent='새 비밀번호는 6자 이상이어야 해요';err.style.display='block';return;}
+  if(n1!==n2){err.textContent='새 비밀번호가 일치하지 않아요';err.style.display='block';return;}
+  err.style.display='none';
+  S.user.pw=n1;
+  var idx=S.members.findIndex(function(m){return m.phone===S.user.phone;});
+  if(idx>=0) S.members[idx].pw=n1;
+  closeM('changePwM');['cpOld','cpNew','cpNew2'].forEach(function(id){document.getElementById(id).value='';});
+  alert('비밀번호가 변경되었습니다!');renderMypage();
+}
+
+// ── 사업체 등록/수정/삭제 ────────────────
+function requireLogin(type){
+  if(!S.user){
+    document.getElementById('gateTx').textContent=type==='biz'?'사업체 등록은 성도만 가능해요':'후기 작성은 성도만 가능해요';
+    document.getElementById('gateDesc').textContent=type==='biz'?'회원가입 후 내 사업을 소개해보세요!':'회원가입 후 경험을 공유해주세요!';
+    openM('gateM');return;
+  }
+  if(type==='biz'||type==='rec'){openAddBiz(type==='rec'?'rec':'own');}
+  else{
+    document.getElementById('rvBiz').innerHTML=S.biz.map(function(b){return '<option value="'+b.id+'">'+b.name+'</option>';}).join('');
+    openM('addRvM');
+  }
+}
+function openAddBiz(defaultType){
+  document.getElementById('bizModalTitle').textContent='사업체 등록';
+  document.getElementById('editBizId').value='';
+  ['bName','bPhone','bRegNo','bAddr','bWeb','bKw','bDesc'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('bCat').value='';
+  document.getElementById('bType').value=defaultType||'own';
+  document.getElementById('bPhone').value=S.user?S.user.phone:'';
+  document.getElementById('bizErr').style.display='none';
+  openM('addBizM');
+}
+function openEditBiz(bizId){
+  var b=S.biz.find(function(x){return x.id===bizId;});
+  if(!b) return;
+  document.getElementById('bizModalTitle').textContent='사업체 수정';
+  document.getElementById('editBizId').value=bizId;
+  document.getElementById('bType').value=b.type||'own';
+  document.getElementById('bName').value=b.name||'';
+  document.getElementById('bCat').value=b.cat||'';
+  document.getElementById('bPhone').value=b.phone||b.ownerPhone||'';
+  document.getElementById('bRegNo').value=b.regNo||'';
+  document.getElementById('bAddr').value=b.addr||'';
+  document.getElementById('bWeb').value=b.web||'';
+  document.getElementById('bKw').value=b.kw||'';
+  document.getElementById('bDesc').value=b.desc||'';
+  document.getElementById('bizErr').style.display='none';
+  openM('addBizM');
+}
+function saveBiz(){
+  var name=document.getElementById('bName').value.trim();
+  var cat=document.getElementById('bCat').value;
+  var phone=document.getElementById('bPhone').value.trim();
+  var addr=document.getElementById('bAddr').value.trim();
+  var err=document.getElementById('bizErr');
+  if(!name||!cat||!addr){err.textContent='상호명, 업종, 주소는 필수입니다';err.style.display='block';return;}
+  err.style.display='none';
+  var editId=document.getElementById('editBizId').value;
+  if(editId){
+    var b=S.biz.find(function(x){return String(x.id)===String(editId);});
+    if(b){
+      b.type=document.getElementById('bType').value;b.name=name;b.cat=cat;
+      b.phone=phone;b.regNo=document.getElementById('bRegNo').value.trim();
+      b.addr=addr;b.web=document.getElementById('bWeb').value.trim();
+      b.kw=document.getElementById('bKw').value.trim();b.desc=document.getElementById('bDesc').value.trim();
+    }
+    closeM('addBizM');doFilter();renderMypage();alert('사업체 정보가 수정되었습니다!');
+  } else {
+    S.biz.push({id:Date.now(),name:name,cat:cat,type:document.getElementById('bType').value,
+      owner:S.user.name,ownerRole:S.user.role,ownerChurch:S.user.church,phone:phone,
+      regNo:document.getElementById('bRegNo').value.trim(),addr:addr,
+      web:document.getElementById('bWeb').value.trim(),kw:document.getElementById('bKw').value.trim(),
+      desc:document.getElementById('bDesc').value.trim()});
+    closeM('addBizM');doFilter();alert('사업체가 등록되었습니다!');
+  }
+}
+function deleteBiz(bizId){
+  if(!confirm('사업체를 삭제하시겠어요?'))return;
+  S.biz=S.biz.filter(function(b){return b.id!==bizId;});
+  goBack();
+}
+function addReview(){
+  var bizId=parseInt(document.getElementById('rvBiz').value);
+  var biz=S.biz.find(function(b){return b.id===bizId;});
+  var text=document.getElementById('rvText').value.trim();
+  if(!text){alert('후기 내용을 입력해주세요');return;}
+  S.reviews.unshift({id:Date.now(),bizId:bizId,bizName:biz.name,reviewer:S.user.name,role:S.user.role,stars:parseInt(document.getElementById('rvStars').value),text:text,date:new Date().toISOString().slice(0,10)});
+  closeM('addRvM');renderAllRv();document.getElementById('rvText').value='';alert('후기가 등록되었습니다!');
+}
+
+// ── CSV 처리 ─────────────────────────────
+function parseCSV(text){
+  return text.split(/\r?\n/).map(function(line){
+    var cols=[],cur='',inQ=false;
+    for(var i=0;i<line.length;i++){
+      var ch=line[i];
+      if(ch==='"'){inQ=!inQ;}
+      else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
+      else{cur+=ch;}
+    }
+    cols.push(cur.trim());return cols;
+  });
+}
+function handleDrop(e){e.preventDefault();document.getElementById('dropZone').style.borderColor='';var f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function handleFile(file){
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var text=e.target.result;
+      if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
+      var rows=parseCSV(text);
+      var dataRows=rows.slice(2).filter(function(r){return r[0]&&String(r[0]).trim();});
+      S.csvParsed=dataRows.map(function(r){
+        return {name:String(r[0]||'').trim(),phone:String(r[1]||'').trim(),pw:(String(r[2]||'').trim())||'1111',
+          church:String(r[3]||'').trim(),role:String(r[4]||'성도').trim(),no:'',
+          biz_cat:String(r[5]||'').trim(),biz_name:String(r[6]||'').trim(),
+          biz_addr:String(r[7]||'').trim(),biz_desc:String(r[8]||'').trim()};
+      });
+      showCsvPreview();
+    }catch(err){alert('파일을 읽을 수 없어요: '+err);}
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function showCsvPreview(){
+  var valid=S.csvParsed.filter(function(m){return m.name&&m.phone;});
+  var invalid=S.csvParsed.filter(function(m){return !m.name||!m.phone;});
+  document.getElementById('csvCount').textContent='총 '+S.csvParsed.length+'명 인식 · 유효 '+valid.length+'명'+(invalid.length?' · 누락 '+invalid.length+'명':'');
+  var h='<table style="width:100%;border-collapse:collapse"><thead><tr style="background:var(--bg2)">'+
+    ['이름','전화번호','교회','직분','업종','상호','상태'].map(function(t){return '<th style="padding:6px 7px;text-align:left;border-bottom:1px solid var(--bd);font-size:11px;white-space:nowrap">'+t+'</th>';}).join('')+
+    '</tr></thead><tbody>';
+  S.csvParsed.forEach(function(m){
+    var missing=!m.name||!m.phone;
+    var dup=S.members.find(function(ex){return ex.phone===m.phone;});
+    var status=missing?'<span style="color:#a32d2d">✗</span>':dup?'<span style="color:#854f0b">기존</span>':'<span style="color:#0f6e56">✓</span>';
+    var bg=missing?'#fff5f5':dup?'#fffdf5':'';
+    h+='<tr style="background:'+bg+'">'+[m.name,m.phone,m.church,m.role,m.biz_cat,m.biz_name].map(function(v){return '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:11px">'+(v||'-')+'</td>';}).join('')+'<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:11px">'+status+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('csvTable').innerHTML=h;
+  document.getElementById('csvPreview').style.display='block';
+}
+function doUpload(){
+  var addedM=0,addedB=0,skipped=0;
+  S.csvParsed.forEach(function(m){
+    if(!m.name||!m.phone){skipped++;return;}
+    var member=S.members.find(function(ex){return ex.phone===m.phone;});
+    if(!member){member={name:m.name,phone:m.phone,pw:m.pw||'1111',church:m.church,role:m.role,no:''};S.members.push(member);addedM++;}
+    if(m.biz_name){
+      var np=m.phone.replace(/[^0-9]/g,'');
+      var exists=S.bizDB.find(function(b){var bp=(b.ownerPhone||b.phone||'').replace(/[^0-9]/g,'');return b.ownerName===m.name&&bp===np&&b.name===m.biz_name&&b.cat===m.biz_cat;});
+      if(!exists){
+        var nb={id:Date.now()+Math.random(),name:m.biz_name,cat:m.biz_cat||'기타',type:'own',
+          owner:m.name,ownerName:m.name,ownerPhone:m.phone,ownerRole:m.role,ownerChurch:m.church,
+          phone:m.phone,addr:m.biz_addr,regNo:'',web:'',kw:'',desc:m.biz_desc};
+        S.bizDB.push(nb);
+        var dupBiz=S.biz.find(function(b){return b.name===nb.name&&b.phone===nb.phone&&b.cat===nb.cat;});
+        if(!dupBiz){S.biz.push(nb);addedB++;}
+      }
+    }
+  });
+  closeM('csvM');S.csvParsed=[];document.getElementById('csvPreview').style.display='none';document.getElementById('csvInput').value='';
+  alert('업로드 완료!\n\n회원 '+addedM+'명 등록\n사업체 '+addedB+'개 등록'+(skipped?'\n('+skipped+'건 건너뜀)':''));
+  doFilter();renderMypage();
+}
+
+function doLogout(){
+  if(confirm('로그아웃 하시겠어요?')){
+    S.user=null;try{localStorage.removeItem('savedLogin');}catch(e){}
+    document.getElementById('loginBtn').textContent='로그인';
+    checkAdminTab();renderMypage();
+  }
+}
+function openM(id){document.getElementById(id).classList.add('op');}
+function closeM(id){var el=document.getElementById(id);if(el)el.classList.remove('op');}
+document.querySelectorAll('.ov').forEach(function(el){el.addEventListener('click',function(e){if(e.target===el)el.classList.remove('op');});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.ov.op').forEach(function(el){el.classList.remove('op');});});
+
+try{
+  var saved=localStorage.getItem('savedLogin');
+  if(saved){var d=JSON.parse(saved);var m=S.members.find(function(x){return x.phone===d.phone&&x.pw===d.pw;});if(m){S.user=m;document.getElementById('loginBtn').textContent=m.name+' '+m.role;checkAdminTab();}}
+}catch(e){}
+
+initSelects();
+doFilter();
+</script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyBwbzl-zkuv1cH5c3Lu6ucrnYQuoJ97c8Q",
+      authDomain: "church-biz.firebaseapp.com",
+      projectId: "church-biz",
+      storageBucket: "church-biz.firebasestorage.app",
+      messagingSenderId: "913903248333",
+      appId: "1:913903248333:web:92e694cbf45c5358221a84"
+    });
+    var db = firebase.firestore();
+  </script>
+  <script src="church_biz_app.js"></script>
+</body>
+</html>
