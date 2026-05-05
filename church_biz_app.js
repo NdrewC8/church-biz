@@ -168,8 +168,8 @@ function bizCardHtml(b) {
     : '<div class="bi">'+(EM[b.cat]||'🏪')+'</div>';
   // 전화 버튼: 휴대폰(초록) + 일반전화(파랑) 둘 다
   var telBtns='';
-  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📱</a>';
-  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:#2980b9;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>';
+  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:#27ae60;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📱</a>';
+  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:#7f8c8d;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>';
   return '<div class="bc" onclick="showDetail('+b.id+')">'+
     typeBadge+
     '<div class="bh">'+cardThumb+
@@ -239,8 +239,8 @@ function showDetail(bizId) {
   if(tel||btel){
     if(tel&&btel){
       html+='<div style="display:flex;gap:8px;margin-bottom:10px">'+
-        '<a class="call-btn" href="tel:'+tel+'" style="flex:1;margin-bottom:0">📱 휴대폰</a>'+
-        '<a class="call-btn" href="tel:'+btel+'" style="flex:1;margin-bottom:0;background:#2980b9">📞 사업체</a>'+
+        '<a class="call-btn" href="tel:'+tel+'" style="flex:1;margin-bottom:0;background:#27ae60">📱 휴대폰</a>'+
+        '<a class="call-btn" href="tel:'+btel+'" style="flex:1;margin-bottom:0;background:#7f8c8d">📞 사업체</a>'+
       '</div>';
     } else {
       html+='<a class="call-btn" href="tel:'+(tel||btel)+'">'+(tel?'📱 휴대폰':'📞 사업체 전화')+'</a>';
@@ -350,7 +350,7 @@ function renderMap(){
       '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
       '<div style="flex:1"><div style="font-size:15px;font-weight:600">'+b.name+'</div>'+
       '<div style="font-size:13px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
-      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:13px;text-decoration:none">📞</a>':'')+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#27ae60;color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:13px;text-decoration:none">📱</a>':'')+
     '</div>';
   }).join('');
 }
@@ -366,117 +366,106 @@ function renderNotice(){
   var el = document.getElementById('noticeContent');
   var admin = isAdmin();
   var notices = (S.notices||[]).slice().sort(function(a,b){ return b.id - a.id; });
-
   var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">' +
     '<div style="font-size:18px;font-weight:700">📢 공지사항</div>' +
     (admin ? '<button onclick="openNoticeWrite()" style="padding:7px 14px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">+ 글쓰기</button>' : '') +
   '</div>';
-
   if(!notices.length){
     html += '<div class="empty" style="padding:40px 0">등록된 공지가 없어요</div>';
   } else {
     notices.forEach(function(n){
       var isPinned = n.pinned;
-      html += '<div style="background:#fff;border:1.5px solid ' + (isPinned?'var(--p)':'var(--bd)') + ';border-radius:14px;padding:14px 15px;margin-bottom:10px;cursor:pointer" onclick="openNoticeDetail(' + n.id + ')">' +
+      html += '<div style="background:#fff;border:1.5px solid '+(isPinned?'var(--p)':'var(--bd)')+';border-radius:14px;padding:14px 15px;margin-bottom:10px;cursor:pointer" onclick="openNoticeDetail('+n.id+')">' +
         '<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">' +
-          (isPinned ? '<span style="background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px">📌 공지</span>' : '') +
-          '<span style="font-size:15px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(n.title) + '</span>' +
+          (isPinned?'<span style="background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px">📌 공지</span>':'') +
+          '<span style="font-size:15px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escHtml(n.title)+'</span>' +
         '</div>' +
-        '<div style="font-size:13px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px">' + escHtml(n.content||'').replace(/\n/g,' ') + '</div>' +
+        '<div style="font-size:13px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px">'+escHtml(n.content||'').replace(/\n/g,' ')+'</div>' +
         '<div style="display:flex;align-items:center;justify-content:space-between">' +
-          '<span style="font-size:12px;color:#aaa">' + fmtDate(n.id) + ' · ' + escHtml(n.author) + '</span>' +
-          (admin ? '<div style="display:flex;gap:6px" onclick="event.stopPropagation()">' +
-            '<button onclick="openNoticeEdit(' + n.id + ')" style="padding:3px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:7px;font-size:12px;cursor:pointer">수정</button>' +
-            '<button onclick="deleteNotice(' + n.id + ')" style="padding:3px 10px;background:#fee2e2;color:#dc2626;border:1px solid #dc2626;border-radius:7px;font-size:12px;cursor:pointer">삭제</button>' +
-          '</div>' : '') +
+          '<span style="font-size:12px;color:#aaa">'+fmtDate(n.id)+' · '+escHtml(n.author)+'</span>' +
+          (admin?'<div style="display:flex;gap:6px" onclick="event.stopPropagation()">'+
+            '<button onclick="openNoticeEdit('+n.id+')" style="padding:3px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:7px;font-size:12px;cursor:pointer">수정</button>'+
+            '<button onclick="deleteNotice('+n.id+')" style="padding:3px 10px;background:#fee2e2;color:#dc2626;border:1px solid #dc2626;border-radius:7px;font-size:12px;cursor:pointer">삭제</button>'+
+          '</div>':'') +
         '</div>' +
       '</div>';
     });
   }
   el.innerHTML = html;
 }
-
 function fmtDate(ts){
-  var d = new Date(ts);
-  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+  var d=new Date(ts);
+  return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
 }
-
 function escHtml(str){
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
 function openNoticeDetail(id){
-  var n = S.notices.find(function(x){ return x.id===id; });
+  var n=S.notices.find(function(x){return x.id===id;});
   if(!n) return;
-  var admin = isAdmin();
-  var el = document.getElementById('noticeContent');
-  el.innerHTML =
-    '<button onclick="renderNotice()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 목록으로</button>' +
-    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px">' +
-      (n.pinned ? '<div style="display:inline-block;background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:10px">📌 공지</div>' : '') +
-      '<div style="font-size:18px;font-weight:700;margin-bottom:8px">' + escHtml(n.title) + '</div>' +
-      '<div style="font-size:12px;color:#aaa;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bd)">' + fmtDate(n.id) + ' · ' + escHtml(n.author) + '</div>' +
-      '<div style="font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--t)">' + escHtml(n.content) + '</div>' +
-    '</div>' +
-    (admin ? '<div style="display:flex;gap:8px;margin-top:12px">' +
-      '<button onclick="openNoticeEdit(' + n.id + ')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">수정</button>' +
-      '<button onclick="deleteNotice(' + n.id + ')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">삭제</button>' +
-    '</div>' : '');
+  var admin=isAdmin();
+  var el=document.getElementById('noticeContent');
+  el.innerHTML=
+    '<button onclick="renderNotice()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 목록으로</button>'+
+    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px">'+
+      (n.pinned?'<div style="display:inline-block;background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:10px">📌 공지</div>':'')+
+      '<div style="font-size:18px;font-weight:700;margin-bottom:8px">'+escHtml(n.title)+'</div>'+
+      '<div style="font-size:12px;color:#aaa;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bd)">'+fmtDate(n.id)+' · '+escHtml(n.author)+'</div>'+
+      '<div style="font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--t)">'+escHtml(n.content)+'</div>'+
+    '</div>'+
+    (admin?'<div style="display:flex;gap:8px;margin-top:12px">'+
+      '<button onclick="openNoticeEdit('+n.id+')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">수정</button>'+
+      '<button onclick="deleteNotice('+n.id+')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">삭제</button>'+
+    '</div>':'');
 }
-
 function openNoticeWrite(){
-  if(!isAdmin()){ alert('관리자만 공지를 작성할 수 있어요.'); return; }
+  if(!isAdmin()){alert('관리자만 공지를 작성할 수 있어요.');return;}
   showNoticeForm(null);
 }
 function openNoticeEdit(id){
   if(!isAdmin()) return;
-  var n = S.notices.find(function(x){ return x.id===id; });
+  var n=S.notices.find(function(x){return x.id===id;});
   showNoticeForm(n);
 }
-
 function showNoticeForm(n){
-  var el = document.getElementById('noticeContent');
-  var isEdit = !!n;
-  el.innerHTML =
-    '<button onclick="renderNotice()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 취소</button>' +
-    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px">' +
-      '<div style="font-size:16px;font-weight:700;margin-bottom:14px">' + (isEdit?'공지 수정':'새 공지 작성') + '</div>' +
-      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">제목</div>' +
-      '<input id="noticeTitleInput" value="' + escHtml(isEdit?n.title:'') + '" placeholder="제목을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;margin-bottom:12px;font-family:inherit">' +
-      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">내용</div>' +
-      '<textarea id="noticeContentInput" placeholder="내용을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;min-height:160px;resize:vertical;font-family:inherit;line-height:1.7">' + escHtml(isEdit?n.content:'') + '</textarea>' +
-      '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:16px">' +
-        '<input type="checkbox" id="noticePinned" ' + (isEdit&&n.pinned?'checked':'') + ' style="width:16px;height:16px;cursor:pointer">' +
-        '<label for="noticePinned" style="font-size:14px;cursor:pointer">📌 상단 고정 (중요 공지)</label>' +
-      '</div>' +
-      '<button onclick="saveNotice(' + (isEdit?n.id:'null') + ')" style="width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer">' + (isEdit?'수정 완료':'등록하기') + '</button>' +
+  var el=document.getElementById('noticeContent');
+  var isEdit=!!n;
+  el.innerHTML=
+    '<button onclick="renderNotice()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 취소</button>'+
+    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px">'+
+      '<div style="font-size:16px;font-weight:700;margin-bottom:14px">'+(isEdit?'공지 수정':'새 공지 작성')+'</div>'+
+      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">제목</div>'+
+      '<input id="noticeTitleInput" value="'+escHtml(isEdit?n.title:'')+'" placeholder="제목을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;margin-bottom:12px;font-family:inherit">'+
+      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">내용</div>'+
+      '<textarea id="noticeContentInput" placeholder="내용을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;min-height:160px;resize:vertical;font-family:inherit;line-height:1.7">'+escHtml(isEdit?n.content:'')+'</textarea>'+
+      '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:16px">'+
+        '<input type="checkbox" id="noticePinned" '+(isEdit&&n.pinned?'checked':'')+' style="width:16px;height:16px;cursor:pointer">'+
+        '<label for="noticePinned" style="font-size:14px;cursor:pointer">📌 상단 고정 (중요 공지)</label>'+
+      '</div>'+
+      '<button onclick="saveNotice('+(isEdit?n.id:'null')+')" style="width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer">'+(isEdit?'수정 완료':'등록하기')+'</button>'+
     '</div>';
 }
-
 function saveNotice(editId){
-  var title = (document.getElementById('noticeTitleInput').value||'').trim();
-  var content = (document.getElementById('noticeContentInput').value||'').trim();
-  var pinned = document.getElementById('noticePinned').checked;
-  if(!title){ alert('제목을 입력해주세요.'); return; }
-  if(!content){ alert('내용을 입력해주세요.'); return; }
-
-  if(editId && editId !== null){
-    var n = S.notices.find(function(x){ return x.id===editId; });
-    if(n){ n.title=title; n.content=content; n.pinned=pinned; }
+  var title=(document.getElementById('noticeTitleInput').value||'').trim();
+  var content=(document.getElementById('noticeContentInput').value||'').trim();
+  var pinned=document.getElementById('noticePinned').checked;
+  if(!title){alert('제목을 입력해주세요.');return;}
+  if(!content){alert('내용을 입력해주세요.');return;}
+  if(editId&&editId!==null){
+    var n=S.notices.find(function(x){return x.id===editId;});
+    if(n){n.title=title;n.content=content;n.pinned=pinned;}
   } else {
-    S.notices.push({ id: Date.now(), title:title, content:content, pinned:pinned, author: S.user.name });
+    S.notices.push({id:Date.now(),title:title,content:content,pinned:pinned,author:S.user.name});
   }
   saveToFirebase();
   renderNotice();
 }
-
 function deleteNotice(id){
   if(!confirm('이 공지를 삭제하시겠어요?')) return;
-  S.notices = S.notices.filter(function(n){ return n.id !== id; });
+  S.notices=S.notices.filter(function(n){return n.id!==id;});
   saveToFirebase();
   renderNotice();
 }
-
 // ── 마이페이지 ───────────────────────────
 function renderMypage(){
   var el=document.getElementById('mypageContent');
@@ -524,7 +513,8 @@ function renderMypage(){
     '<div style="font-size:15px;font-weight:600;color:var(--t2);margin:13px 0 9px">내 후기 ('+myRvs.length+'개)</div>'+
     (myRvs.length?myRvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty" style="padding:13px">작성한 후기 없음</div>')+
     '<a href="https://open.kakao.com/o/sf0Mu1si" target="_blank" style="display:block;width:100%;padding:10px;background:#FAE100;color:#3A1D1D;border-radius:11px;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box;margin-top:10px">💬 카카오 오픈채팅으로 문의하기</a>'+
-    '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:15px;cursor:pointer;margin-top:8px;font-weight:500">로그아웃</button>';
+    '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:15px;cursor:pointer;margin-top:8px;font-weight:500">로그아웃</button>'+
+    '<button onclick="confirmWithdraw()" style="width:100%;padding:10px;background:transparent;color:#bbb;border:1.5px solid #e0e0e0;border-radius:11px;font-size:13px;cursor:pointer;margin-top:6px;font-weight:400">회원탈퇴</button>';
   el.innerHTML=html;
 }
 
@@ -1209,6 +1199,29 @@ function doUpload(){
   doFilter();renderMypage();
 }
 
+
+function confirmWithdraw(){
+  if(!S.user) return;
+  var name = S.user.name;
+  if(!confirm('정말 탈퇴하시겠어요?\n\n탈퇴 시 회원 정보와 등록하신 사업체가 모두 삭제됩니다.')) return;
+  var confirm2 = prompt('탈퇴를 확인하려면 이름("' + name + '")을 입력해주세요.');
+  if(confirm2 !== name){ alert('이름이 일치하지 않아요. 탈퇴가 취소되었습니다.'); return; }
+  S.members = S.members.filter(function(m){ return m.phone !== S.user.phone; });
+  S.biz = S.biz.filter(function(b){
+    var up = (S.user.phone||'').replace(/[^0-9]/g,'');
+    var bp = (b.phone||'').replace(/[^0-9]/g,'');
+    var bop = (b.ownerPhone||'').replace(/[^0-9]/g,'');
+    return !(bp===up || bop===up);
+  });
+  S.reviews = S.reviews.filter(function(r){ return r.reviewer !== S.user.name; });
+  S.likes = S.likes.filter(function(k){ return k.indexOf(S.user.phone+'_') !== 0; });
+  S.user = null;
+  try{ localStorage.removeItem('savedLogin'); }catch(e){}
+  document.getElementById('loginBtn').textContent='로그인';
+  saveToFirebase();
+  checkAdminTab(); renderMypage(); doFilter();
+  alert('탈퇴가 완료되었습니다.\n이용해주셔서 감사합니다.');
+}
 function doLogout(){
   if(confirm('로그아웃 하시겠어요?')){
     S.user=null;try{localStorage.removeItem('savedLogin');}catch(e){}
