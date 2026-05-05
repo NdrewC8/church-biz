@@ -168,8 +168,8 @@ function bizCardHtml(b) {
     : '<div class="bi">'+(EM[b.cat]||'🏪')+'</div>';
   // 전화 버튼: 휴대폰(초록) + 일반전화(파랑) 둘 다
   var telBtns='';
-  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:#8bc34a;color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:16px;cursor:pointer;text-decoration:none;line-height:1">📱</a>';
-  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:16px;cursor:pointer;text-decoration:none;line-height:1">📞</a>';
+  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:#8bc34a;color:#fff;border:none;border-radius:10px;padding:7px 9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#fff\"><rect x=\"5\" y=\"1\" width=\"14\" height=\"22\" rx=\"3\" ry=\"3\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"12\" cy=\"19\" r=\"1.2\" fill=\"#fff\"/><rect x=\"9\" y=\"3.5\" width=\"6\" height=\"1.2\" rx=\"0.6\" fill=\"#fff\"/></svg></a>';
+  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:var(--p);color:#fff;border:none;border-radius:10px;padding:7px 9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#fff\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z\" fill=\"#fff\"/></svg></a>';
   return '<div class="bc" onclick="showDetail('+b.id+')">'+
     typeBadge+
     '<div class="bh">'+cardThumb+
@@ -239,11 +239,11 @@ function showDetail(bizId) {
   if(tel||btel){
     if(tel&&btel){
       html+='<div style="display:flex;gap:8px;margin-bottom:10px">'+
-        '<a class="call-btn" href="tel:'+tel+'" style="flex:1;margin-bottom:0;background:#8bc34a">📱 휴대폰</a>'+
-        '<a class="call-btn" href="tel:'+btel+'" style="flex:1;margin-bottom:0;background:var(--p)">📞 사업체</a>'+
+        '<a class="call-btn" href="tel:'+tel+'" style="flex:1;margin-bottom:0;background:#8bc34a"><svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:6px"><rect x="5" y="1" width="14" height="22" rx="3" ry="3" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="19" r="1.2" fill="#fff"/><rect x="9" y="3.5" width="6" height="1.2" rx="0.6" fill="#fff"/></svg>휴대폰</a>'+
+        '<a class="call-btn" href="tel:'+btel+'" style="flex:1;margin-bottom:0;background:var(--p)"><svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:6px"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z\" fill=\"#fff\"/></svg>사업체</a>'+
       '</div>';
     } else {
-      html+='<a class="call-btn" href="tel:'+(tel||btel)+'">'+(tel?'📱 휴대폰':'📞 사업체 전화')+'</a>';
+      html+='<a class="call-btn" href="tel:'+(tel||btel)+'" style="background:'+(tel?'#8bc34a':'var(--p)')+'">'+(tel?'<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:6px"><rect x="5" y="1" width="14" height="22" rx="3" ry="3" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="19" r="1.2" fill="#fff"/><rect x="9" y="3.5" width="6" height="1.2" rx="0.6" fill="#fff"/></svg>휴대폰':'<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:6px"><path d=\'M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z\' fill=\'#fff\'/></svg>사업체 전화')+'</a>';
     }
   }
 
@@ -350,7 +350,7 @@ function renderMap(){
       '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
       '<div style="flex:1"><div style="font-size:15px;font-weight:600">'+b.name+'</div>'+
       '<div style="font-size:13px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
-      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:16px;text-decoration:none;line-height:1">📱</a>':'')+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:10px;padding:7px 9px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#fff\"><rect x=\"5\" y=\"1\" width=\"14\" height=\"22\" rx=\"3\" ry=\"3\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"12\" cy=\"19\" r=\"1.2\" fill=\"#fff\"/><rect x=\"9\" y=\"3.5\" width=\"6\" height=\"1.2\" rx=\"0.6\" fill=\"#fff\"/></svg></a>':'')+
     '</div>';
   }).join('');
 }
