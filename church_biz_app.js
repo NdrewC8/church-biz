@@ -168,8 +168,8 @@ function bizCardHtml(b) {
     : '<div class="bi">'+(EM[b.cat]||'🏪')+'</div>';
   // 전화 버튼: 휴대폰(초록) + 일반전화(파랑) 둘 다
   var telBtns='';
-  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:#27ae60;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📱</a>';
-  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:#7f8c8d;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>';
+  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:#8bc34a;color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:16px;cursor:pointer;text-decoration:none;line-height:1">📱</a>';
+  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:16px;cursor:pointer;text-decoration:none;line-height:1">📞</a>';
   return '<div class="bc" onclick="showDetail('+b.id+')">'+
     typeBadge+
     '<div class="bh">'+cardThumb+
@@ -239,8 +239,8 @@ function showDetail(bizId) {
   if(tel||btel){
     if(tel&&btel){
       html+='<div style="display:flex;gap:8px;margin-bottom:10px">'+
-        '<a class="call-btn" href="tel:'+tel+'" style="flex:1;margin-bottom:0;background:#27ae60">📱 휴대폰</a>'+
-        '<a class="call-btn" href="tel:'+btel+'" style="flex:1;margin-bottom:0;background:#7f8c8d">📞 사업체</a>'+
+        '<a class="call-btn" href="tel:'+tel+'" style="flex:1;margin-bottom:0;background:#8bc34a">📱 휴대폰</a>'+
+        '<a class="call-btn" href="tel:'+btel+'" style="flex:1;margin-bottom:0;background:var(--p)">📞 사업체</a>'+
       '</div>';
     } else {
       html+='<a class="call-btn" href="tel:'+(tel||btel)+'">'+(tel?'📱 휴대폰':'📞 사업체 전화')+'</a>';
@@ -350,7 +350,7 @@ function renderMap(){
       '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
       '<div style="flex:1"><div style="font-size:15px;font-weight:600">'+b.name+'</div>'+
       '<div style="font-size:13px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
-      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#27ae60;color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:13px;text-decoration:none">📱</a>':'')+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:16px;text-decoration:none;line-height:1">📱</a>':'')+
     '</div>';
   }).join('');
 }
