@@ -233,6 +233,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <button class="nb on" onclick="showTab('list',this)">목록</button>
     <button class="nb" onclick="showTab('map',this)">지도</button>
     <button class="nb" onclick="showTab('reviews',this)">후기</button>
+    <button class="nb" onclick="showTab('notice',this)">📢 공지</button>
     <button class="nb" onclick="showTab('mypage',this)">마이페이지</button>
     <button class="nb" id="adminTab" style="display:none" onclick="showTab('admin',this)">관리자</button>
   </div>
@@ -291,6 +292,11 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   <div class="sc" id="sc-reviews">
     <div style="padding:13px" id="rvListAll"></div>
     <button class="fab" onclick="requireLogin('review')">+</button>
+  </div>
+
+  <!-- 공지 -->
+  <div class="sc" id="sc-notice">
+    <div style="padding:13px" id="noticeContent"></div>
   </div>
 
   <!-- 마이페이지 -->

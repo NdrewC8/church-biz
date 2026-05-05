@@ -27,6 +27,7 @@ async function saveToFirebase(){
       biz: S.biz,
       bizDB: S.bizDB,
       reviews: S.reviews,
+      notices: S.notices,
       likes: S.likes,
       updatedAt: new Date().toISOString()
     });
@@ -43,6 +44,7 @@ async function loadFromFirebase(){
       S.biz = data.biz || [];
       S.bizDB = data.bizDB || [];
       S.reviews = data.reviews || [];
+      S.notices = data.notices || [];
       S.likes = data.likes || [];
       console.log('Firebase 데이터 로드 완료');
       doFilter();
@@ -61,7 +63,7 @@ const CATS = Object.keys(EM);
 const PASTOR = ['목사','전도사'];
 const CL = ['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
 
-let S = { user:null, members:[], biz:[], bizDB:[], reviews:[], csvParsed:[], likes:[], catFilter:'' };
+let S = { user:null, members:[], biz:[], bizDB:[], reviews:[], notices:[], csvParsed:[], likes:[], catFilter:'' };
 let prevTab = 'list';
 let bizPhotosTemp = [];   // 사업체 등록 임시 사진
 let rvPhotosTemp  = [];   // 후기 임시 사진
@@ -133,6 +135,7 @@ function showTab(name, btn) {
   if(name==='rec'){ showSkeletons('recList',4); setTimeout(function(){renderRec();},200); }
   if(name==='map'){ showLoading('mapList','지도 불러오는 중...'); setTimeout(function(){renderMap();},200); }
   if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
+  if(name==='notice') renderNotice();
   if(name==='mypage') renderMypage();
   if(name==='admin') renderAdmin();
 }
@@ -355,6 +358,123 @@ function renderMap(){
 function renderAllRv(){
   var sorted=sortRv(S.reviews.slice());
   document.getElementById('rvListAll').innerHTML=sorted.length?sorted.map(function(r){return rvHtml(r,false);}).join(''):'<div class="empty">아직 후기가 없어요</div>';
+}
+
+
+// ── 공지 ─────────────────────────────────
+function renderNotice(){
+  var el = document.getElementById('noticeContent');
+  var admin = isAdmin();
+  var notices = (S.notices||[]).slice().sort(function(a,b){ return b.id - a.id; });
+
+  var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">' +
+    '<div style="font-size:18px;font-weight:700">📢 공지사항</div>' +
+    (admin ? '<button onclick="openNoticeWrite()" style="padding:7px 14px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">+ 글쓰기</button>' : '') +
+  '</div>';
+
+  if(!notices.length){
+    html += '<div class="empty" style="padding:40px 0">등록된 공지가 없어요</div>';
+  } else {
+    notices.forEach(function(n){
+      var isPinned = n.pinned;
+      html += '<div style="background:#fff;border:1.5px solid ' + (isPinned?'var(--p)':'var(--bd)') + ';border-radius:14px;padding:14px 15px;margin-bottom:10px;cursor:pointer" onclick="openNoticeDetail(' + n.id + ')">' +
+        '<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">' +
+          (isPinned ? '<span style="background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px">📌 공지</span>' : '') +
+          '<span style="font-size:15px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(n.title) + '</span>' +
+        '</div>' +
+        '<div style="font-size:13px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px">' + escHtml(n.content||'').replace(/\n/g,' ') + '</div>' +
+        '<div style="display:flex;align-items:center;justify-content:space-between">' +
+          '<span style="font-size:12px;color:#aaa">' + fmtDate(n.id) + ' · ' + escHtml(n.author) + '</span>' +
+          (admin ? '<div style="display:flex;gap:6px" onclick="event.stopPropagation()">' +
+            '<button onclick="openNoticeEdit(' + n.id + ')" style="padding:3px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:7px;font-size:12px;cursor:pointer">수정</button>' +
+            '<button onclick="deleteNotice(' + n.id + ')" style="padding:3px 10px;background:#fee2e2;color:#dc2626;border:1px solid #dc2626;border-radius:7px;font-size:12px;cursor:pointer">삭제</button>' +
+          '</div>' : '') +
+        '</div>' +
+      '</div>';
+    });
+  }
+  el.innerHTML = html;
+}
+
+function fmtDate(ts){
+  var d = new Date(ts);
+  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+}
+
+function escHtml(str){
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function openNoticeDetail(id){
+  var n = S.notices.find(function(x){ return x.id===id; });
+  if(!n) return;
+  var admin = isAdmin();
+  var el = document.getElementById('noticeContent');
+  el.innerHTML =
+    '<button onclick="renderNotice()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 목록으로</button>' +
+    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px">' +
+      (n.pinned ? '<div style="display:inline-block;background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:10px">📌 공지</div>' : '') +
+      '<div style="font-size:18px;font-weight:700;margin-bottom:8px">' + escHtml(n.title) + '</div>' +
+      '<div style="font-size:12px;color:#aaa;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bd)">' + fmtDate(n.id) + ' · ' + escHtml(n.author) + '</div>' +
+      '<div style="font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--t)">' + escHtml(n.content) + '</div>' +
+    '</div>' +
+    (admin ? '<div style="display:flex;gap:8px;margin-top:12px">' +
+      '<button onclick="openNoticeEdit(' + n.id + ')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">수정</button>' +
+      '<button onclick="deleteNotice(' + n.id + ')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">삭제</button>' +
+    '</div>' : '');
+}
+
+function openNoticeWrite(){
+  if(!isAdmin()){ alert('관리자만 공지를 작성할 수 있어요.'); return; }
+  showNoticeForm(null);
+}
+function openNoticeEdit(id){
+  if(!isAdmin()) return;
+  var n = S.notices.find(function(x){ return x.id===id; });
+  showNoticeForm(n);
+}
+
+function showNoticeForm(n){
+  var el = document.getElementById('noticeContent');
+  var isEdit = !!n;
+  el.innerHTML =
+    '<button onclick="renderNotice()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 취소</button>' +
+    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:18px">' +
+      '<div style="font-size:16px;font-weight:700;margin-bottom:14px">' + (isEdit?'공지 수정':'새 공지 작성') + '</div>' +
+      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">제목</div>' +
+      '<input id="noticeTitleInput" value="' + escHtml(isEdit?n.title:'') + '" placeholder="제목을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;margin-bottom:12px;font-family:inherit">' +
+      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">내용</div>' +
+      '<textarea id="noticeContentInput" placeholder="내용을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;min-height:160px;resize:vertical;font-family:inherit;line-height:1.7">' + escHtml(isEdit?n.content:'') + '</textarea>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:16px">' +
+        '<input type="checkbox" id="noticePinned" ' + (isEdit&&n.pinned?'checked':'') + ' style="width:16px;height:16px;cursor:pointer">' +
+        '<label for="noticePinned" style="font-size:14px;cursor:pointer">📌 상단 고정 (중요 공지)</label>' +
+      '</div>' +
+      '<button onclick="saveNotice(' + (isEdit?n.id:'null') + ')" style="width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer">' + (isEdit?'수정 완료':'등록하기') + '</button>' +
+    '</div>';
+}
+
+function saveNotice(editId){
+  var title = (document.getElementById('noticeTitleInput').value||'').trim();
+  var content = (document.getElementById('noticeContentInput').value||'').trim();
+  var pinned = document.getElementById('noticePinned').checked;
+  if(!title){ alert('제목을 입력해주세요.'); return; }
+  if(!content){ alert('내용을 입력해주세요.'); return; }
+
+  if(editId && editId !== null){
+    var n = S.notices.find(function(x){ return x.id===editId; });
+    if(n){ n.title=title; n.content=content; n.pinned=pinned; }
+  } else {
+    S.notices.push({ id: Date.now(), title:title, content:content, pinned:pinned, author: S.user.name });
+  }
+  saveToFirebase();
+  renderNotice();
+}
+
+function deleteNotice(id){
+  if(!confirm('이 공지를 삭제하시겠어요?')) return;
+  S.notices = S.notices.filter(function(n){ return n.id !== id; });
+  saveToFirebase();
+  renderNotice();
 }
 
 // ── 마이페이지 ───────────────────────────
