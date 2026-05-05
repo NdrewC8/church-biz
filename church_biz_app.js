@@ -1,98 +1,4 @@
 
-// ── 네이버 지도 ───────────────────────
-var naverMapObj = null;
-var mapMarkers = [];
-var mapInfoWindows = [];
-
-function initNaverMap(){
-  if(typeof naver === 'undefined' || !naver.maps) return;
-  var mapDiv = document.getElementById('naverMap');
-  if(!mapDiv) return;
-  naverMapObj = new naver.maps.Map(mapDiv, {
-    center: new naver.maps.LatLng(37.5665, 126.9780),
-    zoom: 10,
-    mapTypeControl: true
-  });
-  renderMapMarkers(S.biz);
-  populateMapCatFilter();
-}
-
-function populateMapCatFilter(){
-  var sel = document.getElementById('mapCatFilter');
-  if(!sel) return;
-  var cats = [...new Set(S.biz.map(function(b){return b.cat||'';}).filter(Boolean))].sort(function(a,b){return a.localeCompare(b,'ko');});
-  sel.innerHTML = '<option value="">업종 전체</option>' + cats.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
-}
-
-function filterMap(){
-  var kw = (document.getElementById('mapSearchInput')||{value:''}).value.toLowerCase();
-  var cat = (document.getElementById('mapCatFilter')||{value:''}).value;
-  var list = S.biz.filter(function(b){
-    var mk = !kw || (b.name||'').toLowerCase().includes(kw) || (b.cat||'').toLowerCase().includes(kw) || (b.addr||'').toLowerCase().includes(kw);
-    var mc = !cat || b.cat === cat;
-    return mk && mc;
-  });
-  renderMapMarkers(list);
-  renderMapList(list);
-}
-
-function renderMapMarkers(list){
-  if(!naverMapObj) return;
-  // 기존 마커 제거
-  mapMarkers.forEach(function(m){m.setMap(null);});
-  mapMarkers = [];
-  mapInfoWindows.forEach(function(w){w.close();});
-  mapInfoWindows = [];
-
-  var geocoder = naver.maps.Service;
-  list.forEach(function(b, idx){
-    if(!b.addr) return;
-    naver.maps.Service.geocode({query: b.addr}, function(status, res){
-      if(status !== naver.maps.Service.Status.OK) return;
-      var result = res.v2.addresses[0];
-      if(!result) return;
-      var pos = new naver.maps.LatLng(result.y, result.x);
-      var marker = new naver.maps.Marker({
-        position: pos,
-        map: naverMapObj,
-        title: b.name,
-        icon: {
-          content: '<div style="background:' + catColor(b.cat) + ';color:#fff;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.3)">' + b.name + '</div>',
-          anchor: new naver.maps.Point(0, 0)
-        }
-      });
-      var infoWindow = new naver.maps.InfoWindow({
-        content: '<div style="padding:10px;min-width:160px;font-size:13px">' +
-          '<strong>' + b.name + '</strong><br>' +
-          '<span style="color:' + catColor(b.cat) + '">' + b.cat + '</span><br>' +
-          (b.addr ? '<small style="color:#666">' + b.addr + '</small><br>' : '') +
-          (b.phone ? '<a href="tel:' + b.phone.replace(/[^0-9]/g,'') + '" style="color:#C8185A;font-weight:600">📱 ' + b.phone + '</a>' : '') +
-          '</div>'
-      });
-      naver.maps.Event.addListener(marker, 'click', function(){
-        mapInfoWindows.forEach(function(w){w.close();});
-        infoWindow.open(naverMapObj, marker);
-      });
-      mapMarkers.push(marker);
-      mapInfoWindows.push(infoWindow);
-    });
-  });
-}
-
-function renderMapList(list){
-  var el = document.getElementById('mapList');
-  if(!el) return;
-  el.innerHTML = list.slice(0,30).map(function(b){
-    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--bd);cursor:pointer" onclick="showDetail(' + b.id + ')">' +
-      '<div style="font-size:22px">' + (EM[b.cat]||'🏪') + '</div>' +
-      '<div style="flex:1"><div style="font-size:14px;font-weight:600">' + b.name + '</div>' +
-      '<div style="font-size:12px;color:' + catColor(b.cat) + '">' + b.cat + '</div>' +
-      '<div style="font-size:12px;color:#666">' + (b.addr||'') + '</div></div>' +
-      '<div style="font-size:12px;color:#C8185A;font-weight:600">' + (b.ownerChurch||b.church||'') + '</div>' +
-    '</div>';
-  }).join('') + (list.length > 30 ? '<div style="text-align:center;padding:10px;font-size:13px;color:#666">외 ' + (list.length-30) + '개</div>' : '');
-}
-
 function catColor(cat){
   var c={
     '법률/세무':'#2563eb','보험':'#2563eb','부동산':'#2563eb',
@@ -229,7 +135,6 @@ function showTab(name, btn) {
   if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
   if(name==='mypage') renderMypage();
   if(name==='admin') renderAdmin();
-  if(name==='map'){ if(!naverMapObj) { setTimeout(initNaverMap, 300); } else { filterMap(); } }
 }
 
 function goBack() {
@@ -260,8 +165,8 @@ function bizCardHtml(b) {
     : '<div class="bi">'+(EM[b.cat]||'🏪')+'</div>';
   // 전화 버튼: 휴대폰(초록) + 일반전화(파랑) 둘 다
   var telBtns='';
-  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:12px;cursor:pointer;text-decoration:none;font-weight:600">📱</a>';
-  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:#2980b9;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:12px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>';
+  if(tel) telBtns+='<a href="tel:'+tel+'" onclick="event.stopPropagation()" title="휴대폰" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📱</a>';
+  if(btel) telBtns+='<a href="tel:'+btel+'" onclick="event.stopPropagation()" title="일반전화" style="background:#2980b9;color:#fff;border:none;border-radius:8px;padding:4px 9px;font-size:13px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>';
   return '<div class="bc" onclick="showDetail('+b.id+')">'+
     typeBadge+
     '<div class="bh">'+cardThumb+
@@ -270,11 +175,11 @@ function bizCardHtml(b) {
       '<div class="bct" style="color:'+catColor(b.cat)+';background:'+catColorLight(b.cat)+'">'+b.cat+'</div>'+
       '<div class="bow">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</div>'+
     '</div></div>'+
-    (b.addr ? '<div style="font-size:12px;color:var(--t2);margin-top:6px">📍 '+b.addr+'</div>' : '')+
+    (b.addr ? '<div style="font-size:13px;color:var(--t2);margin-top:6px">📍 '+b.addr+'</div>' : '')+
     (kws ? '<div class="tgs">'+kws+'</div>' : '')+
     desc+
     '<div class="bf">'+
-      '<span style="color:var(--ac);font-size:13px">'+('⭐'.repeat(Math.round(avg))||'☆☆☆☆☆')+' <span style="font-size:12px;color:var(--t2)">'+rvs.length+'개 후기</span></span>'+
+      '<span style="color:var(--ac);font-size:14px">'+('⭐'.repeat(Math.round(avg))||'☆☆☆☆☆')+' <span style="font-size:13px;color:var(--t2)">'+rvs.length+'개 후기</span></span>'+
       '<div style="display:flex;align-items:center;gap:5px">'+
         telBtns+
         '<button id="like-'+b.id+'" class="like-btn'+(liked?' on':'')+'" onclick="toggleLike('+b.id+',event)">'+(liked?'❤️':'🤍')+'</button>'+
@@ -299,8 +204,8 @@ function showDetail(bizId) {
   // 수정/삭제 버튼
   var eb=document.getElementById('det-edit-btns');
   if(S.user&&S.user.phone===b.phone){
-    eb.innerHTML='<button onclick="openEditBiz('+bizId+')" style="background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;margin-right:4px">수정</button>'+
-      '<button onclick="deleteBiz('+bizId+')" style="background:rgba(255,0,0,.25);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer">삭제</button>';
+    eb.innerHTML='<button onclick="openEditBiz('+bizId+')" style="background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer;margin-right:4px">수정</button>'+
+      '<button onclick="deleteBiz('+bizId+')" style="background:rgba(255,0,0,.25);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer">삭제</button>';
   } else { eb.innerHTML=''; }
 
   var rvs=sortRv(S.reviews.filter(function(r){return r.bizId===bizId;}));
@@ -313,18 +218,18 @@ function showDetail(bizId) {
   var html='<div class="det-card">'+
     '<div style="display:flex;align-items:center;gap:13px;margin-bottom:13px">'+
       '<div style="width:52px;height:52px;border-radius:13px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px">'+(EM[b.cat]||'🏪')+'</div>'+
-      '<div><div style="font-size:18px;font-weight:700">'+b.name+tp+'</div>'+
-      '<div style="font-size:13px;font-weight:600;color:var('+catColor(b.cat)+');margin-top:3px">'+b.cat+'</div>'+
-      '<div style="font-size:13px;color:var(--ac)">'+'⭐'.repeat(Math.round(avg))+(avg?'<span style="color:var(--t2);font-size:12px"> '+avg+'점 ('+rvs.length+'개)</span>':'<span style="color:var(--t2);font-size:12px"> 후기없음</span>')+'</div>'+
+      '<div><div style="font-size:19px;font-weight:700">'+b.name+tp+'</div>'+
+      '<div style="font-size:14px;font-weight:600;color:var('+catColor(b.cat)+');margin-top:3px">'+b.cat+'</div>'+
+      '<div style="font-size:14px;color:var(--ac)">'+'⭐'.repeat(Math.round(avg))+(avg?'<span style="color:var(--t2);font-size:13px"> '+avg+'점 ('+rvs.length+'개)</span>':'<span style="color:var(--t2);font-size:13px"> 후기없음</span>')+'</div>'+
     '</div></div>'+
     '<div class="det-row"><span class="dl">담당자</span><span class="dv">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</span></div>'+
     (b.phone?'<div class="det-row"><span class="dl">휴대폰</span><span class="dv"><a href="tel:'+(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'')+'" style="color:var(--p)">'+(b.phone||b.ownerPhone||'')+'</a></span></div>':'')+
     (b.bizPhone?'<div class="det-row"><span class="dl">사업체 전화</span><span class="dv"><a href="tel:'+btel+'" style="color:#2980b9">'+b.bizPhone+'</a></span></div>':'')+
     (b.addr?'<div class="det-row"><span class="dl">주소</span><span class="dv">'+b.addr+'</span></div>':'')+
     (b.regNo?'<div class="det-row"><span class="dl">사업자번호</span><span class="dv">'+b.regNo+'</span></div>':'')+
-    (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+(b.web.startsWith('http')?b.web:'https://'+b.web)+'" target="_blank" style="font-size:13px;color:#185fa5;text-align:right;word-break:break-all;text-decoration:underline;cursor:pointer">'+b.web+' 🔗</a></div>':'')+
+    (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+(b.web.startsWith('http')?b.web:'https://'+b.web)+'" target="_blank" style="font-size:14px;color:#185fa5;text-align:right;word-break:break-all;text-decoration:underline;cursor:pointer">'+b.web+' 🔗</a></div>':'')+
     (kws?'<div style="margin-top:9px;display:flex;gap:4px;flex-wrap:wrap">'+kws+'</div>':'')+
-    (b.desc?'<div style="margin-top:10px;font-size:13px;color:var(--t2);line-height:1.7;white-space:pre-line;padding-top:10px;border-top:1px solid var(--bd)">'+b.desc+'</div>':'')+
+    (b.desc?'<div style="margin-top:10px;font-size:14px;color:var(--t2);line-height:1.7;white-space:pre-line;padding-top:10px;border-top:1px solid var(--bd)">'+b.desc+'</div>':'')+
   '</div>';
 
   // 전화걸기 버튼 (휴대폰 + 일반전화 나란히)
@@ -339,9 +244,9 @@ function showDetail(bizId) {
     }
   }
 
-  html+='<div style="font-size:14px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
+  html+='<div style="font-size:15px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
     (rvs.length?rvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty">아직 후기가 없어요</div>')+
-    '<button onclick="openReviewFromDetail('+bizId+')" style="width:100%;padding:11px;background:var(--pl);color:var(--p);border:1px solid var(--bd);border-radius:11px;font-size:14px;cursor:pointer;margin-top:5px;font-weight:600">✏️ 후기 작성하기</button>';
+    '<button onclick="openReviewFromDetail('+bizId+')" style="width:100%;padding:11px;background:var(--pl);color:var(--p);border:1px solid var(--bd);border-radius:11px;font-size:15px;cursor:pointer;margin-top:5px;font-weight:600">✏️ 후기 작성하기</button>';
 
   document.getElementById('det-body').innerHTML=html;
   // 사진 갤러리
@@ -372,8 +277,8 @@ function rvHtml(r,showDel){
     '<div class="rv-hd">'+
       '<div class="av'+(p?' av-p':'')+'">'+r.reviewer[0]+'</div>'+
       '<div style="flex:1"><div class="rn">'+(p?'★ ':'')+r.reviewer+(p?'<span class="badge-p">'+r.role+'님 추천</span>':'')+'</div>'+
-      '<div style="font-size:12px;color:var(--t2)">'+r.bizName+'</div></div>'+
-      '<div style="display:flex;align-items:center;gap:4px"><span style="font-size:14px;color:var(--ac)">'+'⭐'.repeat(r.stars)+'</span>'+del+'</div>'+
+      '<div style="font-size:13px;color:var(--t2)">'+r.bizName+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:4px"><span style="font-size:15px;color:var(--ac)">'+'⭐'.repeat(r.stars)+'</span>'+del+'</div>'+
     '</div><div class="rt">'+r.text+'</div>'+
     (r.photos&&r.photos.length?'<div class="rv-photos">'+r.photos.map(function(src){return '<img src="'+src+'" onclick="openViewer(\''+src+'\')">'; }).join('')+'</div>':'')+
     '<div class="rd">'+r.date+'</div></div>';
@@ -414,7 +319,7 @@ function doFilter(){
     return mk&&mr&&(!cat||b.cat===cat);
   });
   list.sort(function(a,b){return (a.name||'').localeCompare(b.name||'','ko');});
-  document.getElementById('bizList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">검색 결과가 없어요<br><small style="font-size:12px">키워드·업종·지역을 변경해보세요</small></div>';
+  document.getElementById('bizList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">검색 결과가 없어요<br><small style="font-size:13px">키워드·업종·지역을 변경해보세요</small></div>';
   var chips='';
   if(kw) chips+='<div class="chip">🔍 "'+kw+'" <span class="cx" onclick="clKw()">×</span></div>';
   if(cat) chips+='<div class="chip">📂 '+cat+' <span class="cx" onclick="clCat()">×</span></div>';
@@ -434,15 +339,15 @@ function renderRec(){
 function renderMap(){
   var CLS=['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
   document.getElementById('mapPins').innerHTML=S.biz.slice(0,20).map(function(b,i){
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:11px;height:11px;border-radius:50%;background:'+CLS[i%CLS.length]+';border:2px solid #fff"></div><div style="font-size:11px;color:var(--t2)">'+b.name+'</div></div>';
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:11px;height:11px;border-radius:50%;background:'+CLS[i%CLS.length]+';border:2px solid #fff"></div><div style="font-size:12px;color:var(--t2)">'+b.name+'</div></div>';
   }).join('');
   document.getElementById('mapList').innerHTML=S.biz.slice(0,30).map(function(b,i){
     var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;margin-bottom:7px;cursor:pointer" onclick="showDetail('+b.id+')">'+
       '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
-      '<div style="flex:1"><div style="font-size:14px;font-weight:600">'+b.name+'</div>'+
-      '<div style="font-size:12px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
-      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:12px;text-decoration:none">📞</a>':'')+
+      '<div style="flex:1"><div style="font-size:15px;font-weight:600">'+b.name+'</div>'+
+      '<div style="font-size:13px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:13px;text-decoration:none">📞</a>':'')+
     '</div>';
   }).join('');
 }
@@ -456,7 +361,7 @@ function renderAllRv(){
 function renderMypage(){
   var el=document.getElementById('mypageContent');
   if(!S.user){
-    el.innerHTML='<div class="gate"><div style="font-size:32px;margin-bottom:10px">👤</div><div style="font-size:17px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:13px;color:var(--t2);line-height:1.8;margin-bottom:18px">성도 비즈니스 네트워크의<br>모든 기능을 이용하려면 로그인해주세요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
+    el.innerHTML='<div class="gate"><div style="font-size:32px;margin-bottom:10px">👤</div><div style="font-size:18px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:18px">성도 비즈니스 네트워크의<br>모든 기능을 이용하려면 로그인해주세요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
     return;
   }
   var myBiz=S.biz.filter(function(b){
@@ -467,14 +372,14 @@ function renderMypage(){
   });
   var myRvs=S.reviews.filter(function(r){return r.reviewer===S.user.name;});
   var liked=getLikedBiz();
-  var warn=S.user.pw==='1111'?'<div class="pw-warn">⚠️ 초기 비밀번호(1111) 사용 중 <button onclick="openM(\'changePwM\')" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:3px 10px;font-size:12px;cursor:pointer;margin-left:6px">변경하기</button></div>':'';
+  var warn=S.user.pw==='1111'?'<div class="pw-warn">⚠️ 초기 비밀번호(1111) 사용 중 <button onclick="openM(\'changePwM\')" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:3px 10px;font-size:13px;cursor:pointer;margin-left:6px">변경하기</button></div>':'';
   var html=warn+
     '<div class="pc"><div class="prow">'+
       '<div class="pav">'+S.user.name[0]+'</div>'+
-      '<div style="flex:1"><div style="font-size:17px;font-weight:700">'+S.user.name+'</div><div style="font-size:13px;color:var(--t2);margin-top:3px">'+S.user.role+' · 사랑하는교회 '+S.user.church+'</div></div>'+
+      '<div style="flex:1"><div style="font-size:18px;font-weight:700">'+S.user.name+'</div><div style="font-size:14px;color:var(--t2);margin-top:3px">'+S.user.role+' · 사랑하는교회 '+S.user.church+'</div></div>'+
       '<div style="display:flex;gap:5px">'+
-        '<button onclick="loadEdit();openM(\'editM\')" style="padding:5px 10px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:12px;cursor:pointer;font-weight:600">편집</button>'+
-        '<button onclick="openM(\'changePwM\')" style="padding:5px 10px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:12px;cursor:pointer;font-weight:600">🔑</button>'+
+        '<button onclick="loadEdit();openM(\'editM\')" style="padding:5px 10px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">편집</button>'+
+        '<button onclick="openM(\'changePwM\')" style="padding:5px 10px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">🔑</button>'+
       '</div></div>'+
       '<div class="pgrid">'+
         '<div class="pi"><div class="pl2">전화번호</div><div class="pv">'+S.user.phone+'</div></div>'+
@@ -482,24 +387,24 @@ function renderMypage(){
         (S.user.no?'<div class="pi"><div class="pl2">교번</div><div class="pv">'+S.user.no+'</div></div>':'')+
         '<div class="pi"><div class="pl2">직분</div><div class="pv">'+S.user.role+'</div></div>'+
       '</div></div>'+
-    '<div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:9px">내 사업체 ('+myBiz.length+'개)</div>'+
+    '<div style="font-size:15px;font-weight:600;color:var(--t2);margin-bottom:9px">내 사업체 ('+myBiz.length+'개)</div>'+
     (myBiz.length?myBiz.map(function(b){
       return '<div class="bc" onclick="showDetail('+b.id+')">'+
         '<div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div>'+
         '<div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div>'+
-        '<button onclick="event.stopPropagation();openEditBiz('+b.id+')" style="padding:5px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:8px;font-size:12px;cursor:pointer;flex-shrink:0">수정</button>'+
+        '<button onclick="event.stopPropagation();openEditBiz('+b.id+')" style="padding:5px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:8px;font-size:13px;cursor:pointer;flex-shrink:0">수정</button>'+
       '</div></div>';
     }).join(''):'<div class="empty" style="padding:10px">등록된 사업체 없음</div>')+
     '<div style="display:flex;gap:8px;margin-top:8px;margin-bottom:4px">'+
-      '<button onclick="openAddBiz(\'own\')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:13px;cursor:pointer;font-weight:600">🏪 운영업체 추가</button>'+
-      '<button onclick="openAddBiz(\'rec\')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:13px;cursor:pointer;font-weight:600">⭐ 추천업체 추가</button>'+
+      '<button onclick="openAddBiz(\'own\')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">🏪 운영업체 추가</button>'+
+      '<button onclick="openAddBiz(\'rec\')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">⭐ 추천업체 추가</button>'+
     '</div>'+
-    '<div style="font-size:14px;font-weight:600;color:var(--t2);margin:13px 0 9px">❤️ 찜한 사업체 ('+liked.length+'개)</div>'+
+    '<div style="font-size:15px;font-weight:600;color:var(--t2);margin:13px 0 9px">❤️ 찜한 사업체 ('+liked.length+'개)</div>'+
     (liked.length?liked.map(function(b){return '<div class="bc" onclick="showDetail('+b.id+')"><div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div><div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div></div></div>';}).join(''):'<div class="empty" style="padding:10px">찜한 사업체 없음</div>')+
-    '<div style="font-size:14px;font-weight:600;color:var(--t2);margin:13px 0 9px">내 후기 ('+myRvs.length+'개)</div>'+
+    '<div style="font-size:15px;font-weight:600;color:var(--t2);margin:13px 0 9px">내 후기 ('+myRvs.length+'개)</div>'+
     (myRvs.length?myRvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty" style="padding:13px">작성한 후기 없음</div>')+
-    '<a href="https://open.kakao.com/o/sf0Mu1si" target="_blank" style="display:block;width:100%;padding:10px;background:#FAE100;color:#3A1D1D;border-radius:11px;font-size:14px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box;margin-top:10px">💬 카카오 오픈채팅으로 문의하기</a>'+
-    '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:14px;cursor:pointer;margin-top:8px;font-weight:500">로그아웃</button>';
+    '<a href="https://open.kakao.com/o/sf0Mu1si" target="_blank" style="display:block;width:100%;padding:10px;background:#FAE100;color:#3A1D1D;border-radius:11px;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box;margin-top:10px">💬 카카오 오픈채팅으로 문의하기</a>'+
+    '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:15px;cursor:pointer;margin-top:8px;font-weight:500">로그아웃</button>';
   el.innerHTML=html;
 }
 
@@ -529,14 +434,14 @@ function renderAdmin(){
       '<div class="stat-card"><div class="stat-num">'+S.reviews.length+'</div><div class="stat-label">전체 후기</div></div>'+
       '<div class="stat-card"><div class="stat-num">'+S.likes.length+'</div><div class="stat-label">찜 횟수</div></div>'+
     '</div>';
-    body+='<div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:9px">업종별 사업체</div>';
+    body+='<div style="font-size:15px;font-weight:600;color:var(--t2);margin-bottom:9px">업종별 사업체</div>';
     var cc={};
     S.biz.forEach(function(b){cc[b.cat]=(cc[b.cat]||0)+1;});
     Object.entries(cc).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){
       body+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;margin-bottom:6px">'+
-        '<span style="font-size:17px">'+(EM[e[0]]||'📌')+'</span>'+
-        '<span style="flex:1;font-size:14px;font-weight:500">'+e[0]+'</span>'+
-        '<span style="font-size:14px;font-weight:700;color:var(--p)">'+e[1]+'개</span></div>';
+        '<span style="font-size:18px">'+(EM[e[0]]||'📌')+'</span>'+
+        '<span style="flex:1;font-size:15px;font-weight:500">'+e[0]+'</span>'+
+        '<span style="font-size:15px;font-weight:700;color:var(--p)">'+e[1]+'개</span></div>';
     });
   } else if(adminSection==='members'){
     var mKw=(window.adminMemberKw||'').toLowerCase();
@@ -549,17 +454,17 @@ function renderAdmin(){
     else if(mSort==='church-asc') mList.sort(function(a,b){return (a.church||'').localeCompare(b.church||'','ko');});
     else if(mSort==='church-desc') mList.sort(function(a,b){return (b.church||'').localeCompare(a.church||'','ko');});
     body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
-      '<input id="adminMemberKwInput" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" oninput="window.adminMemberKw=this.value;renderAdmin()" style="flex:1;padding:7px 10px;font-size:13px">'+
-      '<select onchange="window.adminMemberSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:12px">'+
+      '<input id="adminMemberKwInput" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" oninput="window.adminMemberKw=this.value;renderAdmin()" style="flex:1;padding:7px 10px;font-size:14px">'+
+      '<select onchange="window.adminMemberSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(mSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
         '<option value="name-desc"'+(mSort==='name-desc'?' selected':'')+'>이름 ↓</option>'+
         '<option value="church-asc"'+(mSort==='church-asc'?' selected':'')+'>교회 ↑</option>'+
         '<option value="church-desc"'+(mSort==='church-desc'?' selected':'')+'>교회 ↓</option>'+
       '</select>'+
     '</div>'+
-    '<div style="font-size:13px;color:var(--t2);margin-bottom:8px">총 '+mList.length+'명 / 전체 '+S.members.length+'명</div>';
+    '<div style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+mList.length+'명 / 전체 '+S.members.length+'명</div>';
     mList.forEach(function(m){
-      body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+' <span style="font-size:12px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
+      body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+' <span style="font-size:13px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
         '<button class="admin-del" onclick="adminDelMember(\''+m.phone+'\')">삭제</button></div>';
     });
   } else if(adminSection==='biz'){
@@ -573,23 +478,23 @@ function renderAdmin(){
     else if(bSort==='cat-asc') bList.sort(function(a,b){return (a.cat||'').localeCompare(b.cat||'','ko');});
     else if(bSort==='cat-desc') bList.sort(function(a,b){return (b.cat||'').localeCompare(a.cat||'','ko');});
     body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
-      '<input id="adminBizKwInput" class="fi" placeholder="업체명,업종,담당자 검색..." value="'+(bKw||'')+'" oninput="window.adminBizKw=this.value;renderAdmin()" style="flex:1;padding:7px 10px;font-size:13px">'+
-      '<select onchange="window.adminBizSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:12px">'+
+      '<input id="adminBizKwInput" class="fi" placeholder="업체명,업종,담당자 검색..." value="'+(bKw||'')+'" oninput="window.adminBizKw=this.value;renderAdmin()" style="flex:1;padding:7px 10px;font-size:14px">'+
+      '<select onchange="window.adminBizSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(bSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
         '<option value="name-desc"'+(bSort==='name-desc'?' selected':'')+'>이름 ↓</option>'+
         '<option value="cat-asc"'+(bSort==='cat-asc'?' selected':'')+'>업종 ↑</option>'+
         '<option value="cat-desc"'+(bSort==='cat-desc'?' selected':'')+'>업종 ↓</option>'+
       '</select>'+
     '</div>'+
-    '<div style="font-size:13px;color:var(--t2);margin-bottom:8px">총 '+bList.length+'개 / 전체 '+S.biz.length+'개</div>';
+    '<div style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+bList.length+'개 / 전체 '+S.biz.length+'개</div>';
     bList.forEach(function(b){
-      body+='<div class="admin-row"><div style="font-size:19px;margin-right:4px">'+(EM[b.cat]||'🏪')+'</div>'+
-        '<div class="admin-row-info"><div class="admin-row-name">'+b.name+' <span style="font-size:11px;color:var(--p)">'+b.cat+'</span></div><div class="admin-row-sub">'+b.owner+' · '+(b.addr||b.region||'')+'</div></div>'+
+      body+='<div class="admin-row"><div style="font-size:20px;margin-right:4px">'+(EM[b.cat]||'🏪')+'</div>'+
+        '<div class="admin-row-info"><div class="admin-row-name">'+b.name+' <span style="font-size:12px;color:var(--p)">'+b.cat+'</span></div><div class="admin-row-sub">'+b.owner+' · '+(b.addr||b.region||'')+'</div></div>'+
         '<button class="admin-del" onclick="adminDelBiz('+b.id+')">삭제</button></div>';
     });
   } else if(adminSection==='reviews'){
     var sorted=sortRv(S.reviews.slice());
-    body='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">총 '+sorted.length+'개</div>';
+    body='<div style="font-size:14px;color:var(--t2);margin-bottom:10px">총 '+sorted.length+'개</div>';
     sorted.forEach(function(r){
       body+='<div class="admin-row" style="align-items:flex-start"><div class="admin-row-info">'+
         '<div class="admin-row-name">'+r.reviewer+' → '+r.bizName+' '+'⭐'.repeat(r.stars)+'</div>'+
@@ -597,34 +502,34 @@ function renderAdmin(){
         '<button class="admin-del" onclick="adminDelReview('+r.id+')">삭제</button></div>';
     });
   } else if(adminSection==='csv'){
-    body='<p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.7">CSV 파일로 회원과 사업체를 일괄 등록할 수 있어요.</p>'+
+    body='<p style="font-size:15px;color:var(--t2);margin-bottom:14px;line-height:1.7">CSV 파일로 회원과 사업체를 일괄 등록할 수 있어요.</p>'+
       '<button class="bp" onclick="closeM(\'skip\');openM(\'csvM\')">📥 CSV 업로드 열기</button>';
   } else if(adminSection==='backup'){
     var now=new Date().toLocaleDateString('ko-KR');
-    body='<p style="font-size:14px;color:var(--t2);margin-bottom:16px;line-height:1.7">현재 앱의 모든 데이터(회원·사업체·후기)를 JSON 파일로 백업하거나 복원할 수 있어요.</p>'+
+    body='<p style="font-size:15px;color:var(--t2);margin-bottom:16px;line-height:1.7">현재 앱의 모든 데이터(회원·사업체·후기)를 JSON 파일로 백업하거나 복원할 수 있어요.</p>'+
       '<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px">'+
-        '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:10px">📊 현재 데이터 현황</div>'+
+        '<div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:10px">📊 현재 데이터 현황</div>'+
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
           '<div style="background:#fff;border:1px solid var(--bd);border-radius:8px;padding:10px;text-align:center">'+
-            '<div style="font-size:21px;font-weight:700;color:var(--p)">'+S.members.length+'</div>'+
-            '<div style="font-size:12px;color:var(--t2)">회원</div></div>'+
+            '<div style="font-size:22px;font-weight:700;color:var(--p)">'+S.members.length+'</div>'+
+            '<div style="font-size:13px;color:var(--t2)">회원</div></div>'+
           '<div style="background:#fff;border:1px solid var(--bd);border-radius:8px;padding:10px;text-align:center">'+
-            '<div style="font-size:21px;font-weight:700;color:var(--p)">'+S.biz.length+'</div>'+
-            '<div style="font-size:12px;color:var(--t2)">사업체</div></div>'+
+            '<div style="font-size:22px;font-weight:700;color:var(--p)">'+S.biz.length+'</div>'+
+            '<div style="font-size:13px;color:var(--t2)">사업체</div></div>'+
           '<div style="background:#fff;border:1px solid var(--bd);border-radius:8px;padding:10px;text-align:center">'+
-            '<div style="font-size:21px;font-weight:700;color:var(--p)">'+S.reviews.length+'</div>'+
-            '<div style="font-size:12px;color:var(--t2)">후기</div></div>'+
+            '<div style="font-size:22px;font-weight:700;color:var(--p)">'+S.reviews.length+'</div>'+
+            '<div style="font-size:13px;color:var(--t2)">후기</div></div>'+
           '<div style="background:#fff;border:1px solid var(--bd);border-radius:8px;padding:10px;text-align:center">'+
-            '<div style="font-size:21px;font-weight:700;color:var(--p)">'+S.likes.length+'</div>'+
-            '<div style="font-size:12px;color:var(--t2)">찜</div></div>'+
+            '<div style="font-size:22px;font-weight:700;color:var(--p)">'+S.likes.length+'</div>'+
+            '<div style="font-size:13px;color:var(--t2)">찜</div></div>'+
         '</div>'+
       '</div>'+
       '<button class="bp" onclick="doBackup()" style="margin-bottom:8px">💾 JSON 백업 파일 다운로드</button>'+
-      '<div style="font-size:12px;color:var(--t2);text-align:center;margin-bottom:16px">백업일: '+now+'</div>'+
+      '<div style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:16px">백업일: '+now+'</div>'+
       '<div style="border-top:1px solid var(--bd);padding-top:14px">'+
-        '<div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--t)">📂 백업 파일에서 복원</div>'+
-        '<p style="font-size:12px;color:#a32d2d;margin-bottom:10px;line-height:1.6">⚠️ 복원 시 현재 데이터에 병합됩니다. 중복 데이터는 건너뜁니다.</p>'+
-        '<label style="display:block;background:var(--bg2);border:2px dashed var(--bd);border-radius:10px;padding:14px;text-align:center;cursor:pointer;font-size:13px;color:var(--t2)">'+
+        '<div style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--t)">📂 백업 파일에서 복원</div>'+
+        '<p style="font-size:13px;color:#a32d2d;margin-bottom:10px;line-height:1.6">⚠️ 복원 시 현재 데이터에 병합됩니다. 중복 데이터는 건너뜁니다.</p>'+
+        '<label style="display:block;background:var(--bg2);border:2px dashed var(--bd);border-radius:10px;padding:14px;text-align:center;cursor:pointer;font-size:14px;color:var(--t2)">'+
           '📁 백업 파일 선택 (.json)<input type="file" accept=".json" style="display:none" onchange="doRestore(this.files[0])">'+
         '</label>'+
       '</div>';
@@ -702,7 +607,7 @@ function checkBizMatch(){
   });
   if(!matches.length){mb.style.display='none';return;}
   ml.innerHTML=matches.map(function(b){
-    return '<div class="match-item"><div><div style="font-size:14px;font-weight:600">'+b.name+'</div><div style="font-size:12px;color:var(--t2)">'+b.cat+'</div></div></div>';
+    return '<div class="match-item"><div><div style="font-size:15px;font-weight:600">'+b.name+'</div><div style="font-size:13px;color:var(--t2)">'+b.cat+'</div></div></div>';
   }).join('');
   mb.style.display='block';
 }
@@ -939,12 +844,12 @@ function rvBizSearchInput(){
   var drop=document.getElementById('rvBizDrop');
   var list=kw?S.biz.filter(function(b){return b.name.toLowerCase().includes(kw)||((b.cat||'').toLowerCase().includes(kw));})
              :S.biz.slice(0,30);
-  if(!list.length){drop.innerHTML='<div style="padding:11px 13px;font-size:13px;color:var(--t2)">검색 결과가 없어요</div>';drop.style.display='block';return;}
+  if(!list.length){drop.innerHTML='<div style="padding:11px 13px;font-size:14px;color:var(--t2)">검색 결과가 없어요</div>';drop.style.display='block';return;}
   drop.innerHTML=list.map(function(b){
-    return '<div onclick="rvBizSelect('+b.id+')" style="padding:10px 13px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px" onmouseover="this.style.background=\'var(--pl)\'" onmouseout="this.style.background=\'\'">'+
-      '<span style="font-size:17px">'+(EM[b.cat]||'🏪')+'</span>'+
-      '<span style="flex:1"><strong>'+b.name+'</strong> <span style="font-size:12px;color:var(--t2)">'+b.cat+'</span></span>'+
-      '<span style="font-size:11px;color:var(--t2)">'+b.owner+'</span>'+
+    return '<div onclick="rvBizSelect('+b.id+')" style="padding:10px 13px;font-size:15px;cursor:pointer;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px" onmouseover="this.style.background=\'var(--pl)\'" onmouseout="this.style.background=\'\'">'+
+      '<span style="font-size:18px">'+(EM[b.cat]||'🏪')+'</span>'+
+      '<span style="flex:1"><strong>'+b.name+'</strong> <span style="font-size:13px;color:var(--t2)">'+b.cat+'</span></span>'+
+      '<span style="font-size:12px;color:var(--t2)">'+b.owner+'</span>'+
     '</div>';
   }).join('');
   drop.style.display='block';
@@ -957,8 +862,8 @@ function rvBizSelect(bizId){
   document.getElementById('rvBizDrop').style.display='none';
   var sel=document.getElementById('rvBizSelected');
   sel.style.display='flex';
-  sel.innerHTML=(EM[biz.cat]||'🏪')+' <span style="flex:1;margin-left:6px">'+biz.name+' <span style="font-size:12px;color:var(--t2);font-weight:400">'+biz.cat+'</span></span>'+
-    '<span onclick="rvBizClear()" style="cursor:pointer;font-size:15px;color:var(--t2);padding:0 2px">×</span>';
+  sel.innerHTML=(EM[biz.cat]||'🏪')+' <span style="flex:1;margin-left:6px">'+biz.name+' <span style="font-size:13px;color:var(--t2);font-weight:400">'+biz.cat+'</span></span>'+
+    '<span onclick="rvBizClear()" style="cursor:pointer;font-size:16px;color:var(--t2);padding:0 2px">×</span>';
 }
 function rvBizClear(){
   document.getElementById('rvBiz').value='';
@@ -1128,7 +1033,7 @@ function showCsvPreview(){
     (noMobile.length?' · 📵 휴대폰 없음(로그인불가) '+noMobile.length+'명':'')+
     (invalid.length?' · 누락 '+invalid.length+'명':'');
   var h='<table style="width:100%;border-collapse:collapse"><thead><tr style="background:var(--bg2)">'+
-    ['이름','휴대폰','일반전화','교회','직분','상태'].map(function(t){return '<th style="padding:6px 7px;text-align:left;border-bottom:1px solid var(--bd);font-size:12px;white-space:nowrap">'+t+'</th>';}).join('')+
+    ['이름','휴대폰','일반전화','교회','직분','상태'].map(function(t){return '<th style="padding:6px 7px;text-align:left;border-bottom:1px solid var(--bd);font-size:13px;white-space:nowrap">'+t+'</th>';}).join('')+
     '</tr></thead><tbody>';
   S.csvParsed.forEach(function(m){
     var missing=!m.name||(!m.phone&&!m.bizPhone);
@@ -1140,12 +1045,12 @@ function showCsvPreview(){
                '<span style="color:#0f6e56">✓</span>';
     var bg=missing?'#fff5f5':noPhone?'#fffbf0':dup?'#fffdf5':'';
     h+='<tr style="background:'+bg+'">'+
-      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:12px">'+(m.name||'-')+'</td>'+
-      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:12px;color:'+(m.phone?'var(--t)':'#aaa')+'">'+(m.phone||'없음')+'</td>'+
-      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:12px;color:'+(m.bizPhone?'var(--t)':'#aaa')+'">'+(m.bizPhone||'-')+'</td>'+
-      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:12px">'+(m.church||'-')+'</td>'+
-      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:12px">'+(m.role||'-')+'</td>'+
-      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:12px">'+status+'</td></tr>';
+      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:13px">'+(m.name||'-')+'</td>'+
+      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:13px;color:'+(m.phone?'var(--t)':'#aaa')+'">'+(m.phone||'없음')+'</td>'+
+      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:13px;color:'+(m.bizPhone?'var(--t)':'#aaa')+'">'+(m.bizPhone||'-')+'</td>'+
+      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:13px">'+(m.church||'-')+'</td>'+
+      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:13px">'+(m.role||'-')+'</td>'+
+      '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:13px">'+status+'</td></tr>';
   });
   h+='</tbody></table>';
   document.getElementById('csvTable').innerHTML=h;
