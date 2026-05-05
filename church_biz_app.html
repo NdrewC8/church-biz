@@ -547,5 +547,60 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     var db = firebase.firestore();
   </script>
   <script src="church_biz_app.js"></script>
+
+<!-- 종료 팝업 -->
+<div id="exitPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:18px;width:88%;max-width:340px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.22)">
+    <!-- 헤더 -->
+    <div style="background:var(--p);padding:13px 18px;display:flex;align-items:center;justify-content:space-between">
+      <span style="color:#fff;font-size:15px;font-weight:700">안내</span>
+      <button onclick="closeExitPopup()" style="background:transparent;border:none;color:rgba(255,255,255,0.8);font-size:20px;cursor:pointer;line-height:1;padding:0">✕</button>
+    </div>
+    <!-- 배너 영역 -->
+    <div style="background:var(--pl);padding:22px 20px 18px;text-align:center;border-bottom:1.5px solid #f0c8d0">
+      <div style="font-size:24px;margin-bottom:8px">🛒</div>
+      <div style="font-size:16px;font-weight:700;color:var(--p);line-height:1.5">쿠팡쇼핑으로<br>아프리카 선교하기</div>
+      <div style="font-size:12px;color:var(--t2);margin-top:6px">쇼핑금액의 1%가 선교헌금으로 쓰입니다</div>
+    </div>
+    <!-- 바로가기 버튼 -->
+    <div style="padding:14px 20px 6px">
+      <a href="https://link.coupang.com/a/eADPS5" target="_blank" onclick="closeExitPopup()"
+        style="display:block;width:100%;padding:12px;background:var(--p);color:#fff;border-radius:11px;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">
+        바로가기
+      </a>
+    </div>
+    <!-- 종료 확인 -->
+    <div style="padding:6px 20px 16px;text-align:center">
+      <div style="font-size:13px;color:var(--t2);margin-bottom:12px">네트워크 서비스를 종료하시겠습니까?</div>
+      <div style="display:flex;gap:10px">
+        <button onclick="closeExitPopup()" style="flex:1;padding:10px;background:#f4f4f4;color:var(--t2);border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">아니요</button>
+        <button onclick="doExit()" style="flex:1;padding:10px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">예</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 뒤로가기 / 종료 시도 감지
+history.pushState(null, '', location.href);
+window.addEventListener('popstate', function(){
+  history.pushState(null, '', location.href);
+  showExitPopup();
+});
+
+function showExitPopup(){
+  var p = document.getElementById('exitPopup');
+  p.style.display = 'flex';
+}
+function closeExitPopup(){
+  document.getElementById('exitPopup').style.display = 'none';
+}
+function doExit(){
+  document.getElementById('exitPopup').style.display = 'none';
+  history.back();
+  setTimeout(function(){ window.close(); }, 200);
+}
+</script>
+
 </body>
 </html>
