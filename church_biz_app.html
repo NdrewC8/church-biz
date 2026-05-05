@@ -6,231 +6,159 @@
 <title>사랑하는교회 사업소개</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --p:#C8185A;--pl:#fce8f0;--ac:#E8194B;
-  --t:#1a1a1a;--t2:#5a6477;--bg:#fff;--bg2:#fdf5f8;--bd:#f0d0de;
-  /* 업종 색상 팔레트 */
-  --cat1:#2563eb;--cat1l:#dbeafe;  /* 파랑 - 전문직 */
-  --cat2:#16a34a;--cat2l:#dcfce7;  /* 초록 - 식품/의료 */
-  --cat3:#d97706;--cat3l:#fef3c7;  /* 주황 - 건설/제조 */
-  --cat4:#7c3aed;--cat4l:#ede9fe;  /* 보라 - 교육/서비스 */
-  --cat5:#0891b2;--cat5l:#cffafe;  /* 청록 - IT/통신 */
-  --cat6:#C8185A;--cat6l:#fce8f0;  /* 핑크 - 기타 */
-}
-body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgun Gothic',sans-serif;background:#f5edf1;display:flex;justify-content:center;padding:20px;min-height:100vh}
-.app{width:100%;max-width:460px;background:var(--bg);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(200,24,90,.15)}
-/* 헤더 */
-.hd{background:#fff;padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:62px;border-bottom:2px solid var(--p);position:relative;overflow:hidden}
-.hd::before{display:none}
-.hd::after{display:none}
-.hd-logo{display:flex;align-items:center;gap:9px;z-index:1}
-.hd-cross{width:32px;height:32px;position:relative;flex-shrink:0}
-.hd-cross svg{width:32px;height:32px}
-.hd-text{z-index:1}
-.hd-t{color:var(--p);font-size:18px;font-weight:700;letter-spacing:-.3px}
-.hd-s{color:var(--t2);font-size:18px;margin-top:1px;letter-spacing:.3px}
-.hd-btn{background:var(--p);border:none;color:#fff;border-radius:20px;padding:6px 13px;font-size:18px;cursor:pointer;font-weight:500;z-index:1}
-.hd-btn:hover{background:#9e1045}
+:root{--p:#1a5c3a;--pl:#e8f4ee;--ac:#f0a500;--t:#1a1a1a;--t2:#6b7280;--bg:#fff;--bg2:#f9fafb;--bd:#e5e7eb}
+body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgun Gothic',sans-serif;background:#f3f4f6;display:flex;justify-content:center;padding:20px;min-height:100vh}
+.app{width:100%;max-width:460px;background:var(--bg);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.10)}
+.hd{background:var(--p);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.hd-t{color:#fff;font-size:15px;font-weight:600}.hd-s{color:rgba(255,255,255,.7);font-size:11px}
+.hd-btn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:20px;padding:6px 13px;font-size:12px;cursor:pointer;font-weight:500}
+.hd-btn:hover{background:rgba(255,255,255,.28)}
 .nav{display:flex;border-bottom:1px solid var(--bd);overflow-x:auto}
 .nav::-webkit-scrollbar{display:none}
-.nb{flex:1;min-width:60px;padding:10px 4px;border:none;background:transparent;font-size:18px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.nb{flex:1;min-width:60px;padding:10px 4px;border:none;background:transparent;font-size:12px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 .nb.on{color:var(--p);border-bottom-color:var(--p);font-weight:600}
 .sc{display:none}.sc.on{display:block}
 /* 검색 */
 .sw{background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 12px}
 .kwr{display:flex;gap:6px;margin-bottom:8px}
-.kwi{flex:1;padding:8px 13px;border:1px solid var(--bd);border-radius:20px;font-size:18px;background:var(--bg);color:var(--t);outline:none}
+.kwi{flex:1;padding:8px 13px;border:1px solid var(--bd);border-radius:20px;font-size:13px;background:var(--bg);color:var(--t);outline:none}
 .kwi:focus{border-color:var(--p)}
-.kbtn{padding:8px 13px;background:var(--p);color:#fff;border:none;border-radius:20px;font-size:18px;cursor:pointer}
+.kbtn{padding:8px 13px;background:var(--p);color:#fff;border:none;border-radius:20px;font-size:12px;cursor:pointer}
 .fr{display:flex;gap:6px}
-.fsel{flex:1;padding:7px 9px;border:1px solid var(--bd);border-radius:20px;font-size:18px;background:var(--bg);color:var(--t);outline:none;cursor:pointer}
+.fsel{flex:1;padding:7px 9px;border:1px solid var(--bd);border-radius:20px;font-size:12px;background:var(--bg);color:var(--t);outline:none;cursor:pointer}
 .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.chip{display:flex;align-items:center;gap:3px;padding:3px 9px;background:var(--p);color:#fff;border-radius:12px;font-size:18px}
-.cx{cursor:pointer;font-size:18px}
+.chip{display:flex;align-items:center;gap:3px;padding:3px 9px;background:var(--p);color:#fff;border-radius:12px;font-size:11px}
+.cx{cursor:pointer;font-size:14px}
 .bl{padding:10px}
 /* 업체카드 */
 .bc{position:relative;background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:13px;margin-bottom:9px;cursor:pointer}
 .bc:hover{border-color:var(--p);box-shadow:0 2px 12px rgba(26,92,58,.08)}
 /* 운영/추천 뱃지 - 우측상단 */
-.type-badge{position:absolute;top:10px;right:10px;font-size:18px;padding:3px 8px;border-radius:6px;font-weight:700}
-.badge-own{background:#fce8f0;color:#9e1045}
+.type-badge{position:absolute;top:10px;right:10px;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700}
+.badge-own{background:#dbeafe;color:#1d4ed8}
 .badge-rec{background:#fee2e2;color:#dc2626}
 .bh{display:flex;gap:11px;align-items:flex-start}
-.bi{width:42px;height:42px;border-radius:11px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.bn{font-size:18px;font-weight:600;color:var(--t);padding-right:50px}
-.bct{font-size:18px;color:var(--p);margin:2px 0;font-weight:500}
-.bow{font-size:18px;color:var(--t2);margin-top:2px}
+.bi{width:42px;height:42px;border-radius:11px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.bn{font-size:14px;font-weight:600;color:var(--t);padding-right:50px}
+.bct{font-size:11px;color:var(--p);margin:2px 0;font-weight:500}
+.bow{font-size:12px;color:var(--t2);margin-top:2px}
 .bf{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)}
 .tgs{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
-.tg{font-size:18px;padding:2px 8px;border-radius:10px;background:var(--pl);color:#0f6e56;font-weight:500}
-.biz-desc{font-size:18px;color:var(--t2);margin-top:7px;line-height:1.6;white-space:pre-line}
-.badge-p{font-size:18px;padding:2px 6px;border-radius:8px;background:#fff3cd;color:#633806;margin-left:4px}
-.empty{text-align:center;padding:32px 16px;color:var(--t2);font-size:18px;line-height:2}
+.tg{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--pl);color:#0f6e56;font-weight:500}
+.biz-desc{font-size:12px;color:var(--t2);margin-top:7px;line-height:1.6;white-space:pre-line}
+.badge-p{font-size:10px;padding:2px 6px;border-radius:8px;background:#fff3cd;color:#633806;margin-left:4px}
+.empty{text-align:center;padding:32px 16px;color:var(--t2);font-size:13px;line-height:2}
 .fab{position:sticky;bottom:16px;right:16px;float:right;margin-right:16px;margin-bottom:16px;width:46px;height:46px;border-radius:50%;background:var(--p);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 14px rgba(26,92,58,.35)}
 /* 상세 */
 .det-hd{background:var(--p);padding:13px 16px;display:flex;align-items:center;gap:10px}
-.back-btn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.det-title{color:#fff;font-size:18px;font-weight:600;flex:1}
+.back-btn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.det-title{color:#fff;font-size:15px;font-weight:600;flex:1}
 .det-body{padding:13px}
 .det-card{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:11px}
 .det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--bd)}
 .det-row:last-child{border-bottom:none}
-.dl{font-size:18px;color:var(--t2);flex-shrink:0;margin-right:8px;white-space:nowrap}
-.dv{font-size:18px;color:var(--t);text-align:right;word-break:break-all;white-space:pre-line}
-.call-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--p);color:#fff;border:none;border-radius:13px;font-size:18px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none}
+.dl{font-size:12px;color:var(--t2);flex-shrink:0;margin-right:8px;white-space:nowrap}
+.dv{font-size:12px;color:var(--t);text-align:right;word-break:break-all;white-space:pre-line}
+.call-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--p);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none}
 .call-btn:hover{background:#155230}
 /* 후기 */
 .rv{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:13px;margin-bottom:9px}
 .rv.ppick{border-color:var(--ac);background:#fffdf5}
 .rv-hd{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.av{width:30px;height:30px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:600;flex-shrink:0}
-.av-p{background:#9e1045}
-.rn{font-size:18px;font-weight:600;color:var(--t)}
-.rt{font-size:18px;color:var(--t2);line-height:1.6}
-.rd{font-size:18px;color:var(--t2);margin-top:5px}
-.del-btn{background:none;border:none;color:var(--t2);font-size:18px;cursor:pointer;padding:2px 6px;border-radius:4px}
+.av{width:30px;height:30px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.av-p{background:#854f0b}
+.rn{font-size:13px;font-weight:600;color:var(--t)}
+.rt{font-size:12px;color:var(--t2);line-height:1.6}
+.rd{font-size:11px;color:var(--t2);margin-top:5px}
+.del-btn{background:none;border:none;color:var(--t2);font-size:11px;cursor:pointer;padding:2px 6px;border-radius:4px}
 .del-btn:hover{background:#fee2e2;color:#a32d2d}
 /* 쿠팡 */
 .cpn{padding:13px;background:var(--bg2);border-top:1px solid var(--bd)}
 .cpn-g{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .cc{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:11px;cursor:pointer}
 .cc:hover{border-color:var(--ac)}
-.cb{font-size:11px;background:#fff3cd;color:#633806;padding:2px 6px;border-radius:8px;display:inline-block;margin-bottom:5px;font-weight:600}
-.cn2{font-size:18px;font-weight:600;color:var(--t);margin-bottom:2px}
-.cpr{font-size:18px;font-weight:700;color:#a32d2d}
-.co{font-size:18px;color:var(--t2);text-decoration:line-through}
+.cb{font-size:9px;background:#fff3cd;color:#633806;padding:2px 6px;border-radius:8px;display:inline-block;margin-bottom:5px;font-weight:600}
+.cn2{font-size:12px;font-weight:600;color:var(--t);margin-bottom:2px}
+.cpr{font-size:13px;font-weight:700;color:#a32d2d}
+.co{font-size:10px;color:var(--t2);text-decoration:line-through}
 /* 모달 */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
 .ov.op{display:flex}
 .modal{background:var(--bg);border-radius:22px 22px 0 0;padding:22px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto}
 .mh{width:38px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 18px}
-.mt{font-size:19px;font-weight:700;margin-bottom:4px}
-.ms{font-size:18px;color:var(--t2);margin-bottom:18px}
+.mt{font-size:17px;font-weight:700;margin-bottom:4px}
+.ms{font-size:12px;color:var(--t2);margin-bottom:18px}
 .fg{margin-bottom:12px}
-.fl{font-size:18px;color:var(--t2);margin-bottom:5px;display:flex;align-items:center;gap:4px;font-weight:500}
-.req{font-size:18px;color:#a32d2d;font-weight:600}
-.opt-l{font-size:18px;color:var(--t2);border:1px solid var(--bd);padding:1px 6px;border-radius:4px}
-.fi{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;font-size:18px;background:var(--bg);color:var(--t);outline:none;font-family:inherit}
+.fl{font-size:12px;color:var(--t2);margin-bottom:5px;display:flex;align-items:center;gap:4px;font-weight:500}
+.req{font-size:10px;color:#a32d2d;font-weight:600}
+.opt-l{font-size:10px;color:var(--t2);border:1px solid var(--bd);padding:1px 6px;border-radius:4px}
+.fi{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;font-size:14px;background:var(--bg);color:var(--t);outline:none;font-family:inherit}
 .fi:focus{border-color:var(--p)}
-.fs{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;font-size:18px;background:var(--bg);color:var(--t);outline:none;font-family:inherit;cursor:pointer}
-.err{font-size:18px;color:#a32d2d;margin-top:5px;display:none;padding:8px 12px;background:#fff5f5;border-radius:8px}
-.bp{width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:18px;font-weight:600;cursor:pointer;margin-top:9px;font-family:inherit}
+.fs{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;font-size:14px;background:var(--bg);color:var(--t);outline:none;font-family:inherit;cursor:pointer}
+.err{font-size:12px;color:#a32d2d;margin-top:5px;display:none;padding:8px 12px;background:#fff5f5;border-radius:8px}
+.bp{width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;margin-top:9px;font-family:inherit}
 .bp:hover{background:#155230}
-.bs{width:100%;padding:10px;background:transparent;color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:18px;cursor:pointer;margin-top:7px;font-weight:500;font-family:inherit}
+.bs{width:100%;padding:10px;background:transparent;color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:13px;cursor:pointer;margin-top:7px;font-weight:500;font-family:inherit}
 .bs:hover{background:var(--pl)}
-.sdiv{font-size:18px;font-weight:600;color:var(--t2);padding:4px 0 9px;border-bottom:1px solid var(--bd);margin-bottom:12px}
+.sdiv{font-size:11px;font-weight:600;color:var(--t2);padding:4px 0 9px;border-bottom:1px solid var(--bd);margin-bottom:12px}
 /* 마이페이지 */
-.pc{background:linear-gradient(135deg,#fce8f0,#fdf2f6);border:1.5px solid #f0c0d4;border-radius:14px;padding:15px;margin-bottom:15px}
+.pc{background:var(--pl);border-radius:14px;padding:15px;margin-bottom:15px}
 .prow{display:flex;align-items:center;gap:13px;margin-bottom:11px}
-.pav{width:48px;height:48px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0}
+.pav{width:48px;height:48px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;flex-shrink:0}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
 .pi{background:var(--bg);border-radius:10px;padding:9px 11px}
-.pl2{font-size:18px;color:var(--t2);font-weight:500}
-.pv{font-size:18px;font-weight:600;color:var(--t);margin-top:2px}
+.pl2{font-size:10px;color:var(--t2);font-weight:500}
+.pv{font-size:13px;font-weight:600;color:var(--t);margin-top:2px}
 .gate{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:24px;margin:13px;text-align:center}
 .rem-row{display:flex;align-items:center;gap:9px;margin-top:10px}
 .rem-row input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--p)}
-.rem-row label{font-size:18px;color:var(--t2);cursor:pointer}
+.rem-row label{font-size:12px;color:var(--t2);cursor:pointer}
 .drop-zone{border:2px dashed var(--bd);border-radius:12px;padding:28px;text-align:center;cursor:pointer;margin-bottom:12px}
 .drop-zone:hover{border-color:var(--p)}
-.pw-warn{background:#fff3cd;border:1px solid #f0c040;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:18px;color:#633806}
+.pw-warn{background:#fff3cd;border:1px solid #f0c040;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#633806}
 /* 매칭 박스 */
 .match-box{background:#e8f4ee;border:1.5px solid var(--p);border-radius:12px;padding:14px;margin-bottom:14px}
-.match-box h4{font-size:18px;font-weight:700;color:var(--p);margin-bottom:8px}
+.match-box h4{font-size:14px;font-weight:700;color:var(--p);margin-bottom:8px}
 .match-item{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
 /* 찜 */
-.like-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px;line-height:1;transition:transform .15s}
+.like-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;line-height:1;transition:transform .15s}
 .like-btn:hover{transform:scale(1.2)}
 /* 관리자 */
 .admin-tab{display:flex;border-bottom:1px solid var(--bd);margin-bottom:12px}
-.at{flex:1;padding:8px;border:none;background:transparent;font-size:18px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent}
+.at{flex:1;padding:8px;border:none;background:transparent;font-size:12px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent}
 .at.on{color:var(--p);border-bottom-color:var(--p);font-weight:600}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .stat-card{background:var(--pl);border-radius:12px;padding:13px;text-align:center}
 .stat-num{font-size:26px;font-weight:700;color:var(--p)}
-.stat-label{font-size:18px;color:var(--t2);margin-top:3px}
+.stat-label{font-size:11px;color:var(--t2);margin-top:3px}
 .admin-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:11px;margin-bottom:7px}
 .admin-row-info{flex:1}
-.admin-row-name{font-size:18px;font-weight:600}
-.admin-row-sub{font-size:18px;color:var(--t2);margin-top:2px}
-.admin-del{padding:4px 10px;background:transparent;color:#a32d2d;border:1px solid #a32d2d;border-radius:7px;font-size:18px;cursor:pointer;flex-shrink:0}
+.admin-row-name{font-size:13px;font-weight:600}
+.admin-row-sub{font-size:11px;color:var(--t2);margin-top:2px}
+.admin-del{padding:4px 10px;background:transparent;color:#a32d2d;border:1px solid #a32d2d;border-radius:7px;font-size:11px;cursor:pointer;flex-shrink:0}
 .admin-del:hover{background:#fee2e2}
 /* 로딩 */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;gap:12px}
 .spinner{width:36px;height:36px;border:3px solid var(--pl);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:18px;color:var(--t2)}
+.loading-text{font-size:12px;color:var(--t2)}
 .sk-card{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:13px;margin-bottom:9px}
 .skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bd) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:8px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .sk-line{height:12px;margin-bottom:8px}
 .sk-line.w100{width:100%}.sk-line.w70{width:70%}.sk-line.w50{width:50%}.sk-line.w30{width:30%}
-/* 검색 UI 개선 */
-.search-wrap{background:var(--bg);border-bottom:1px solid var(--bd);padding:10px 12px}
-.search-row{display:flex;gap:6px;align-items:center;background:var(--bg2);border:1.5px solid var(--bd);border-radius:22px;padding:7px 13px;transition:border-color .2s}
-.search-row:focus-within{border-color:var(--p);background:#fff}
-.search-icon{font-size:18px;flex-shrink:0}
-.search-input{flex:1;border:none;background:transparent;font-size:18px;color:var(--t);outline:none;font-family:inherit}
-.search-input::placeholder{color:#aaa}
-.search-clear{background:none;border:none;color:var(--t2);font-size:19px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0}
-.filter-row{display:flex;gap:6px;margin-top:8px;align-items:center;overflow-x:auto}
-.filter-row::-webkit-scrollbar{display:none}
-.fsel2{flex-shrink:0;padding:5px 10px;border:1px solid var(--bd);border-radius:16px;font-size:18px;background:var(--bg);color:var(--t);outline:none;cursor:pointer}
-.fsel2.on{border-color:var(--p);color:var(--p);background:var(--pl);font-weight:600}
-.cat-chip-wrap{display:flex;gap:5px;overflow-x:auto;flex:1}
-.cat-chip-wrap::-webkit-scrollbar{display:none}
-.cat-chip{flex-shrink:0;padding:4px 10px;border:1px solid var(--bd);border-radius:14px;font-size:18px;background:var(--bg);color:var(--t2);cursor:pointer;white-space:nowrap}
-.cat-chip.on{border-color:var(--p);color:var(--p);background:var(--pl);font-weight:600}
-.result-bar{display:flex;align-items:center;justify-content:space-between;padding:7px 12px 0;font-size:18px;color:var(--t2)}
-.result-count{font-weight:600;color:var(--p)}
-/* 사진 업로드 */
-.photo-upload-area{border:2px dashed var(--bd);border-radius:12px;padding:16px;text-align:center;cursor:pointer;margin-bottom:8px;transition:border-color .2s}
-.photo-upload-area:hover{border-color:var(--p)}
-.photo-preview-wrap{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}
-.photo-thumb{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;flex-shrink:0}
-.photo-thumb img{width:100%;height:100%;object-fit:cover}
-.photo-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.55);border:none;color:#fff;border-radius:50%;width:18px;height:18px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-/* 상세 사진 갤러리 */
-.det-gallery{display:flex;gap:7px;overflow-x:auto;padding:0 13px 11px;margin-top:2px}
-.det-gallery::-webkit-scrollbar{display:none}
-.det-gallery img{height:140px;border-radius:11px;object-fit:cover;flex-shrink:0;cursor:pointer;max-width:200px}
-/* 후기 사진 */
-.rv-photos{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.rv-photos img{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer}
-/* 사진 뷰어 */
-.photo-viewer{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:center;justify-content:center}
-.photo-viewer.on{display:flex}
-.photo-viewer img{max-width:95vw;max-height:90vh;border-radius:10px;object-fit:contain}
-.photo-viewer-close{position:fixed;top:18px;right:20px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center}
-/* 약관 동의 */
-.terms-wrap{border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:14px}
-.terms-all{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg2);border-bottom:2px solid var(--bd);cursor:pointer;user-select:none}
-.terms-all-text .ta-label{font-size:18px;font-weight:700;color:var(--t)}
-.terms-all-text .ta-sub{font-size:18px;color:var(--t2);margin-top:2px}
-.terms-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bd);user-select:none}
-.terms-item:last-child{border-bottom:none}
-.ti-label{font-size:18px;color:var(--t);flex:1;line-height:1.4}
-.ti-link{font-size:18px;color:var(--p);white-space:nowrap;cursor:pointer;padding:2px 7px;border:1px solid var(--p);border-radius:6px;flex-shrink:0}
-.tc-box{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;cursor:pointer}
-.tc-box.on{border-color:var(--p);background:var(--p)}
-.tc-box.on::after{content:'✓';color:#fff;font-size:18px;font-weight:800}
-.terms-content{font-size:18px;color:var(--t2);line-height:1.8;max-height:55vh;overflow-y:auto;padding:4px 2px;white-space:pre-wrap}
 </style>
+  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xy1r6dv1u1&submodules=geocoder"></script>
 </head>
 <body>
 <div class="app">
   <div class="hd">
-    <div class="hd-logo">
-      <img id="churchLogo" alt="사랑하는교회" style="height:42px;object-fit:contain" src="data:image/png;base64,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">
-      <div style="border-left:1px solid var(--bd);padding-left:10px;margin-left:4px">
-        <div style="font-size:18px;font-weight:700;color:var(--p);letter-spacing:-.3px">사랑하는교회</div>
-        <div style="font-size:18px;color:var(--t2);margin-top:1px">성도 비즈니스 네트워크</div>
-      </div>
-    </div>
+    <div><div class="hd-t">사랑하는교회 사업소개</div><div class="hd-s">성도 비즈니스 네트워크</div></div>
     <button class="hd-btn" id="loginBtn" onclick="onHdBtn()">로그인</button>
   </div>
   <div class="nav">
     <button class="nb on" onclick="showTab('list',this)">목록</button>
+    <button class="nb" onclick="showTab('rec',this)">추천</button>
     <button class="nb" onclick="showTab('map',this)">지도</button>
     <button class="nb" onclick="showTab('reviews',this)">후기</button>
     <button class="nb" onclick="showTab('mypage',this)">마이페이지</button>
@@ -241,29 +169,33 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   <div class="sc on" id="sc-list">
     <div class="sw">
       <div class="kwr">
-        <input class="kwi" id="kwInput" placeholder="키워드 검색..." oninput="doFilter()" autocomplete="off">
+        <input class="kwi" id="kwInput" placeholder="키워드 검색..." oninput="doFilter()">
         <button class="kbtn" onclick="clearAll()">초기화</button>
       </div>
       <div class="fr">
-        <select class="fsel" id="catSel" onchange="doFilter()"><option value="">업종 전체</option><option value="간판/광고">간판/광고</option><option value="건축/건설">건축/건설</option><option value="교육">교육</option><option value="귀금속/예물">귀금속/예물</option><option value="그 외">그 외</option><option value="기타">기타</option><option value="꽃집">꽃집</option><option value="농업/임업/축산업">농업/임업/축산업</option><option value="렌탈">렌탈</option><option value="법률/세무">법률/세무</option><option value="병원/의료">병원/의료</option><option value="보험">보험</option><option value="부동산">부동산</option><option value="서비스">서비스</option><option value="설비">설비</option><option value="숙박">숙박</option><option value="스포츠">스포츠</option><option value="식품/음식점">식품/음식점</option><option value="온라인판매">온라인판매</option><option value="요양시설">요양시설</option><option value="운수">운수</option><option value="유통">유통</option><option value="이미용">이미용</option><option value="인테리어">인테리어</option><option value="자동차">자동차</option><option value="정보통신/컴퓨터">정보통신/컴퓨터</option><option value="제조">제조</option><option value="종교">종교</option><option value="카페">카페</option><option value="판매">판매</option></select>
-        <input class="fsel" id="regionInput" placeholder="지역 검색 (예: 서울, 인천)" oninput="doFilter()" style="cursor:text">
+        <select class="fsel" id="catSel" onchange="doFilter()"><option value="">업종 전체</option></select>
+        <input class="fsel" id="regionInput" placeholder="지역 검색 (예: 경기도, 군포)" oninput="doFilter()" style="cursor:text">
       </div>
-    <div class="chips" id="chips"></div>
+      <div class="chips" id="chips"></div>
     </div>
     <div class="bl" id="bizList"></div>
     <button class="fab" onclick="requireLogin('biz')">+</button>
-
-    <!-- 쿠팡 아프리카 후원 배너 -->
-    <div style="margin:16px 12px 20px;border:1.5px solid #f0c8d0;border-radius:14px;overflow:hidden;background:#fff">
-      <div style="padding:14px 15px">
-        <p style="font-size:18px;color:#6b7280;line-height:1.8;margin-bottom:11px;font-weight:700;text-align:center">이 포스팅은 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</p>
-        <a href="https://link.coupang.com/a/eADPS5" target="_blank"
-          style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:#C8185A;color:#fff;border-radius:10px;font-size:18px;font-weight:700;text-decoration:none;box-sizing:border-box;margin-bottom:11px">
-          🛒 쿠팡에서 쇼핑하고 아프리카 후원하기
-        </a>
-        <p style="font-size:18px;color:#6b7280;line-height:1.7;text-align:center;font-weight:700">🌍 쇼핑금액의 1%를 아프리카선교헌금으로 쓰입니다.</p>
+    <div class="cpn">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:9px;font-weight:600">🛒 쿠팡 추천 상품</div>
+      <div class="cpn-g">
+        <div class="cc"><div class="cb">로켓배송</div><div class="cn2">꽃 보존액 500ml</div><div class="cpr">12,900원</div><div class="co">18,000원</div></div>
+        <div class="cc"><div class="cb">특가</div><div class="cn2">명함 100매</div><div class="cpr">3,500원</div><div class="co">8,000원</div></div>
+        <div class="cc"><div class="cb">로켓배송</div><div class="cn2">소상공인 POS기</div><div class="cpr">89,000원</div><div class="co">120,000원</div></div>
+        <div class="cc"><div class="cb">베스트</div><div class="cn2">업소용 앞치마</div><div class="cpr">7,200원</div><div class="co">12,000원</div></div>
       </div>
+      <p style="font-size:10px;color:var(--t2);margin-top:9px;text-align:center">이 링크를 통한 구매 시 교회 방송선교 후원에 도움이 됩니다</p>
     </div>
+  </div>
+
+  <!-- 추천 사업체 -->
+  <div class="sc" id="sc-rec">
+    <div class="bl" id="recList"></div>
+    <button class="fab" onclick="requireLogin('rec')">+</button>
   </div>
 
   <!-- 상세 -->
@@ -279,30 +211,13 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 
   <!-- 지도 -->
   <div class="sc" id="sc-map">
-    <div style="background:#e8f4ee;height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-bottom:1px solid var(--bd)">
-      <div style="font-size:18px;font-weight:600;color:var(--p);margin-bottom:8px">📍 성도 사업체 위치</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center" id="mapPins"></div>
-      <div style="font-size:18px;color:var(--t2);margin-top:8px">네이버지도 API 키 연동 시 실제 지도 표시</div>
+    <div style="padding:10px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center">
+      <input id="mapSearchInput" class="kwi" placeholder="업체명, 업종, 지역..." oninput="filterMap()" style="flex:1;font-size:15px;padding:7px 12px">
+      <select id="mapCatFilter" class="fsel" onchange="filterMap()" style="max-width:120px;font-size:14px;padding:7px 8px"></select>
     </div>
-    <div style="padding:9px" id="mapList"></div>
+    <div id="naverMap" style="width:100%;height:400px"></div>
+    <div style="padding:9px;max-height:300px;overflow-y:auto" id="mapList"></div>
   </div>
-
-  <!-- 후기 -->
-  <div class="sc" id="sc-reviews">
-    <div style="padding:13px" id="rvListAll"></div>
-    <button class="fab" onclick="requireLogin('review')">+</button>
-  </div>
-
-  <!-- 마이페이지 -->
-  <div class="sc" id="sc-mypage">
-    <div style="padding:13px" id="mypageContent"></div>
-  </div>
-
-  <!-- 관리자 -->
-  <div class="sc" id="sc-admin">
-    <div style="padding:13px" id="adminContent"></div>
-  </div>
-</div>
 
 <!-- 로그인선택 -->
 <div class="ov" id="choiceM">
@@ -324,57 +239,17 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <div id="matchBox" style="display:none" class="match-box">
       <h4>🏪 등록된 사업체가 있습니다!</h4>
       <div id="matchList"></div>
-      <div style="font-size:18px;color:#0f6e56;margin-top:6px">가입 완료 후 해당 사업체가 자동으로 연결됩니다.</div>
+      <div style="font-size:11px;color:#0f6e56;margin-top:6px">가입 완료 후 해당 사업체가 자동으로 연결됩니다.</div>
     </div>
     <div class="fg"><label class="fl">비밀번호 <span class="req">필수</span></label><input class="fi" id="jPw" placeholder="비밀번호 (6자 이상)" type="password"></div>
-    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="jChurch"><option value="">선택해주세요</option><option value="강릉">강릉</option><option value="경주">경주</option><option value="광주">광주</option><option value="구미">구미</option><option value="남양주">남양주</option><option value="대구">대구</option><option value="대전">대전</option><option value="목포">목포</option><option value="부산">부산</option><option value="부천">부천</option><option value="서산">서산</option><option value="서울">서울</option><option value="수원">수원</option><option value="순천">순천</option><option value="안동">안동</option><option value="안산">안산</option><option value="안양">안양</option><option value="양산">양산</option><option value="용인">용인</option><option value="울산">울산</option><option value="원주">원주</option><option value="의정부">의정부</option><option value="익산">익산</option><option value="인천">인천</option><option value="일산">일산</option><option value="전주">전주</option><option value="제주">제주</option><option value="제천">제천</option><option value="창원">창원</option><option value="천안">천안</option><option value="청주">청주</option><option value="춘천">춘천</option><option value="통영">통영</option><option value="평택">평택</option><option value="포항">포항</option><option value="화성">화성</option></select></div>
+    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="jChurch"><option value="">선택해주세요</option></select></div>
     <div class="fg"><label class="fl">직분 <span class="req">필수</span></label>
-      <select class="fs" id="jRole"><option value="">직분 선택</option><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select>
+      <select class="fs" id="jRole"><option value="">선택해주세요</option><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select>
     </div>
     <div class="fg"><label class="fl">교번 <span class="opt-l">선택</span></label><input class="fi" id="jNo" placeholder="예: 2024-0001"></div>
-
-    <!-- 약관 동의 -->
-    <div class="terms-wrap">
-      <div class="terms-all" onclick="toggleAllTerms()">
-        <div class="tc-box" id="tc-all"></div>
-        <div class="terms-all-text">
-          <div class="ta-label">전체 동의합니다.</div>
-          <div class="ta-sub">선택항목에 동의하지 않아도 서비스를 이용할 수 있습니다.</div>
-        </div>
-      </div>
-      <div class="terms-item">
-        <div class="tc-box" id="tc-1" onclick="toggleTerm('tc-1')"></div>
-        <div class="ti-label">이용약관 동의 <span style="color:var(--ac);font-size:18px;font-weight:600">(필수)</span></div>
-        <span class="ti-link" onclick="openTermsView('use')">약관보기 ›</span>
-      </div>
-      <div class="terms-item">
-        <div class="tc-box" id="tc-2" onclick="toggleTerm('tc-2')"></div>
-        <div class="ti-label">개인정보 수집·이용 동의 <span style="color:var(--ac);font-size:18px;font-weight:600">(필수)</span></div>
-        <span class="ti-link" onclick="openTermsView('privacy')">약관보기 ›</span>
-      </div>
-      <div class="terms-item">
-        <div class="tc-box" id="tc-3" onclick="toggleTerm('tc-3')"></div>
-        <div class="ti-label">마케팅·알림 수신 동의 <span style="color:var(--t2);font-size:18px">(선택)</span></div>
-        <span class="ti-link" onclick="openTermsView('marketing')">약관보기 ›</span>
-      </div>
-      <div class="terms-item">
-        <div class="tc-box" id="tc-4" onclick="toggleTerm('tc-4')"></div>
-        <div class="ti-label">본인은 만 14세 이상입니다. <span style="color:var(--ac);font-size:18px;font-weight:600">(필수)</span></div>
-      </div>
-    </div>
-
     <div id="joinErr" class="err"></div>
     <button class="bp" onclick="doJoin()">가입하기</button>
     <button class="bs" onclick="closeM('joinM');openM('choiceM')">뒤로가기</button>
-  </div>
-</div>
-
-<!-- 약관 내용 모달 -->
-<div class="ov" id="termsViewM">
-  <div class="modal"><div class="mh"></div>
-    <div class="mt" id="termsViewTitle">약관</div>
-    <div class="terms-content" id="termsViewContent"></div>
-    <button class="bp" style="margin-top:14px" onclick="closeM('termsViewM')">확인</button>
   </div>
 </div>
 
@@ -384,7 +259,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <div class="mt">로그인</div><div class="ms">전화번호와 비밀번호로 로그인</div>
     <div class="fg"><label class="fl">전화번호 <span class="req">필수</span></label><input class="fi" id="lPhone" placeholder="010-0000-0000" type="tel" oninput="formatPhone(this)"></div>
     <div class="fg"><label class="fl">비밀번호 <span class="req">필수</span></label><input class="fi" id="lPw" placeholder="비밀번호" type="password"></div>
-    <div class="rem-row"><input type="checkbox" id="rememberMe" checked><label for="rememberMe">로그인 상태 유지</label></div>
+    <div class="rem-row"><input type="checkbox" id="rememberMe"><label for="rememberMe">로그인 상태 유지</label></div>
     <div id="loginErr" class="err"></div>
     <button class="bp" onclick="doLogin()">로그인</button>
     <button class="bs" onclick="closeM('loginM');openM('joinM')">회원가입하기</button>
@@ -398,7 +273,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <div class="mt">회원정보 수정</div><div class="ms">정보를 수정 후 저장해주세요</div>
     <div class="fg"><label class="fl">이름 <span class="req">필수</span></label><input class="fi" id="epName"></div>
     <div class="fg"><label class="fl">전화번호</label><input class="fi" id="epPhone" type="tel" oninput="formatPhone(this)"></div>
-    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="epChurch"><option value="">선택해주세요</option><option value="강릉">강릉</option><option value="경주">경주</option><option value="광주">광주</option><option value="구미">구미</option><option value="남양주">남양주</option><option value="대구">대구</option><option value="대전">대전</option><option value="목포">목포</option><option value="부산">부산</option><option value="부천">부천</option><option value="서산">서산</option><option value="서울">서울</option><option value="수원">수원</option><option value="순천">순천</option><option value="안동">안동</option><option value="안산">안산</option><option value="안양">안양</option><option value="양산">양산</option><option value="용인">용인</option><option value="울산">울산</option><option value="원주">원주</option><option value="의정부">의정부</option><option value="익산">익산</option><option value="인천">인천</option><option value="일산">일산</option><option value="전주">전주</option><option value="제주">제주</option><option value="제천">제천</option><option value="창원">창원</option><option value="천안">천안</option><option value="청주">청주</option><option value="춘천">춘천</option><option value="통영">통영</option><option value="평택">평택</option><option value="포항">포항</option><option value="화성">화성</option></select></div>
+    <div class="fg"><label class="fl">등록교회 <span class="req">필수</span></label><select class="fs" id="epChurch"></select></div>
     <div class="fg"><label class="fl">직분</label><select class="fs" id="epRole"><option>성도</option><option>집사</option><option>권사</option><option>장로</option><option>목사</option><option>전도사</option><option>안수집사</option></select></div>
     <div class="fg"><label class="fl">교번 <span class="opt-l">선택</span></label><input class="fi" id="epNo"></div>
     <button class="bp" onclick="saveProfile()">저장하기</button>
@@ -426,28 +301,18 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <div class="ms">내 사업을 성도들에게 소개해요</div>
     <input type="hidden" id="editBizId" value="">
     <div class="fg"><label class="fl">등록 유형 <span class="req">필수</span></label>
-      <select class="fs" id="bType" onchange="onBizTypeChange()"><option value="own">운영 사업체</option><option value="rec">추천 사업체</option></select>
+      <select class="fs" id="bType"><option value="own">운영 사업체</option><option value="rec">추천 사업체</option></select>
     </div>
     <div class="sdiv">필수 정보</div>
     <div class="fg"><label class="fl">상호명 <span class="req">필수</span></label><input class="fi" id="bName" placeholder="예: 은혜 꽃집"></div>
-    <div class="fg"><label class="fl">업종 <span class="req">필수</span></label><select class="fs" id="bCat"><option value="">선택해주세요</option><option value="간판/광고">간판/광고</option><option value="건축/건설">건축/건설</option><option value="교육">교육</option><option value="귀금속/예물">귀금속/예물</option><option value="그 외">그 외</option><option value="기타">기타</option><option value="꽃집">꽃집</option><option value="농업/임업/축산업">농업/임업/축산업</option><option value="렌탈">렌탈</option><option value="법률/세무">법률/세무</option><option value="병원/의료">병원/의료</option><option value="보험">보험</option><option value="부동산">부동산</option><option value="서비스">서비스</option><option value="설비">설비</option><option value="숙박">숙박</option><option value="스포츠">스포츠</option><option value="식품/음식점">식품/음식점</option><option value="온라인판매">온라인판매</option><option value="요양시설">요양시설</option><option value="운수">운수</option><option value="유통">유통</option><option value="이미용">이미용</option><option value="인테리어">인테리어</option><option value="자동차">자동차</option><option value="정보통신/컴퓨터">정보통신/컴퓨터</option><option value="제조">제조</option><option value="종교">종교</option><option value="카페">카페</option><option value="판매">판매</option></select></div>
-    <div class="fg" id="fgBizPhone"><label class="fl" id="lblBizPhone">사업체 전화 <span class="opt-l">일반전화 · 선택</span></label><input class="fi" id="bBizPhone" placeholder="02-000-0000 (사무실·매장 번호)" oninput="formatPhone(this)"></div>
-    <div class="fg" id="fgPhone"><label class="fl" id="lblPhone">담당자 휴대폰 <span class="req">필수</span></label><input class="fi" id="bPhone" placeholder="010-0000-0000" oninput="formatPhone(this)"></div>
+    <div class="fg"><label class="fl">업종 <span class="req">필수</span></label><select class="fs" id="bCat"><option value="">선택해주세요</option></select></div>
+    <div class="fg"><label class="fl">연락처 <span class="req">필수</span></label><input class="fi" id="bPhone" placeholder="010-0000-0000" oninput="formatPhone(this)"></div>
     <div class="fg"><label class="fl">주소 <span class="req">필수</span></label><input class="fi" id="bAddr" placeholder="주소를 입력해주세요"></div>
     <div class="sdiv">선택 정보</div>
     <div class="fg"><label class="fl">사업자등록번호 <span class="opt-l">선택</span></label><input class="fi" id="bRegNo" placeholder="000-00-00000"></div>
     <div class="fg"><label class="fl">홈페이지 <span class="opt-l">선택</span></label><input class="fi" id="bWeb" placeholder="https://..."></div>
     <div class="fg"><label class="fl">키워드 <span class="opt-l">선택</span></label><input class="fi" id="bKw" placeholder="성도할인, 24시간, 무료상담"></div>
     <div class="fg"><label class="fl">소개 <span class="opt-l">선택</span></label><textarea class="fi" id="bDesc" placeholder="사업체 소개를 입력해주세요" rows="3" style="resize:none"></textarea></div>
-    <div class="fg">
-      <label class="fl">사업체 사진 <span class="opt-l">선택 · 최대 4장</span></label>
-      <div class="photo-preview-wrap" id="bizPhotoPreview"></div>
-      <div class="photo-upload-area" onclick="document.getElementById('bizPhotoInput').click()">
-        <div style="font-size:22px;margin-bottom:4px">📷</div>
-        <div style="font-size:18px;color:var(--t2)">클릭해서 사진 추가</div>
-      </div>
-      <input type="file" id="bizPhotoInput" accept="image/*" multiple style="display:none" onchange="addBizPhotos(this.files)">
-    </div>
     <div id="bizErr" class="err"></div>
     <button class="bp" onclick="saveBiz()">저장하기</button>
     <button class="bs" onclick="closeM('addBizM')">닫기</button>
@@ -458,35 +323,14 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 <div class="ov" id="addRvM">
   <div class="modal"><div class="mh"></div>
     <div class="mt">후기 작성</div><div class="ms">이용한 사업체에 후기를 남겨주세요</div>
-    <div class="fg" style="position:relative">
-      <label class="fl">사업체 <span class="req">필수</span></label>
-      <input class="fi" id="rvBizSearch" placeholder="업체명을 입력해서 검색하세요" autocomplete="off" oninput="rvBizSearchInput()" onfocus="rvBizSearchInput()">
-      <input type="hidden" id="rvBiz">
-      <div id="rvBizDrop" style="display:none;position:absolute;left:0;right:0;background:#fff;border:1px solid var(--bd);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;max-height:200px;overflow-y:auto;margin-top:2px"></div>
-      <div id="rvBizSelected" style="display:none;margin-top:6px;padding:7px 11px;background:var(--pl);border-radius:8px;font-size:18px;color:var(--p);font-weight:600;display:flex;align-items:center;justify-content:space-between"></div>
-    </div>
+    <div class="fg"><label class="fl">사업체 <span class="req">필수</span></label><select class="fs" id="rvBiz"></select></div>
     <div class="fg"><label class="fl">별점 <span class="req">필수</span></label>
       <select class="fs" id="rvStars"><option value="5">⭐⭐⭐⭐⭐ 최고예요</option><option value="4">⭐⭐⭐⭐ 좋아요</option><option value="3">⭐⭐⭐ 보통이에요</option><option value="2">⭐⭐ 별로예요</option><option value="1">⭐ 나빠요</option></select>
     </div>
     <div class="fg"><label class="fl">후기 내용 <span class="req">필수</span></label><input class="fi" id="rvText" placeholder="이용 경험을 공유해주세요"></div>
-    <div class="fg">
-      <label class="fl">후기 사진 <span class="opt-l">선택 · 최대 3장</span></label>
-      <div class="photo-preview-wrap" id="rvPhotoPreview"></div>
-      <div class="photo-upload-area" onclick="document.getElementById('rvPhotoInput').click()">
-        <div style="font-size:22px;margin-bottom:3px">📷</div>
-        <div style="font-size:18px;color:var(--t2)">클릭해서 사진 추가</div>
-      </div>
-      <input type="file" id="rvPhotoInput" accept="image/*" multiple style="display:none" onchange="addRvPhotos(this.files)">
-    </div>
     <button class="bp" onclick="addReview()">등록하기</button>
     <button class="bs" onclick="closeM('addRvM')">닫기</button>
   </div>
-</div>
-
-<!-- 사진 전체보기 뷰어 -->
-<div class="photo-viewer" id="photoViewer" onclick="closeViewer()">
-  <button class="photo-viewer-close" onclick="closeViewer()">×</button>
-  <img id="viewerImg" src="" alt="">
 </div>
 
 <!-- CSV업로드 (관리자용) -->
@@ -494,20 +338,20 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   <div class="modal"><div class="mh"></div>
     <div class="mt">회원/사업체 CSV 업로드</div>
     <div class="ms">CSV 파일로 회원과 사업체를 일괄 등록해요</div>
-    <div style="background:var(--pl);border-radius:11px;padding:13px;margin-bottom:14px;font-size:18px;color:#0f6e56;line-height:1.9">
+    <div style="background:var(--pl);border-radius:11px;padding:13px;margin-bottom:14px;font-size:12px;color:#0f6e56;line-height:1.9">
       <strong>📋 파일 형식</strong><br>
       이름 / 전화번호 / 비밀번호 / 등록교회 / 직분 / 업종 / 상호 / 주소 / 비고<br>
       2행은 안내행으로 자동 건너뜀 · 초기 비밀번호: <strong>1111</strong>
     </div>
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--p)'" ondragleave="this.style.borderColor=''" ondrop="handleDrop(event)">
       <div style="font-size:28px;margin-bottom:8px">📂</div>
-      <div style="font-size:18px;font-weight:600;color:var(--t);margin-bottom:4px">클릭하거나 파일을 드래그하세요</div>
-      <div style="font-size:18px;color:var(--t2)">.csv 파일만 지원</div>
+      <div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:4px">클릭하거나 파일을 드래그하세요</div>
+      <div style="font-size:11px;color:var(--t2)">.csv 파일만 지원</div>
     </div>
     <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
     <div id="csvPreview" style="display:none">
-      <div style="font-size:18px;font-weight:600;color:var(--t2);margin-bottom:8px" id="csvCount"></div>
-      <div style="max-height:220px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;font-size:18px" id="csvTable"></div>
+      <div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:8px" id="csvCount"></div>
+      <div style="max-height:220px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;font-size:11px" id="csvTable"></div>
       <button class="bp" onclick="doUpload()" style="margin-top:12px">등록하기</button>
     </div>
     <button class="bs" style="color:var(--t2);border-color:var(--bd);margin-top:8px" onclick="closeM('csvM')">닫기</button>
@@ -518,14 +362,678 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 <div class="ov" id="gateM">
   <div class="modal"><div class="mh"></div>
     <div style="text-align:center;font-size:32px;margin-bottom:10px">🔒</div>
-    <div style="text-align:center;font-size:18px;font-weight:700;margin-bottom:8px" id="gateTx"></div>
-    <div style="text-align:center;font-size:18px;color:var(--t2);line-height:1.8;margin-bottom:20px" id="gateDesc"></div>
+    <div style="text-align:center;font-size:15px;font-weight:700;margin-bottom:8px" id="gateTx"></div>
+    <div style="text-align:center;font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:20px" id="gateDesc"></div>
     <button class="bp" onclick="closeM('gateM');openM('joinM')">회원가입하기</button>
     <button class="bs" onclick="closeM('gateM');openM('loginM')">이미 가입됐어요 → 로그인</button>
     <button class="bs" style="color:var(--t2);border-color:var(--bd)" onclick="closeM('gateM')">닫기</button>
   </div>
 </div>
 
+<script>
+const EM = {'간판/광고':'📢','건축/건설':'🏗️','교육':'📚','꽃집':'🌸','렌탈':'🔧','병원/의료':'🏥','보험':'🛡️','부동산':'🏠','서비스':'💼','스포츠':'⚽','숙박':'🏨','식품/음식점':'🍽️','온라인판매':'🛒','요양시설':'❤️','유통':'📦','이미용':'✂️','인테리어':'🛋️','자동차':'🚗','정보통신/컴퓨터':'💻','제조':'⚙️','카페':'☕','판매':'🏪','법률/세무':'⚖️','설비':'🔩','농업/임업/축산업':'🌾','귀금속/예물':'💍','운수':'🚚','그 외':'🔮','기타':'📌'};
+const REGIONS = ['강릉','경주','광주','구미','남양주','대구','대전','목포','부산','부천','서울','순천','안동','안산','안양','양산','용인','울산','의정부','익산','인천','일산','전주','제주','제천','창원','천안','춘천','통영','포항','평택','화성','수원'];
+const CATS = Object.keys(EM);
+const PASTOR = ['목사','전도사'];
+const CL = ['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
+
+let S = { user:null, members:[], biz:[], bizDB:[], reviews:[], csvParsed:[], likes:[] };
+let prevTab = 'list';
+
+
+function formatPhone(input) {
+  var v = input.value.replace(/[^0-9]/g,'');
+  // 02 (서울) - 2자리 지역코드
+  if(v.startsWith('02')){
+    if(v.length<=2) input.value=v;
+    else if(v.length<=6) input.value='02-'+v.slice(2);
+    else if(v.length<=9) input.value='02-'+v.slice(2,5)+'-'+v.slice(5);  // 02-xxx-xxxx (7자리)
+    else input.value='02-'+v.slice(2,6)+'-'+v.slice(6,10); // 02-xxxx-xxxx (8자리)
+  }
+  // 010,011,016,017,018,019 (휴대폰)
+  else if(/^01[016789]/.test(v)){
+    if(v.length<=3) input.value=v;
+    else if(v.length<=7) input.value=v.slice(0,3)+'-'+v.slice(3);
+    else input.value=v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7,11);
+  }
+  // 030,031~099 (일반 지역번호 3자리)
+  else if(v.length>0){
+    if(v.length<=3) input.value=v;
+    else if(v.length<=6) input.value=v.slice(0,3)+'-'+v.slice(3);
+    else if(v.length<=9) input.value=v.slice(0,3)+'-'+v.slice(3,6)+'-'+v.slice(6);
+    else input.value=v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7,11);
+  }
+}
+
+function initSelects() {
+  ['jChurch','epChurch'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    REGIONS.forEach(function(r){ var o=document.createElement('option'); o.value=o.textContent=r; el.appendChild(o); });
+  });
+  ['catSel','bCat'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    CATS.forEach(function(c){ var o=document.createElement('option'); o.value=o.textContent=c; el.appendChild(o); });
+  });
+}
+
+// ── 로딩 ─────────────────────────────────
+function showLoading(id, txt) {
+  var el=document.getElementById(id);
+  if(el) el.innerHTML='<div class="loading"><div class="spinner"></div><div class="loading-text">'+(txt||'불러오는 중...')+'</div></div>';
+}
+function showSkeletons(id, n) {
+  var el=document.getElementById(id); if(!el) return;
+  var h='';
+  for(var i=0;i<(n||4);i++){
+    h+='<div class="sk-card"><div style="display:flex;gap:11px"><div class="skeleton" style="width:42px;height:42px;border-radius:11px;flex-shrink:0"></div>';
+    h+='<div style="flex:1"><div class="skeleton sk-line w70"></div><div class="skeleton sk-line w50"></div><div class="skeleton sk-line w30"></div></div></div>';
+    h+='<div style="margin-top:8px"><div class="skeleton sk-line w100"></div></div></div>';
+  }
+  el.innerHTML=h;
+}
+
+// ── 탭 ───────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('sc-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name!=='detail') prevTab=name;
+  if(name==='list'){ showSkeletons('bizList',4); setTimeout(function(){doFilter();},200); }
+  if(name==='rec'){ showSkeletons('recList',4); setTimeout(function(){renderRec();},200); }
+  if(name==='map'){ showLoading('mapList','지도 불러오는 중...'); setTimeout(function(){renderMap();},200); }
+  if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
+  if(name==='mypage') renderMypage();
+  if(name==='admin') renderAdmin();
+}
+
+function goBack() {
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('sc-'+prevTab).classList.add('on');
+  document.querySelectorAll('.nb').forEach(function(b){
+    if(b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+prevTab+"'")) b.classList.add('on');
+  });
+  if(prevTab==='list') doFilter();
+  else if(prevTab==='rec') renderRec();
+}
+
+// ── 업체 카드 HTML ───────────────────────
+function bizCardHtml(b) {
+  var rvs = S.reviews.filter(function(r){return r.bizId===b.id;});
+  var avg = rvs.length ? Math.round(rvs.reduce(function(s,r){return s+r.stars;},0)/rvs.length*10)/10 : 0;
+  var kws = b.kw ? b.kw.split(',').filter(function(k){return k;}).map(function(k){return '<span class="tg">'+k.trim()+'</span>';}).join('') : '';
+  var tel = (b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+  var liked = isLiked(b.id);
+  var typeBadge = b.type==='own'
+    ? '<span class="type-badge badge-own">운영</span>'
+    : '<span class="type-badge badge-rec">추천</span>';
+  var desc = b.desc ? '<div class="biz-desc">'+b.desc+'</div>' : '';
+  return '<div class="bc" onclick="showDetail('+b.id+')">'+
+    typeBadge+
+    '<div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div>'+
+    '<div style="flex:1">'+
+      '<div class="bn">'+b.name+'</div>'+
+      '<div class="bct">'+b.cat+'</div>'+
+      '<div class="bow">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</div>'+
+    '</div></div>'+
+    (b.addr ? '<div style="font-size:11px;color:var(--t2);margin-top:6px">📍 '+b.addr+'</div>' : '')+
+    (kws ? '<div class="tgs">'+kws+'</div>' : '')+
+    desc+
+    '<div class="bf">'+
+      '<span style="color:var(--ac);font-size:12px">'+('⭐'.repeat(Math.round(avg))||'☆☆☆☆☆')+' <span style="font-size:11px;color:var(--t2)">'+rvs.length+'개 후기</span></span>'+
+      '<div style="display:flex;align-items:center;gap:6px">'+
+        (tel ? '<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;text-decoration:none;font-weight:600">📞</a>' : '')+
+        '<button id="like-'+b.id+'" class="like-btn'+(liked?' on':'')+'" onclick="toggleLike('+b.id+',event)">'+(liked?'❤️':'🤍')+'</button>'+
+      '</div>'+
+    '</div></div>';
+}
+
+// ── 상세 ─────────────────────────────────
+function showDetail(bizId) {
+  var b=S.biz.find(function(x){return x.id===bizId;});
+  if(!b) return;
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('sc-detail').classList.add('on');
+  document.getElementById('det-title').textContent=b.name;
+  // 찜 버튼
+  var lb=document.getElementById('det-like-btn');
+  if(lb){
+    lb.textContent=isLiked(b.id)?'❤️':'🤍';
+    lb.onclick=function(e){toggleLike(b.id,e);lb.textContent=isLiked(b.id)?'❤️':'🤍';};
+  }
+  // 수정/삭제 버튼
+  var eb=document.getElementById('det-edit-btns');
+  if(S.user&&S.user.phone===b.phone){
+    eb.innerHTML='<button onclick="openEditBiz('+bizId+')" style="background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;margin-right:4px">수정</button>'+
+      '<button onclick="deleteBiz('+bizId+')" style="background:rgba(255,0,0,.25);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer">삭제</button>';
+  } else { eb.innerHTML=''; }
+
+  var rvs=sortRv(S.reviews.filter(function(r){return r.bizId===bizId;}));
+  var avg=rvs.length?Math.round(rvs.reduce(function(s,r){return s+r.stars;},0)/rvs.length*10)/10:0;
+  var kws=b.kw?b.kw.split(',').filter(function(k){return k;}).map(function(k){return '<span class="tg">'+k.trim()+'</span>';}).join(''):'';
+  var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+  var tp=b.type==='own'?'<span class="type-badge badge-own" style="position:static;display:inline-block;margin-left:6px">운영</span>':'<span class="type-badge badge-rec" style="position:static;display:inline-block;margin-left:6px">추천</span>';
+
+  var html='<div class="det-card">'+
+    '<div style="display:flex;align-items:center;gap:13px;margin-bottom:13px">'+
+      '<div style="width:52px;height:52px;border-radius:13px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px">'+(EM[b.cat]||'🏪')+'</div>'+
+      '<div><div style="font-size:17px;font-weight:700">'+b.name+tp+'</div>'+
+      '<div style="font-size:12px;color:var(--p);margin-top:3px">'+b.cat+'</div>'+
+      '<div style="font-size:12px;color:var(--ac)">'+'⭐'.repeat(Math.round(avg))+(avg?'<span style="color:var(--t2);font-size:11px"> '+avg+'점 ('+rvs.length+'개)</span>':'<span style="color:var(--t2);font-size:11px"> 후기없음</span>')+'</div>'+
+    '</div></div>'+
+    '<div class="det-row"><span class="dl">담당자</span><span class="dv">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</span></div>'+
+    (b.addr?'<div class="det-row"><span class="dl">주소</span><span class="dv">'+b.addr+'</span></div>':'')+
+    (b.regNo?'<div class="det-row"><span class="dl">사업자번호</span><span class="dv">'+b.regNo+'</span></div>':'')+
+    (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+b.web+'" target="_blank" style="font-size:12px;color:#185fa5;text-align:right;word-break:break-all">'+b.web+'</a></div>':'')+
+    (kws?'<div style="margin-top:9px;display:flex;gap:4px;flex-wrap:wrap">'+kws+'</div>':'')+
+    (b.desc?'<div style="margin-top:10px;font-size:12px;color:var(--t2);line-height:1.7;white-space:pre-line;padding-top:10px;border-top:1px solid var(--bd)">'+b.desc+'</div>':'')+
+  '</div>';
+
+  if(tel){
+    html+='<a class="call-btn" href="tel:'+tel+'">📞 전화걸기</a>';
+  }
+
+  html+='<div style="font-size:13px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
+    (rvs.length?rvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty">아직 후기가 없어요</div>')+
+    '<button onclick="requireLogin(\'review\')" style="width:100%;padding:11px;background:var(--pl);color:var(--p);border:1px solid var(--bd);border-radius:11px;font-size:13px;cursor:pointer;margin-top:5px;font-weight:600">✏️ 후기 작성하기</button>';
+
+  document.getElementById('det-body').innerHTML=html;
+}
+
+// ── 후기 ────────────────────────────────
+function isPastor(r){return PASTOR.includes(r);}
+function sortRv(rvs){
+  return rvs.slice().sort(function(a,b){
+    var ap=isPastor(a.role)?1:0,bp=isPastor(b.role)?1:0;
+    return ap!==bp?bp-ap:new Date(b.date)-new Date(a.date);
+  });
+}
+function rvHtml(r,showDel){
+  var p=isPastor(r.role);
+  var del=(showDel&&S.user&&S.user.name===r.reviewer)?'<button class="del-btn" onclick="deleteReview('+r.id+')">삭제</button>':'';
+  return '<div class="rv'+(p?' ppick':'')+'" id="rv-'+r.id+'">'+
+    '<div class="rv-hd">'+
+      '<div class="av'+(p?' av-p':'')+'">'+r.reviewer[0]+'</div>'+
+      '<div style="flex:1"><div class="rn">'+(p?'★ ':'')+r.reviewer+(p?'<span class="badge-p">'+r.role+'님 추천</span>':'')+'</div>'+
+      '<div style="font-size:11px;color:var(--t2)">'+r.bizName+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:4px"><span style="font-size:13px;color:var(--ac)">'+'⭐'.repeat(r.stars)+'</span>'+del+'</div>'+
+    '</div><div class="rt">'+r.text+'</div><div class="rd">'+r.date+'</div></div>';
+}
+function deleteReview(id){
+  if(!confirm('후기를 삭제하시겠어요?')) return;
+  S.reviews=S.reviews.filter(function(r){return r.id!==id;});
+  var el=document.getElementById('rv-'+id); if(el) el.remove();
+}
+
+// ── 찜 ──────────────────────────────────
+function isLiked(bizId){
+  if(!S.user) return false;
+  return S.likes.indexOf(S.user.phone+'_'+bizId)>=0;
+}
+function toggleLike(bizId,e){
+  if(e) e.stopPropagation();
+  if(!S.user){openM('choiceM');return;}
+  var key=S.user.phone+'_'+bizId;
+  var idx=S.likes.indexOf(key);
+  if(idx>=0) S.likes.splice(idx,1); else S.likes.push(key);
+  var btn=document.getElementById('like-'+bizId);
+  if(btn){btn.textContent=isLiked(bizId)?'❤️':'🤍';}
+}
+function getLikedBiz(){
+  if(!S.user) return [];
+  return S.biz.filter(function(b){return S.likes.indexOf(S.user.phone+'_'+b.id)>=0;});
+}
+
+// ── 필터/렌더 ────────────────────────────
+function doFilter(){
+  var kw=document.getElementById('kwInput').value.trim().toLowerCase();
+  var cat=document.getElementById('catSel').value;
+  var region=document.getElementById('regionInput').value.trim().toLowerCase();
+  var list=S.biz.filter(function(b){
+    // 운영+추천 모두 표시
+    var mk=!kw||(b.name.toLowerCase().includes(kw)||(b.kw||'').toLowerCase().includes(kw)||(b.addr||'').toLowerCase().includes(kw)||(b.desc||'').toLowerCase().includes(kw)||(b.owner||'').toLowerCase().includes(kw));
+    var mr=!region||((b.addr||'').toLowerCase().includes(region));
+    return mk&&mr&&(!cat||b.cat===cat);
+  });
+  document.getElementById('bizList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">검색 결과가 없어요<br><small style="font-size:11px">키워드·업종·지역을 변경해보세요</small></div>';
+  var chips='';
+  if(kw) chips+='<div class="chip">🔍 "'+kw+'" <span class="cx" onclick="clKw()">×</span></div>';
+  if(cat) chips+='<div class="chip">📂 '+cat+' <span class="cx" onclick="clCat()">×</span></div>';
+  if(region) chips+='<div class="chip">📍 '+region+' <span class="cx" onclick="clReg()">×</span></div>';
+  document.getElementById('chips').innerHTML=chips;
+}
+function clKw(){document.getElementById('kwInput').value='';doFilter();}
+function clCat(){document.getElementById('catSel').value='';doFilter();}
+function clReg(){document.getElementById('regionInput').value='';doFilter();}
+function clearAll(){document.getElementById('kwInput').value='';document.getElementById('catSel').value='';document.getElementById('regionInput').value='';doFilter();}
+
+function renderRec(){
+  var list=S.biz.filter(function(b){return b.type==='rec';});
+  document.getElementById('recList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">추천 사업체가 없어요<br><small>사업체 등록 시 "추천 사업체"로 등록해주세요</small></div>';
+}
+
+function renderMap(){
+  var CLS=['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
+  document.getElementById('mapPins').innerHTML=S.biz.slice(0,20).map(function(b,i){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:11px;height:11px;border-radius:50%;background:'+CLS[i%CLS.length]+';border:2px solid #fff"></div><div style="font-size:10px;color:var(--t2)">'+b.name+'</div></div>';
+  }).join('');
+  document.getElementById('mapList').innerHTML=S.biz.slice(0,30).map(function(b,i){
+    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;margin-bottom:7px;cursor:pointer" onclick="showDetail('+b.id+')">'+
+      '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
+      '<div style="flex:1"><div style="font-size:13px;font-weight:600">'+b.name+'</div>'+
+      '<div style="font-size:11px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:11px;text-decoration:none">📞</a>':'')+
+    '</div>';
+  }).join('');
+}
+
+function renderAllRv(){
+  var sorted=sortRv(S.reviews.slice());
+  document.getElementById('rvListAll').innerHTML=sorted.length?sorted.map(function(r){return rvHtml(r,false);}).join(''):'<div class="empty">아직 후기가 없어요</div>';
+}
+
+// ── 마이페이지 ───────────────────────────
+function renderMypage(){
+  var el=document.getElementById('mypageContent');
+  if(!S.user){
+    el.innerHTML='<div class="gate"><div style="font-size:32px;margin-bottom:10px">👤</div><div style="font-size:16px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:18px">성도 비즈니스 네트워크의<br>모든 기능을 이용하려면 로그인해주세요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
+    return;
+  }
+  var myBiz=S.biz.filter(function(b){return b.phone===S.user.phone;});
+  var myRvs=S.reviews.filter(function(r){return r.reviewer===S.user.name;});
+  var liked=getLikedBiz();
+  var warn=S.user.pw==='1111'?'<div class="pw-warn">⚠️ 초기 비밀번호(1111) 사용 중 <button onclick="openM(\'changePwM\')" style="background:#854f0b;color:#fff;border:none;border-radius:8px;padding:3px 10px;font-size:11px;cursor:pointer;margin-left:6px">변경하기</button></div>':'';
+  var html=warn+
+    '<div class="pc"><div class="prow">'+
+      '<div class="pav">'+S.user.name[0]+'</div>'+
+      '<div style="flex:1"><div style="font-size:16px;font-weight:700">'+S.user.name+'</div><div style="font-size:12px;color:var(--t2);margin-top:3px">'+S.user.role+' · 사랑하는교회 '+S.user.church+'</div></div>'+
+      '<div style="display:flex;gap:5px">'+
+        '<button onclick="loadEdit();openM(\'editM\')" style="padding:5px 10px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-weight:600">편집</button>'+
+        '<button onclick="openM(\'changePwM\')" style="padding:5px 10px;background:#854f0b;color:#fff;border:none;border-radius:10px;font-size:11px;cursor:pointer;font-weight:600">🔑</button>'+
+      '</div></div>'+
+      '<div class="pgrid">'+
+        '<div class="pi"><div class="pl2">전화번호</div><div class="pv">'+S.user.phone+'</div></div>'+
+        '<div class="pi"><div class="pl2">등록교회</div><div class="pv">'+S.user.church+'</div></div>'+
+        (S.user.no?'<div class="pi"><div class="pl2">교번</div><div class="pv">'+S.user.no+'</div></div>':'')+
+        '<div class="pi"><div class="pl2">직분</div><div class="pv">'+S.user.role+'</div></div>'+
+      '</div></div>'+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:9px">내 사업체 ('+myBiz.length+'개)</div>'+
+    (myBiz.length?myBiz.map(function(b){
+      return '<div class="bc" onclick="showDetail('+b.id+')">'+
+        '<div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div>'+
+        '<div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div>'+
+        '<button onclick="event.stopPropagation();openEditBiz('+b.id+')" style="padding:5px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:8px;font-size:11px;cursor:pointer;flex-shrink:0">수정</button>'+
+      '</div></div>';
+    }).join(''):'<div class="empty" style="padding:10px">등록된 사업체 없음</div>')+
+    '<div style="display:flex;gap:8px;margin-top:8px;margin-bottom:4px">'+
+      '<button onclick="openAddBiz(\'own\')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:12px;cursor:pointer;font-weight:600">🏪 운영업체 추가</button>'+
+      '<button onclick="openAddBiz(\'rec\')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:12px;cursor:pointer;font-weight:600">⭐ 추천업체 추가</button>'+
+    '</div>'+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin:13px 0 9px">❤️ 찜한 사업체 ('+liked.length+'개)</div>'+
+    (liked.length?liked.map(function(b){return '<div class="bc" onclick="showDetail('+b.id+')"><div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div><div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div></div></div>';}).join(''):'<div class="empty" style="padding:10px">찜한 사업체 없음</div>')+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin:13px 0 9px">내 후기 ('+myRvs.length+'개)</div>'+
+    (myRvs.length?myRvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty" style="padding:13px">작성한 후기 없음</div>')+
+    '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:13px;cursor:pointer;margin-top:15px;font-weight:500">로그아웃</button>';
+  el.innerHTML=html;
+}
+
+// ── 관리자 ───────────────────────────────
+var adminSection='stats';
+function isAdmin(){return S.user&&(S.user.phone==='010-8388-0848'||S.user.role==='목사'||S.user.role==='장로');}
+function checkAdminTab(){
+  var t=document.getElementById('adminTab');
+  if(t) t.style.display=isAdmin()?'block':'none';
+}
+
+function renderAdmin(){
+  if(!isAdmin()){document.getElementById('adminContent').innerHTML='<div class="empty">관리자 권한이 없습니다</div>';return;}
+  var el=document.getElementById('adminContent');
+  var secs=[['stats','📊 통계'],['members','👥 회원'],['biz','🏪 사업체'],['reviews','💬 후기'],['csv','📥 업로드']];
+  var tabs='<div class="admin-tab">';
+  secs.forEach(function(s){
+    tabs+='<button class="at'+(adminSection===s[0]?' on':'')+'" onclick="adminSection=\''+s[0]+'\';renderAdmin()">'+s[1]+'</button>';
+  });
+  tabs+='</div>';
+
+  var body='';
+  if(adminSection==='stats'){
+    body+='<div class="stat-grid">'+
+      '<div class="stat-card"><div class="stat-num">'+S.members.length+'</div><div class="stat-label">전체 회원</div></div>'+
+      '<div class="stat-card"><div class="stat-num">'+S.biz.length+'</div><div class="stat-label">등록 사업체</div></div>'+
+      '<div class="stat-card"><div class="stat-num">'+S.reviews.length+'</div><div class="stat-label">전체 후기</div></div>'+
+      '<div class="stat-card"><div class="stat-num">'+S.likes.length+'</div><div class="stat-label">찜 횟수</div></div>'+
+    '</div>';
+    body+='<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:9px">업종별 사업체</div>';
+    var cc={};
+    S.biz.forEach(function(b){cc[b.cat]=(cc[b.cat]||0)+1;});
+    Object.entries(cc).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){
+      body+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;margin-bottom:6px">'+
+        '<span style="font-size:16px">'+(EM[e[0]]||'📌')+'</span>'+
+        '<span style="flex:1;font-size:13px;font-weight:500">'+e[0]+'</span>'+
+        '<span style="font-size:13px;font-weight:700;color:var(--p)">'+e[1]+'개</span></div>';
+    });
+  } else if(adminSection==='members'){
+    body='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">총 '+S.members.length+'명</div>';
+    S.members.forEach(function(m){
+      body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+' <span style="font-size:11px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
+        '<button class="admin-del" onclick="adminDelMember(\''+m.phone+'\')">삭제</button></div>';
+    });
+  } else if(adminSection==='biz'){
+    body='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">총 '+S.biz.length+'개</div>';
+    S.biz.forEach(function(b){
+      body+='<div class="admin-row"><div style="font-size:18px;margin-right:4px">'+(EM[b.cat]||'🏪')+'</div>'+
+        '<div class="admin-row-info"><div class="admin-row-name">'+b.name+' <span style="font-size:10px;color:var(--p)">'+b.cat+'</span></div><div class="admin-row-sub">'+b.owner+' · '+(b.addr||b.region||'')+'</div></div>'+
+        '<button class="admin-del" onclick="adminDelBiz('+b.id+')">삭제</button></div>';
+    });
+  } else if(adminSection==='reviews'){
+    var sorted=sortRv(S.reviews.slice());
+    body='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">총 '+sorted.length+'개</div>';
+    sorted.forEach(function(r){
+      body+='<div class="admin-row" style="align-items:flex-start"><div class="admin-row-info">'+
+        '<div class="admin-row-name">'+r.reviewer+' → '+r.bizName+' '+'⭐'.repeat(r.stars)+'</div>'+
+        '<div class="admin-row-sub" style="margin-top:4px;line-height:1.5">'+r.text+'</div></div>'+
+        '<button class="admin-del" onclick="adminDelReview('+r.id+')">삭제</button></div>';
+    });
+  } else if(adminSection==='csv'){
+    body='<p style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.7">CSV 파일로 회원과 사업체를 일괄 등록할 수 있어요.</p>'+
+      '<button class="bp" onclick="closeM(\'skip\');openM(\'csvM\')">📥 CSV 업로드 열기</button>';
+  }
+  el.innerHTML=tabs+body;
+}
+
+function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});renderAdmin();}
+function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});renderAdmin();doFilter();}
+function adminDelReview(id){if(!confirm('후기를 삭제하시겠어요?'))return;S.reviews=S.reviews.filter(function(r){return r.id!==id;});renderAdmin();}
+
+// ── 회원가입/로그인 ──────────────────────
+function onHdBtn(){S.user?(loadEdit(),openM('editM')):openM('choiceM');}
+
+function checkBizMatch(){
+  var name=document.getElementById('jName').value.trim();
+  var phone=document.getElementById('jPhone').value.trim();
+  var mb=document.getElementById('matchBox');
+  var ml=document.getElementById('matchList');
+  if(!name||phone.length<9){mb.style.display='none';return;}
+  var np=phone.replace(/[^0-9]/g,'');
+  var matches=S.bizDB.filter(function(b){
+    var bp=(b.ownerPhone||b.phone||'').replace(/[^0-9]/g,'');
+    return b.ownerName===name&&bp===np;
+  });
+  if(!matches.length){mb.style.display='none';return;}
+  ml.innerHTML=matches.map(function(b){
+    return '<div class="match-item"><div><div style="font-size:13px;font-weight:600">'+b.name+'</div><div style="font-size:11px;color:var(--t2)">'+b.cat+'</div></div></div>';
+  }).join('');
+  mb.style.display='block';
+}
+
+function doJoin(){
+  var name=document.getElementById('jName').value.trim();
+  var phone=document.getElementById('jPhone').value.trim();
+  var pw=document.getElementById('jPw').value;
+  var church=document.getElementById('jChurch').value;
+  var role=document.getElementById('jRole').value;
+  var no=document.getElementById('jNo').value.trim();
+  var err=document.getElementById('joinErr');
+  if(!name||!phone||!pw||!church||!role){err.textContent='필수 항목을 모두 입력해주세요';err.style.display='block';return;}
+  if(pw.length<6){err.textContent='비밀번호는 6자 이상이어야 해요';err.style.display='block';return;}
+  if(S.members.find(function(m){return m.phone===phone;})){err.textContent='이미 가입된 전화번호입니다';err.style.display='block';return;}
+  err.style.display='none';
+  var m={name:name,phone:phone,pw:pw,church:church,role:role,no:no};
+  S.members.push(m); S.user=m;
+  document.getElementById('loginBtn').textContent=name+' '+role;
+  checkAdminTab();
+  var np=phone.replace(/[^0-9]/g,'');
+  var matched=S.bizDB.filter(function(b){
+    var bp=(b.ownerPhone||b.phone||'').replace(/[^0-9]/g,'');
+    return b.ownerName===name&&bp===np;
+  });
+  var linked=0;
+  matched.forEach(function(b){
+    if(!S.biz.find(function(x){return x.id===b.id;})){
+      b.phone=phone;b.ownerRole=role;b.ownerChurch=church;b.type='own';
+      S.biz.push(b);linked++;
+    } else {
+      var ex=S.biz.find(function(x){return x.id===b.id;});
+      ex.phone=phone;ex.ownerRole=role;ex.ownerChurch=church;ex.type='own';
+    }
+  });
+  closeM('joinM');
+  var msg='가입 완료! '+name+' '+role+'님 환영합니다!';
+  if(linked>0) msg+='\n\n🏪 사업체 '+linked+'개가 자동으로 연결되었습니다!';
+  alert(msg);
+  renderMypage(); doFilter();
+}
+
+function doLogin(){
+  var phone=document.getElementById('lPhone').value.trim();
+  var pw=document.getElementById('lPw').value;
+  var err=document.getElementById('loginErr');
+  if(!phone||!pw){err.textContent='전화번호와 비밀번호를 입력해주세요';err.style.display='block';return;}
+  var m=S.members.find(function(x){return x.phone===phone&&x.pw===pw;});
+  if(!m){err.textContent='전화번호 또는 비밀번호가 맞지 않아요';err.style.display='block';return;}
+  err.style.display='none';
+  S.user=m;
+  if(document.getElementById('rememberMe').checked){try{localStorage.setItem('savedLogin',JSON.stringify({phone:phone,pw:pw}));}catch(e){}}
+  document.getElementById('loginBtn').textContent=m.name+' '+m.role;
+  checkAdminTab();
+  closeM('loginM'); renderMypage();
+}
+
+function loadEdit(){
+  if(!S.user) return;
+  document.getElementById('epName').value=S.user.name;
+  document.getElementById('epPhone').value=S.user.phone;
+  document.getElementById('epChurch').value=S.user.church;
+  document.getElementById('epRole').value=S.user.role;
+  document.getElementById('epNo').value=S.user.no||'';
+}
+function saveProfile(){
+  var name=document.getElementById('epName').value.trim();
+  if(!name){alert('이름은 필수입니다');return;}
+  S.user.name=name;S.user.phone=document.getElementById('epPhone').value.trim();
+  S.user.church=document.getElementById('epChurch').value;S.user.role=document.getElementById('epRole').value;
+  S.user.no=document.getElementById('epNo').value.trim();
+  document.getElementById('loginBtn').textContent=name+' '+S.user.role;
+  closeM('editM');renderMypage();alert('저장되었습니다');
+}
+function doChangePw(){
+  var old=document.getElementById('cpOld').value;
+  var n1=document.getElementById('cpNew').value;
+  var n2=document.getElementById('cpNew2').value;
+  var err=document.getElementById('cpErr');
+  if(!old||!n1||!n2){err.textContent='모든 항목을 입력해주세요';err.style.display='block';return;}
+  if(S.user.pw!==old){err.textContent='현재 비밀번호가 맞지 않아요';err.style.display='block';return;}
+  if(n1.length<6){err.textContent='새 비밀번호는 6자 이상이어야 해요';err.style.display='block';return;}
+  if(n1!==n2){err.textContent='새 비밀번호가 일치하지 않아요';err.style.display='block';return;}
+  err.style.display='none';
+  S.user.pw=n1;
+  var idx=S.members.findIndex(function(m){return m.phone===S.user.phone;});
+  if(idx>=0) S.members[idx].pw=n1;
+  closeM('changePwM');['cpOld','cpNew','cpNew2'].forEach(function(id){document.getElementById(id).value='';});
+  alert('비밀번호가 변경되었습니다!');renderMypage();
+}
+
+// ── 사업체 등록/수정/삭제 ────────────────
+function requireLogin(type){
+  if(!S.user){
+    document.getElementById('gateTx').textContent=type==='biz'?'사업체 등록은 성도만 가능해요':'후기 작성은 성도만 가능해요';
+    document.getElementById('gateDesc').textContent=type==='biz'?'회원가입 후 내 사업을 소개해보세요!':'회원가입 후 경험을 공유해주세요!';
+    openM('gateM');return;
+  }
+  if(type==='biz'||type==='rec'){openAddBiz(type==='rec'?'rec':'own');}
+  else{
+    document.getElementById('rvBiz').innerHTML=S.biz.map(function(b){return '<option value="'+b.id+'">'+b.name+'</option>';}).join('');
+    openM('addRvM');
+  }
+}
+function openAddBiz(defaultType){
+  document.getElementById('bizModalTitle').textContent='사업체 등록';
+  document.getElementById('editBizId').value='';
+  ['bName','bPhone','bRegNo','bAddr','bWeb','bKw','bDesc'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('bCat').value='';
+  document.getElementById('bType').value=defaultType||'own';
+  document.getElementById('bPhone').value=S.user?S.user.phone:'';
+  document.getElementById('bizErr').style.display='none';
+  openM('addBizM');
+}
+function openEditBiz(bizId){
+  var b=S.biz.find(function(x){return x.id===bizId;});
+  if(!b) return;
+  document.getElementById('bizModalTitle').textContent='사업체 수정';
+  document.getElementById('editBizId').value=bizId;
+  document.getElementById('bType').value=b.type||'own';
+  document.getElementById('bName').value=b.name||'';
+  document.getElementById('bCat').value=b.cat||'';
+  document.getElementById('bPhone').value=b.phone||b.ownerPhone||'';
+  document.getElementById('bRegNo').value=b.regNo||'';
+  document.getElementById('bAddr').value=b.addr||'';
+  document.getElementById('bWeb').value=b.web||'';
+  document.getElementById('bKw').value=b.kw||'';
+  document.getElementById('bDesc').value=b.desc||'';
+  document.getElementById('bizErr').style.display='none';
+  openM('addBizM');
+}
+function saveBiz(){
+  var name=document.getElementById('bName').value.trim();
+  var cat=document.getElementById('bCat').value;
+  var phone=document.getElementById('bPhone').value.trim();
+  var addr=document.getElementById('bAddr').value.trim();
+  var err=document.getElementById('bizErr');
+  if(!name||!cat||!addr){err.textContent='상호명, 업종, 주소는 필수입니다';err.style.display='block';return;}
+  err.style.display='none';
+  var editId=document.getElementById('editBizId').value;
+  if(editId){
+    var b=S.biz.find(function(x){return String(x.id)===String(editId);});
+    if(b){
+      b.type=document.getElementById('bType').value;b.name=name;b.cat=cat;
+      b.phone=phone;b.regNo=document.getElementById('bRegNo').value.trim();
+      b.addr=addr;b.web=document.getElementById('bWeb').value.trim();
+      b.kw=document.getElementById('bKw').value.trim();b.desc=document.getElementById('bDesc').value.trim();
+    }
+    closeM('addBizM');doFilter();renderMypage();alert('사업체 정보가 수정되었습니다!');
+  } else {
+    S.biz.push({id:Date.now(),name:name,cat:cat,type:document.getElementById('bType').value,
+      owner:S.user.name,ownerRole:S.user.role,ownerChurch:S.user.church,phone:phone,
+      regNo:document.getElementById('bRegNo').value.trim(),addr:addr,
+      web:document.getElementById('bWeb').value.trim(),kw:document.getElementById('bKw').value.trim(),
+      desc:document.getElementById('bDesc').value.trim()});
+    closeM('addBizM');doFilter();alert('사업체가 등록되었습니다!');
+  }
+}
+function deleteBiz(bizId){
+  if(!confirm('사업체를 삭제하시겠어요?'))return;
+  S.biz=S.biz.filter(function(b){return b.id!==bizId;});
+  goBack();
+}
+function addReview(){
+  var bizId=parseInt(document.getElementById('rvBiz').value);
+  var biz=S.biz.find(function(b){return b.id===bizId;});
+  var text=document.getElementById('rvText').value.trim();
+  if(!text){alert('후기 내용을 입력해주세요');return;}
+  S.reviews.unshift({id:Date.now(),bizId:bizId,bizName:biz.name,reviewer:S.user.name,role:S.user.role,stars:parseInt(document.getElementById('rvStars').value),text:text,date:new Date().toISOString().slice(0,10)});
+  closeM('addRvM');renderAllRv();document.getElementById('rvText').value='';alert('후기가 등록되었습니다!');
+}
+
+// ── CSV 처리 ─────────────────────────────
+function parseCSV(text){
+  return text.split(/\r?\n/).map(function(line){
+    var cols=[],cur='',inQ=false;
+    for(var i=0;i<line.length;i++){
+      var ch=line[i];
+      if(ch==='"'){inQ=!inQ;}
+      else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
+      else{cur+=ch;}
+    }
+    cols.push(cur.trim());return cols;
+  });
+}
+function handleDrop(e){e.preventDefault();document.getElementById('dropZone').style.borderColor='';var f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function handleFile(file){
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var text=e.target.result;
+      if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
+      var rows=parseCSV(text);
+      var dataRows=rows.slice(2).filter(function(r){return r[0]&&String(r[0]).trim();});
+      S.csvParsed=dataRows.map(function(r){
+        return {name:String(r[0]||'').trim(),phone:String(r[1]||'').trim(),pw:(String(r[2]||'').trim())||'1111',
+          church:String(r[3]||'').trim(),role:String(r[4]||'성도').trim(),no:'',
+          biz_cat:String(r[5]||'').trim(),biz_name:String(r[6]||'').trim(),
+          biz_addr:String(r[7]||'').trim(),biz_desc:String(r[8]||'').trim()};
+      });
+      showCsvPreview();
+    }catch(err){alert('파일을 읽을 수 없어요: '+err);}
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function showCsvPreview(){
+  var valid=S.csvParsed.filter(function(m){return m.name&&m.phone;});
+  var invalid=S.csvParsed.filter(function(m){return !m.name||!m.phone;});
+  document.getElementById('csvCount').textContent='총 '+S.csvParsed.length+'명 인식 · 유효 '+valid.length+'명'+(invalid.length?' · 누락 '+invalid.length+'명':'');
+  var h='<table style="width:100%;border-collapse:collapse"><thead><tr style="background:var(--bg2)">'+
+    ['이름','전화번호','교회','직분','업종','상호','상태'].map(function(t){return '<th style="padding:6px 7px;text-align:left;border-bottom:1px solid var(--bd);font-size:11px;white-space:nowrap">'+t+'</th>';}).join('')+
+    '</tr></thead><tbody>';
+  S.csvParsed.forEach(function(m){
+    var missing=!m.name||!m.phone;
+    var dup=S.members.find(function(ex){return ex.phone===m.phone;});
+    var status=missing?'<span style="color:#a32d2d">✗</span>':dup?'<span style="color:#854f0b">기존</span>':'<span style="color:#0f6e56">✓</span>';
+    var bg=missing?'#fff5f5':dup?'#fffdf5':'';
+    h+='<tr style="background:'+bg+'">'+[m.name,m.phone,m.church,m.role,m.biz_cat,m.biz_name].map(function(v){return '<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:11px">'+(v||'-')+'</td>';}).join('')+'<td style="padding:5px 7px;border-bottom:1px solid var(--bd);font-size:11px">'+status+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('csvTable').innerHTML=h;
+  document.getElementById('csvPreview').style.display='block';
+}
+function doUpload(){
+  var addedM=0,addedB=0,skipped=0;
+  S.csvParsed.forEach(function(m){
+    if(!m.name||!m.phone){skipped++;return;}
+    var member=S.members.find(function(ex){return ex.phone===m.phone;});
+    if(!member){member={name:m.name,phone:m.phone,pw:m.pw||'1111',church:m.church,role:m.role,no:''};S.members.push(member);addedM++;}
+    if(m.biz_name){
+      var np=m.phone.replace(/[^0-9]/g,'');
+      var exists=S.bizDB.find(function(b){var bp=(b.ownerPhone||b.phone||'').replace(/[^0-9]/g,'');return b.ownerName===m.name&&bp===np&&b.name===m.biz_name&&b.cat===m.biz_cat;});
+      if(!exists){
+        var nb={id:Date.now()+Math.random(),name:m.biz_name,cat:m.biz_cat||'기타',type:'own',
+          owner:m.name,ownerName:m.name,ownerPhone:m.phone,ownerRole:m.role,ownerChurch:m.church,
+          phone:m.phone,addr:m.biz_addr,regNo:'',web:'',kw:'',desc:m.biz_desc};
+        S.bizDB.push(nb);
+        var dupBiz=S.biz.find(function(b){return b.name===nb.name&&b.phone===nb.phone&&b.cat===nb.cat;});
+        if(!dupBiz){S.biz.push(nb);addedB++;}
+      }
+    }
+  });
+  closeM('csvM');S.csvParsed=[];document.getElementById('csvPreview').style.display='none';document.getElementById('csvInput').value='';
+  alert('업로드 완료!\n\n회원 '+addedM+'명 등록\n사업체 '+addedB+'개 등록'+(skipped?'\n('+skipped+'건 건너뜀)':''));
+  doFilter();renderMypage();
+}
+
+function doLogout(){
+  if(confirm('로그아웃 하시겠어요?')){
+    S.user=null;try{localStorage.removeItem('savedLogin');}catch(e){}
+    document.getElementById('loginBtn').textContent='로그인';
+    checkAdminTab();renderMypage();
+  }
+}
+function openM(id){document.getElementById(id).classList.add('op');}
+function closeM(id){var el=document.getElementById(id);if(el)el.classList.remove('op');}
+document.querySelectorAll('.ov').forEach(function(el){el.addEventListener('click',function(e){if(e.target===el)el.classList.remove('op');});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.ov.op').forEach(function(el){el.classList.remove('op');});});
+
+try{
+  var saved=localStorage.getItem('savedLogin');
+  if(saved){var d=JSON.parse(saved);var m=S.members.find(function(x){return x.phone===d.phone&&x.pw===d.pw;});if(m){S.user=m;document.getElementById('loginBtn').textContent=m.name+' '+m.role;checkAdminTab();}}
+}catch(e){}
+
+initSelects();
+doFilter();
+</script>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
