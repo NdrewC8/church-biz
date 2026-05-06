@@ -216,7 +216,6 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 .tc-box.on::after{content:'✓';color:#fff;font-size:13px;font-weight:800}
 .terms-content{font-size:13px;color:var(--t2);line-height:1.8;max-height:55vh;overflow-y:auto;padding:4px 2px;white-space:pre-wrap}
 </style>
-  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xy1r6dv1u1&submodules=geocoder"></script>
 </head>
 <body>
 <div class="app">
@@ -280,22 +279,14 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   </div>
 
   <!-- 지도 -->
-  <div class="sc" id="sc-map" style="display:flex;flex-direction:column;height:100%">
-    <!-- 상단 컨트롤 -->
-    <div style="padding:10px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);flex-shrink:0">
-      <button onclick="locateMe()" style="padding:7px 13px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px">
-        📍 내 위치
-      </button>
-      <input id="mapSearch" placeholder="사업체 검색..." style="flex:1;padding:7px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit" oninput="filterMapList()">
-      <select id="mapCatFilter" onchange="filterMapList()" style="padding:7px 10px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit;background:#fff">
+  <div class="sc" id="sc-map">
+    <div style="padding:10px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd)">
+      <input id="mapSearch" placeholder="사업체 검색..." style="flex:1;padding:7px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit" oninput="renderMap()">
+      <select id="mapCatFilter" onchange="renderMap()" style="padding:7px 10px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit;background:#fff">
         <option value="">전체 업종</option>
       </select>
     </div>
-    <!-- 지도 -->
-    <div id="naverMap" style="width:100%;height:320px;flex-shrink:0"></div>
-    <!-- 하단 목록 -->
-    <div style="padding:10px 13px;font-size:13px;color:var(--t2)" id="mapDistInfo">📍 내 위치 버튼을 눌러 주변 사업체를 찾아보세요</div>
-    <div style="flex:1;overflow-y:auto;padding:0 13px 13px" id="mapList"></div>
+    <div style="padding:9px 13px 13px" id="mapList"></div>
   </div>
 
   <!-- 후기 -->
@@ -606,6 +597,27 @@ function closeExitPopup(){
   document.getElementById('exitPopup').style.display = 'none';
 }
 </script>
+
+
+<!-- 지도앱 선택 팝업 -->
+<div id="mapAppPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9998;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 20px 34px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">지도 앱 선택</div>
+    <div id="mapAppAddr" style="font-size:13px;color:var(--t2);margin-bottom:18px;word-break:keep-all"></div>
+    <div style="display:flex;gap:10px;margin-bottom:14px">
+      <button onclick="goMapApp('naver')" style="flex:1;padding:14px 8px;background:#03C75A;color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer">
+        🗺️ 네이버지도
+      </button>
+      <button onclick="goMapApp('kakao')" style="flex:1;padding:14px 8px;background:#FAE100;color:#3A1D1D;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer">
+        🗺️ 카카오맵
+      </button>
+      <button onclick="goMapApp('tmap')" style="flex:1;padding:14px 8px;background:#E8344E;color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer">
+        🗺️ 티맵
+      </button>
+    </div>
+    <button onclick="closeMapAppPopup()" style="width:100%;padding:12px;background:#f4f4f4;color:#888;border:none;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer">취소</button>
+  </div>
+</div>
 
 </body>
 </html>

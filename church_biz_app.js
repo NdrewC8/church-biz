@@ -1,3 +1,83 @@
+function renderMap(){
+  // 업종 필터 옵션 채우기
+  var catSel = document.getElementById('mapCatFilter');
+  if(catSel && catSel.options.length === 1){
+    var cats = [...new Set(S.biz.map(function(b){return b.cat;}).filter(Boolean))].sort();
+    cats.forEach(function(c){
+      var o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      catSel.appendChild(o);
+    });
+  }
+
+  var kw = (document.getElementById('mapSearch')||{value:''}).value.toLowerCase();
+  var cat = (document.getElementById('mapCatFilter')||{value:''}).value;
+
+  var list = S.biz.filter(function(b){
+    var matchKw = !kw || b.name.toLowerCase().includes(kw) || (b.addr||'').toLowerCase().includes(kw);
+    var matchCat = !cat || b.cat === cat;
+    return matchKw && matchCat;
+  });
+
+  var el = document.getElementById('mapList');
+  if(!list.length){
+    el.innerHTML = '<div class="empty">검색 결과가 없어요</div>';
+    return;
+  }
+
+  el.innerHTML = '<div style="font-size:12px;color:var(--t2);margin-bottom:10px;margin-top:4px">📍 주소를 누르면 지도 앱으로 연결돼요</div>' +
+  list.map(function(b){
+    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+    var addr = b.addr || '';
+    return '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:13px;padding:12px 13px;margin-bottom:9px;cursor:pointer" onclick="showDetail('+b.id+')">'+
+      '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">'+
+        '<div style="width:34px;height:34px;border-radius:9px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">'+(EM[b.cat]||'🏪')+'</div>'+
+        '<div style="flex:1;overflow:hidden">'+
+          '<div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+b.name+'</div>'+
+          '<div style="font-size:12px;color:var(--t2)">'+b.cat+'</div>'+
+        '</div>'+
+        (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:10px;padding:7px 9px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="1" width="14" height="22" rx="3" ry="3" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="19" r="1.2" fill="#fff"/><rect x="9" y="3.5" width="6" height="1.2" rx="0.6" fill="#fff"/></svg></a>':'')+
+      '</div>'+
+      (addr?'<div id="maddr_'+b.id+'" onclick="event.stopPropagation();openMapApp('+b.id+')" style="display:flex;align-items:center;gap:6px;background:var(--pl);border-radius:9px;padding:7px 10px;cursor:pointer">'+
+        '<span style="font-size:16px">📍</span>'+
+        '<span style="font-size:12px;color:var(--p);font-weight:600;flex:1;word-break:keep-all">'+addr+'</span>'+
+        '<span style="font-size:11px;color:var(--p);white-space:nowrap;font-weight:600">지도▶</span>'+
+      '</div>':'')+
+    '</div>';
+  }).join('');
+}
+
+function openMapApp(bizId){
+  var b = S.biz.find(function(x){return x.id===bizId;});
+  var addr = b ? (b.addr||b.region||'') : '';
+  var popup = document.getElementById('mapAppPopup');
+  document.getElementById('mapAppAddr').textContent = addr;
+  window._pendingAddr = addr;
+  popup.style.display = 'flex';
+}
+function closeMapAppPopup(){
+  document.getElementById('mapAppPopup').style.display = 'none';
+}
+function goMapApp(app){
+  var addr = window._pendingAddr || '';
+  var enc = encodeURIComponent(addr);
+  var url = '';
+  if(app==='naver')  url = 'nmap://search?query='+enc+'&appname=com.belovedc.biz';
+  if(app==='kakao')  url = 'kakaomap://search?q='+enc;
+  if(app==='tmap')   url = 'tmap://search?name='+enc;
+  // 앱 실행 시도
+  var fallback = {
+    naver: 'https://map.naver.com/v5/search/'+enc,
+    kakao: 'https://map.kakao.com/?q='+enc,
+    tmap:  'https://tmap.life/search?name='+enc
+  };
+  var win = window.open(url, '_blank');
+  setTimeout(function(){
+    window.open(fallback[app], '_blank');
+  }, 1500);
+  closeMapAppPopup();
+}
+
 
 function catColor(cat){
   var c={
@@ -1289,105 +1369,10 @@ function renderMap(){
   filterMapList();
 }
 
-function locateMe(){
-  if(!navigator.geolocation){ alert('이 브라우저는 위치 서비스를 지원하지 않아요.'); return; }
-  document.getElementById('mapDistInfo').textContent = '📡 위치 확인 중...';
-  navigator.geolocation.getCurrentPosition(function(pos){
-    var lat = pos.coords.latitude;
-    var lng = pos.coords.longitude;
-    window._myPos = { lat: lat, lng: lng };
 
-    var myLatLng = new naver.maps.LatLng(lat, lng);
-    window._naverMap.setCenter(myLatLng);
-    window._naverMap.setZoom(13);
 
-    // 내 위치 마커
-    if(window._myMarker) window._myMarker.setMap(null);
-    window._myMarker = new naver.maps.Marker({
-      position: myLatLng,
-      map: window._naverMap,
-      icon: {
-        content: '<div style="width:18px;height:18px;border-radius:50%;background:#2980b9;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>',
-        anchor: new naver.maps.Point(9, 9)
-      }
-    });
 
-    filterMapList();
-  }, function(){
-    alert('위치 정보를 가져올 수 없어요.\n브라우저 위치 권한을 허용해주세요.');
-    document.getElementById('mapDistInfo').textContent = '위치 권한이 필요해요.';
-  });
-}
 
-function calcDist(lat1, lng1, lat2, lng2){
-  var R = 6371000;
-  var dLat = (lat2-lat1)*Math.PI/180;
-  var dLng = (lng2-lng1)*Math.PI/180;
-  var a = Math.sin(dLat/2)*Math.sin(dLat/2)+
-    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
-    Math.sin(dLng/2)*Math.sin(dLng/2);
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-
-function fmtDist(m){
-  return m < 1000 ? Math.round(m)+'m' : (m/1000).toFixed(1)+'km';
-}
-
-function geocodeAndMark(bizList){
-  // 기존 마커 제거
-  (window._mapMarkers||[]).forEach(function(m){ m.setMap(null); });
-  window._mapMarkers = [];
-
-  bizList.forEach(function(b){
-    if(!b.addr) return;
-    // 좌표 캐시 있으면 바로 마킹
-    if(b._lat && b._lng){
-      addMarker(b);
-      return;
-    }
-    // geocoder로 주소 → 좌표 변환
-    naver.maps.Service.geocode({ query: b.addr }, function(status, res){
-      if(status !== naver.maps.Service.Status.OK) return;
-      var item = res.v2.addresses[0];
-      if(!item) return;
-      b._lat = parseFloat(item.y);
-      b._lng = parseFloat(item.x);
-      addMarker(b);
-    });
-  });
-}
-
-function addMarker(b){
-  var pos = new naver.maps.LatLng(b._lat, b._lng);
-  var color = b.cat==='지교회' ? 'var(--p)' : '#1a5c3a';
-  var marker = new naver.maps.Marker({
-    position: pos,
-    map: window._naverMap,
-    icon: {
-      content: '<div style="background:'+color+';color:#fff;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);cursor:pointer">'+
-        (b.cat==='지교회'?'⛪':'🏪')+' '+b.name+'</div>',
-      anchor: new naver.maps.Point(0, 30)
-    }
-  });
-  window._mapMarkers.push(marker);
-
-  naver.maps.Event.addListener(marker, 'click', function(){
-    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
-    var distTxt = (window._myPos && b._lat) ?
-      ' · ' + fmtDist(calcDist(window._myPos.lat, window._myPos.lng, b._lat, b._lng)) : '';
-    var content =
-      '<div style="padding:10px 13px;min-width:180px;font-family:sans-serif">'+
-      '<div style="font-weight:700;font-size:14px;margin-bottom:3px">'+b.name+'</div>'+
-      '<div style="font-size:12px;color:#666;margin-bottom:6px">'+b.cat+distTxt+'</div>'+
-      '<div style="font-size:12px;color:#444;margin-bottom:8px">'+(b.addr||'')+'</div>'+
-      '<div style="display:flex;gap:6px">'+
-      '<button onclick="showDetail('+b.id+');window._infoWindow.close()" style="flex:1;padding:5px;background:var(--p);color:#fff;border:none;border-radius:7px;font-size:12px;cursor:pointer">상세보기</button>'+
-      (tel?'<a href="tel:'+tel+'" style="flex:1;padding:5px;background:#8bc34a;color:#fff;border-radius:7px;font-size:12px;text-align:center;text-decoration:none">전화</a>':'')+
-      '</div></div>';
-    window._infoWindow.setContent(content);
-    window._infoWindow.open(window._naverMap, marker);
-  });
-}
 
 function filterMapList(){
   if(!window._naverMap) return;
