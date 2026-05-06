@@ -49,6 +49,22 @@ async function loadFromFirebase(){
       console.log('Firebase 데이터 로드 완료');
       doFilter();
       renderAllRv();
+      // 자동 로그인 복원
+      try{
+        var saved = localStorage.getItem('savedLogin');
+        if(saved){
+          var cred = JSON.parse(saved);
+          var m = S.members.find(function(x){ return x.phone===cred.phone && x.pw===cred.pw; });
+          if(m){
+            S.user = m;
+            document.getElementById('loginBtn').textContent = m.name+' '+m.role;
+            checkAdminTab();
+            renderMypage();
+          } else {
+            localStorage.removeItem('savedLogin');
+          }
+        }
+      }catch(e){}
     } else {
       console.log('저장된 데이터 없음');
     }

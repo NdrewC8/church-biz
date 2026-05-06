@@ -576,7 +576,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
       <div style="font-size:13px;color:#888;margin-bottom:12px;text-align:center">네트워크 서비스를 종료하시겠습니까?</div>
       <div style="display:flex;gap:10px">
         <button onclick="closeExitPopup()" style="flex:1;padding:11px;background:#f4f4f4;color:#888;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">아니요</button>
-        <button onclick="doExit()" style="flex:1;padding:11px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">예</button>
+        <button onclick="closeExitPopup()" style="flex:1;padding:11px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">예</button>
       </div>
     </div>
   </div>
@@ -594,11 +594,6 @@ function showExitPopup(){
 }
 function closeExitPopup(){
   document.getElementById('exitPopup').style.display = 'none';
-}
-function doExit(){
-  document.getElementById('exitPopup').style.display = 'none';
-  history.back();
-  setTimeout(function(){ window.close(); }, 200);
 }
 </script>
 
