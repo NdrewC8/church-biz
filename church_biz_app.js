@@ -192,7 +192,8 @@ function bizCardHtml(b) {
     '<div style="flex:1">'+
       '<div class="bn">'+b.name+'</div>'+
       '<div class="bct" style="color:'+catColor(b.cat)+';background:'+catColorLight(b.cat)+'">'+b.cat+'</div>'+
-      '<div class="bow">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</div>'+
+      // 담당자 비표시
+
     '</div></div>'+
     (b.addr ? '<div style="font-size:13px;color:var(--t2);margin-top:6px">📍 '+b.addr+'</div>' : '')+
     (kws ? '<div class="tgs">'+kws+'</div>' : '')+
@@ -241,7 +242,8 @@ function showDetail(bizId) {
       '<div style="font-size:14px;font-weight:600;color:var('+catColor(b.cat)+');margin-top:3px">'+b.cat+'</div>'+
       '<div style="font-size:14px;color:var(--ac)">'+'⭐'.repeat(Math.round(avg))+(avg?'<span style="color:var(--t2);font-size:13px"> '+avg+'점 ('+rvs.length+'개)</span>':'<span style="color:var(--t2);font-size:13px"> 후기없음</span>')+'</div>'+
     '</div></div>'+
-    '<div class="det-row"><span class="dl">담당자</span><span class="dv">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</span></div>'+
+    // 담당자 비표시
+
     (b.phone?'<div class="det-row"><span class="dl">휴대폰</span><span class="dv"><a href="tel:'+(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'')+'" style="color:var(--p)">'+(b.phone||b.ownerPhone||'')+'</a></span></div>':'')+
     (b.bizPhone?'<div class="det-row"><span class="dl">사업체 전화</span><span class="dv"><a href="tel:'+btel+'" style="color:#2980b9">'+b.bizPhone+'</a></span></div>':'')+
     (b.addr?'<div class="det-row"><span class="dl">주소</span><span class="dv">'+b.addr+'</span></div>':'')+
