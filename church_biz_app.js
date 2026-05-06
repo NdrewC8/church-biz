@@ -234,7 +234,6 @@ function showTab(name, btn) {
   if(name!=='detail') prevTab=name;
   if(name==='list'){ showSkeletons('bizList',4); setTimeout(function(){doFilter();},200); }
   if(name==='rec'){ showSkeletons('recList',4); setTimeout(function(){renderRec();},200); }
-  if(name==='map'){ showLoading('mapList','지도 불러오는 중...'); setTimeout(function(){renderMap();},200); }
   if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
   if(name==='notice') renderNotice();
   if(name==='mypage') renderMypage();
@@ -331,7 +330,7 @@ function showDetail(bizId) {
 
     (b.phone?'<div class="det-row"><span class="dl">휴대폰</span><span class="dv"><a href="tel:'+(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'')+'" style="color:var(--p)">'+(b.phone||b.ownerPhone||'')+'</a></span></div>':'')+
     (b.bizPhone?'<div class="det-row"><span class="dl">사업체 전화</span><span class="dv"><a href="tel:'+btel+'" style="color:#2980b9">'+b.bizPhone+'</a></span></div>':'')+
-    (b.addr?'<div class="det-row"><span class="dl">주소</span><span class="dv">'+b.addr+'</span></div>':'')+
+    (b.addr?'<div class="det-row" onclick="openMapApp('+b.id+')" style="cursor:pointer"><span class="dl">주소</span><span class="dv" style="color:var(--p);text-decoration:underline">'+b.addr+' 📍</span></div>':'')+
     (b.regNo?'<div class="det-row"><span class="dl">사업자번호</span><span class="dv">'+b.regNo+'</span></div>':'')+
     (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+(b.web.startsWith('http')?b.web:'https://'+b.web)+'" target="_blank" style="font-size:14px;color:#185fa5;text-align:right;word-break:break-all;text-decoration:underline;cursor:pointer">'+b.web+' 🔗</a></div>':'')+
     (kws?'<div style="margin-top:9px;display:flex;gap:4px;flex-wrap:wrap">'+kws+'</div>':'')+

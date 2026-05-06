@@ -232,7 +232,6 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   <div class="nav">
     <button class="nb" onclick="showTab('notice',this)">📢 공지</button>
     <button class="nb on" onclick="showTab('list',this)">목록</button>
-    <button class="nb" onclick="showTab('map',this)">지도</button>
     <button class="nb" onclick="showTab('reviews',this)">후기</button>
     <button class="nb" onclick="showTab('mypage',this)">마이페이지</button>
     <button class="nb" id="adminTab" style="display:none" onclick="showTab('admin',this)">관리자</button>
@@ -278,16 +277,6 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     <div class="det-body" id="det-body"></div>
   </div>
 
-  <!-- 지도 -->
-  <div class="sc" id="sc-map">
-    <div style="padding:10px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd)">
-      <input id="mapSearch" placeholder="사업체 검색..." style="flex:1;padding:7px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit" oninput="renderMap()">
-      <select id="mapCatFilter" onchange="renderMap()" style="padding:7px 10px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit;background:#fff">
-        <option value="">전체 업종</option>
-      </select>
-    </div>
-    <div style="padding:9px 13px 13px" id="mapList"></div>
-  </div>
 
   <!-- 후기 -->
   <div class="sc" id="sc-reviews">
