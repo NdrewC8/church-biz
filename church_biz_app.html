@@ -216,6 +216,11 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 .tc-box.on::after{content:'✓';color:#fff;font-size:13px;font-weight:800}
 .terms-content{font-size:13px;color:var(--t2);line-height:1.8;max-height:55vh;overflow-y:auto;padding:4px 2px;white-space:pre-wrap}
 </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#C8185A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="사랑하는교회">
 </head>
 <body>
 <div class="app">
@@ -607,6 +612,28 @@ function closeExitPopup(){
     <button onclick="closeMapAppPopup()" style="width:100%;padding:12px;background:#f4f4f4;color:#888;border:none;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer">취소</button>
   </div>
 </div>
+
+
+<script>
+var _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  _deferredPrompt = e;
+});
+function triggerInstall(){
+  if(_deferredPrompt){
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(function(){ _deferredPrompt = null; });
+  } else {
+    // iOS or already installed
+    alert('홈 화면에 추가하는 방법:\n\n• 아이폰: 하단 공유 버튼 → "홈 화면에 추가"\n• 안드로이드: 브라우저 메뉴 → "앱 설치" 또는 "홈 화면에 추가"');
+  }
+}
+// Service Worker 등록
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+</script>
 
 </body>
 </html>

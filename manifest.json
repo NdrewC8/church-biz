@@ -1,0 +1,22 @@
+{
+  "name": "사랑하는교회 비즈니스 네트워크",
+  "short_name": "사랑교회BIZ",
+  "description": "성도 비즈니스 네트워크",
+  "start_url": "./church_biz_app.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#C8185A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -686,7 +686,10 @@ function renderAdmin(){
     bList.forEach(function(b){
       body+='<div class="admin-row"><div style="font-size:20px;margin-right:4px">'+(EM[b.cat]||'🏪')+'</div>'+
         '<div class="admin-row-info"><div class="admin-row-name">'+b.name+' <span style="font-size:12px;color:var(--p)">'+b.cat+'</span></div><div class="admin-row-sub">'+b.owner+' · '+(b.addr||b.region||'')+'</div></div>'+
-        '<button class="admin-del" onclick="adminDelBiz('+b.id+')">삭제</button></div>';
+        '<div style="display:flex;gap:5px">'+
+        '<button class="admin-edit" onclick="adminEditBiz('+b.id+')" style="padding:4px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:7px;font-size:12px;cursor:pointer">수정</button>'+
+        '<button class="admin-del" onclick="adminDelBiz('+b.id+')">삭제</button>'+
+        '</div></div>';
     });
   } else if(adminSection==='reviews'){
     var sorted=sortRv(S.reviews.slice());
@@ -734,6 +737,68 @@ function renderAdmin(){
 }
 
 function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});saveToFirebase();renderAdmin();}
+
+function adminEditBiz(id){
+  var b = S.biz.find(function(x){ return String(x.id)===String(id); });
+  if(!b) return;
+  window._editBizId = id;
+  var el = document.getElementById('adminContent');
+  el.innerHTML =
+    '<button onclick="renderAdmin()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 취소</button>'+
+    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:16px">'+
+      '<div style="font-size:16px;font-weight:700;margin-bottom:14px">사업체 수정</div>'+
+      row('상호명','adminE_name', b.name||'', '필수')+
+      rowSel('업종','adminE_cat', b.cat||'')+
+      row('주소','adminE_addr', b.addr||'', '선택')+
+      row('휴대폰','adminE_phone', b.phone||'', '선택')+
+      row('사업체전화','adminE_bizPhone', b.bizPhone||'', '선택')+
+      row('홈페이지','adminE_web', b.web||'', '선택 (예: www.example.com)')+
+      row('소개','adminE_desc', b.desc||b.biz_desc||'', '선택')+
+      '<button onclick="saveAdminEditBiz()" style="width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px">수정 완료</button>'+
+    '</div>';
+}
+
+function row(label, id, val, placeholder){
+  return '<div style="margin-bottom:11px">'+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">'+label+'</div>'+
+    '<input id="'+id+'" value="'+val.replace(/"/g,'&quot;')+'" placeholder="'+placeholder+'" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit">'+
+  '</div>';
+}
+
+function rowSel(label, id, val){
+  var opts = Object.keys(EM).map(function(c){
+    return '<option value="'+c+'"'+(val===c?' selected':'')+'>'+c+'</option>';
+  }).join('');
+  return '<div style="margin-bottom:11px">'+
+    '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">'+label+'</div>'+
+    '<select id="'+id+'" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit;background:#fff">'+opts+'</select>'+
+  '</div>';
+}
+
+function saveAdminEditBiz(){
+  var id = window._editBizId;
+  var b = S.biz.find(function(x){ return String(x.id)===String(id); });
+  var bd = S.bizDB.find(function(x){ return String(x.id)===String(id); });
+  if(!b){ alert('사업체를 찾을 수 없어요.'); return; }
+  var name = document.getElementById('adminE_name').value.trim();
+  if(!name){ alert('상호명을 입력해주세요.'); return; }
+  var updates = {
+    name: name,
+    cat:  document.getElementById('adminE_cat').value,
+    addr: document.getElementById('adminE_addr').value.trim(),
+    phone: document.getElementById('adminE_phone').value.trim(),
+    bizPhone: document.getElementById('adminE_bizPhone').value.trim(),
+    web:  document.getElementById('adminE_web').value.trim(),
+    desc: document.getElementById('adminE_desc').value.trim(),
+  };
+  Object.assign(b, updates);
+  if(bd) Object.assign(bd, updates);
+  saveToFirebase();
+  doFilter();
+  alert('수정되었습니다!');
+  renderAdmin();
+}
+
 function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});saveToFirebase();renderAdmin();doFilter();}
 function adminDelReview(id){if(!confirm('후기를 삭제하시겠어요?'))return;S.reviews=S.reviews.filter(function(r){return r.id!==id;});saveToFirebase();renderAdmin();renderAllRv();}
 
