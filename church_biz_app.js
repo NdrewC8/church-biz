@@ -38,7 +38,7 @@ function renderMap(){
         '</div>'+
         (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:10px;padding:7px 9px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="1" width="14" height="22" rx="3" ry="3" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="19" r="1.2" fill="#fff"/><rect x="9" y="3.5" width="6" height="1.2" rx="0.6" fill="#fff"/></svg></a>':'')+
       '</div>'+
-      (addr?'<div id="maddr_'+b.id+'" onclick="event.stopPropagation();openMapApp('+b.id+')" style="display:flex;align-items:center;gap:6px;background:var(--pl);border-radius:9px;padding:7px 10px;cursor:pointer">'+
+      (addr?'<div onclick="event.stopPropagation()" data-mapid="'+b.id+'" class="map-addr-btn" style="display:flex;align-items:center;gap:6px;background:var(--pl);border-radius:9px;padding:7px 10px;cursor:pointer">'+
         '<span style="font-size:16px">📍</span>'+
         '<span style="font-size:12px;color:var(--p);font-weight:600;flex:1;word-break:keep-all">'+addr+'</span>'+
         '<span style="font-size:11px;color:var(--p);white-space:nowrap;font-weight:600">지도▶</span>'+
@@ -48,7 +48,7 @@ function renderMap(){
 }
 
 function openMapApp(bizId){
-  var b = S.biz.find(function(x){return x.id===bizId;});
+  var b = S.biz.find(function(x){return String(x.id)===String(bizId);});
   var addr = b ? (b.addr||b.region||'') : '';
   var popup = document.getElementById('mapAppPopup');
   document.getElementById('mapAppAddr').textContent = addr;
@@ -330,7 +330,7 @@ function showDetail(bizId) {
 
     (b.phone?'<div class="det-row"><span class="dl">휴대폰</span><span class="dv"><a href="tel:'+(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'')+'" style="color:var(--p)">'+(b.phone||b.ownerPhone||'')+'</a></span></div>':'')+
     (b.bizPhone?'<div class="det-row"><span class="dl">사업체 전화</span><span class="dv"><a href="tel:'+btel+'" style="color:#2980b9">'+b.bizPhone+'</a></span></div>':'')+
-    (b.addr?'<div class="det-row" onclick="openMapApp('+b.id+')" style="cursor:pointer"><span class="dl">주소</span><span class="dv" style="color:var(--p);text-decoration:underline">'+b.addr+' 📍</span></div>':'')+
+    (b.addr?'<div class="det-row map-addr-btn" data-mapid="'+b.id+'" style="cursor:pointer"><span class="dl">주소</span><span class="dv" style="color:var(--p);text-decoration:underline">'+b.addr+' 📍</span></div>':'')+
     (b.regNo?'<div class="det-row"><span class="dl">사업자번호</span><span class="dv">'+b.regNo+'</span></div>':'')+
     (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+(b.web.startsWith('http')?b.web:'https://'+b.web)+'" target="_blank" style="font-size:14px;color:#185fa5;text-align:right;word-break:break-all;text-decoration:underline;cursor:pointer">'+b.web+' 🔗</a></div>':'')+
     (kws?'<div style="margin-top:9px;display:flex;gap:4px;flex-wrap:wrap">'+kws+'</div>':'')+
@@ -1424,3 +1424,13 @@ function filterMapList(){
     '</div>';
   }).join('');
 }
+
+// 주소 버튼 이벤트 위임
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.map-addr-btn');
+  if(btn){
+    e.stopPropagation();
+    var mapid = btn.getAttribute('data-mapid');
+    if(mapid) openMapApp(mapid);
+  }
+});
