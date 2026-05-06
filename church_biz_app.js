@@ -362,22 +362,6 @@ function renderRec(){
   document.getElementById('recList').innerHTML=list.length?list.map(bizCardHtml).join(''):'<div class="empty">추천 사업체가 없어요<br><small>사업체 등록 시 "추천 사업체"로 등록해주세요</small></div>';
 }
 
-function renderMap(){
-  var CLS=['#1a5c3a','#c0392b','#2980b9','#8e44ad','#e67e22','#16a085','#d35400','#27ae60'];
-  document.getElementById('mapPins').innerHTML=S.biz.slice(0,20).map(function(b,i){
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:11px;height:11px;border-radius:50%;background:'+CLS[i%CLS.length]+';border:2px solid #fff"></div><div style="font-size:12px;color:var(--t2)">'+b.name+'</div></div>';
-  }).join('');
-  document.getElementById('mapList').innerHTML=S.biz.slice(0,30).map(function(b,i){
-    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;margin-bottom:7px;cursor:pointer" onclick="showDetail('+b.id+')">'+
-      '<div style="width:9px;height:9px;border-radius:50%;background:'+CLS[i%CLS.length]+';flex-shrink:0"></div>'+
-      '<div style="flex:1"><div style="font-size:15px;font-weight:600">'+b.name+'</div>'+
-      '<div style="font-size:13px;color:var(--t2)">'+(b.addr||b.region||'')+'</div></div>'+
-      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:10px;padding:7px 9px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"#fff\"><rect x=\"5\" y=\"1\" width=\"14\" height=\"22\" rx=\"3\" ry=\"3\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"12\" cy=\"19\" r=\"1.2\" fill=\"#fff\"/><rect x=\"9\" y=\"3.5\" width=\"6\" height=\"1.2\" rx=\"0.6\" fill=\"#fff\"/></svg></a>':'')+
-    '</div>';
-  }).join('');
-}
-
 function renderAllRv(){
   var sorted=sortRv(S.reviews.slice());
   document.getElementById('rvListAll').innerHTML=sorted.length?sorted.map(function(r){return rvHtml(r,false);}).join(''):'<div class="empty">아직 후기가 없어요</div>';
@@ -1272,3 +1256,187 @@ initSelects();
 loadFromFirebase();
 
 
+
+function renderMap(){
+  // 업종 필터 옵션 채우기
+  var catSel = document.getElementById('mapCatFilter');
+  if(catSel && catSel.options.length === 1){
+    var cats = [...new Set(S.biz.map(function(b){return b.cat;}).filter(Boolean))].sort();
+    cats.forEach(function(c){
+      var o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      catSel.appendChild(o);
+    });
+  }
+
+  if(window._naverMap){
+    filterMapList();
+    return;
+  }
+
+  // 지도 초기화 (서울 중심)
+  var mapOptions = {
+    center: new naver.maps.LatLng(37.5665, 126.9780),
+    zoom: 11,
+    mapTypeId: naver.maps.MapTypeId.NORMAL
+  };
+  window._naverMap = new naver.maps.Map('naverMap', mapOptions);
+  window._mapMarkers = [];
+  window._myMarker = null;
+  window._myPos = null;
+  window._infoWindow = new naver.maps.InfoWindow({ anchorSkew: true });
+
+  filterMapList();
+}
+
+function locateMe(){
+  if(!navigator.geolocation){ alert('이 브라우저는 위치 서비스를 지원하지 않아요.'); return; }
+  document.getElementById('mapDistInfo').textContent = '📡 위치 확인 중...';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    window._myPos = { lat: lat, lng: lng };
+
+    var myLatLng = new naver.maps.LatLng(lat, lng);
+    window._naverMap.setCenter(myLatLng);
+    window._naverMap.setZoom(13);
+
+    // 내 위치 마커
+    if(window._myMarker) window._myMarker.setMap(null);
+    window._myMarker = new naver.maps.Marker({
+      position: myLatLng,
+      map: window._naverMap,
+      icon: {
+        content: '<div style="width:18px;height:18px;border-radius:50%;background:#2980b9;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>',
+        anchor: new naver.maps.Point(9, 9)
+      }
+    });
+
+    filterMapList();
+  }, function(){
+    alert('위치 정보를 가져올 수 없어요.\n브라우저 위치 권한을 허용해주세요.');
+    document.getElementById('mapDistInfo').textContent = '위치 권한이 필요해요.';
+  });
+}
+
+function calcDist(lat1, lng1, lat2, lng2){
+  var R = 6371000;
+  var dLat = (lat2-lat1)*Math.PI/180;
+  var dLng = (lng2-lng1)*Math.PI/180;
+  var a = Math.sin(dLat/2)*Math.sin(dLat/2)+
+    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+    Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function fmtDist(m){
+  return m < 1000 ? Math.round(m)+'m' : (m/1000).toFixed(1)+'km';
+}
+
+function geocodeAndMark(bizList){
+  // 기존 마커 제거
+  (window._mapMarkers||[]).forEach(function(m){ m.setMap(null); });
+  window._mapMarkers = [];
+
+  bizList.forEach(function(b){
+    if(!b.addr) return;
+    // 좌표 캐시 있으면 바로 마킹
+    if(b._lat && b._lng){
+      addMarker(b);
+      return;
+    }
+    // geocoder로 주소 → 좌표 변환
+    naver.maps.Service.geocode({ query: b.addr }, function(status, res){
+      if(status !== naver.maps.Service.Status.OK) return;
+      var item = res.v2.addresses[0];
+      if(!item) return;
+      b._lat = parseFloat(item.y);
+      b._lng = parseFloat(item.x);
+      addMarker(b);
+    });
+  });
+}
+
+function addMarker(b){
+  var pos = new naver.maps.LatLng(b._lat, b._lng);
+  var color = b.cat==='지교회' ? 'var(--p)' : '#1a5c3a';
+  var marker = new naver.maps.Marker({
+    position: pos,
+    map: window._naverMap,
+    icon: {
+      content: '<div style="background:'+color+';color:#fff;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);cursor:pointer">'+
+        (b.cat==='지교회'?'⛪':'🏪')+' '+b.name+'</div>',
+      anchor: new naver.maps.Point(0, 30)
+    }
+  });
+  window._mapMarkers.push(marker);
+
+  naver.maps.Event.addListener(marker, 'click', function(){
+    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+    var distTxt = (window._myPos && b._lat) ?
+      ' · ' + fmtDist(calcDist(window._myPos.lat, window._myPos.lng, b._lat, b._lng)) : '';
+    var content =
+      '<div style="padding:10px 13px;min-width:180px;font-family:sans-serif">'+
+      '<div style="font-weight:700;font-size:14px;margin-bottom:3px">'+b.name+'</div>'+
+      '<div style="font-size:12px;color:#666;margin-bottom:6px">'+b.cat+distTxt+'</div>'+
+      '<div style="font-size:12px;color:#444;margin-bottom:8px">'+(b.addr||'')+'</div>'+
+      '<div style="display:flex;gap:6px">'+
+      '<button onclick="showDetail('+b.id+');window._infoWindow.close()" style="flex:1;padding:5px;background:var(--p);color:#fff;border:none;border-radius:7px;font-size:12px;cursor:pointer">상세보기</button>'+
+      (tel?'<a href="tel:'+tel+'" style="flex:1;padding:5px;background:#8bc34a;color:#fff;border-radius:7px;font-size:12px;text-align:center;text-decoration:none">전화</a>':'')+
+      '</div></div>';
+    window._infoWindow.setContent(content);
+    window._infoWindow.open(window._naverMap, marker);
+  });
+}
+
+function filterMapList(){
+  if(!window._naverMap) return;
+  var kw = (document.getElementById('mapSearch')||{value:''}).value.toLowerCase();
+  var cat = (document.getElementById('mapCatFilter')||{value:''}).value;
+
+  var list = S.biz.filter(function(b){
+    var matchKw = !kw || b.name.toLowerCase().includes(kw) || (b.addr||'').toLowerCase().includes(kw);
+    var matchCat = !cat || b.cat === cat;
+    return matchKw && matchCat;
+  });
+
+  // 거리순 정렬
+  if(window._myPos){
+    list.forEach(function(b){
+      if(b._lat && b._lng){
+        b._dist = calcDist(window._myPos.lat, window._myPos.lng, b._lat, b._lng);
+      } else {
+        b._dist = 999999;
+      }
+    });
+    list.sort(function(a,b){ return a._dist - b._dist; });
+    document.getElementById('mapDistInfo').textContent =
+      '📍 내 위치 기준 ' + list.length + '개 사업체 (가까운 순)';
+  } else {
+    document.getElementById('mapDistInfo').textContent =
+      '📋 전체 ' + list.length + '개 사업체';
+  }
+
+  // 마커 표시 (최대 50개)
+  geocodeAndMark(list.slice(0, 50));
+
+  // 하단 목록
+  var el = document.getElementById('mapList');
+  if(!list.length){
+    el.innerHTML = '<div class="empty">검색 결과가 없어요</div>';
+    return;
+  }
+  el.innerHTML = list.map(function(b){
+    var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
+    var distTxt = (window._myPos && b._dist && b._dist < 999999) ?
+      '<span style="font-size:11px;color:var(--p);font-weight:600;margin-left:6px">'+fmtDist(b._dist)+'</span>' : '';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:11px 13px;background:#fff;border:1.5px solid var(--bd);border-radius:12px;margin-bottom:8px;cursor:pointer" onclick="showDetail('+b.id+')">'+
+      '<div style="width:36px;height:36px;border-radius:10px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+(EM[b.cat]||'🏪')+'</div>'+
+      '<div style="flex:1;overflow:hidden">'+
+        '<div style="font-size:14px;font-weight:700;display:flex;align-items:center">'+b.name+distTxt+'</div>'+
+        '<div style="font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(b.addr||b.region||'')+'</div>'+
+      '</div>'+
+      (tel?'<a href="tel:'+tel+'" onclick="event.stopPropagation()" style="background:#8bc34a;color:#fff;border:none;border-radius:10px;padding:7px 9px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="1" width="14" height="22" rx="3" ry="3" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="19" r="1.2" fill="#fff"/><rect x="9" y="3.5" width="6" height="1.2" rx="0.6" fill="#fff"/></svg></a>':'')+
+    '</div>';
+  }).join('');
+}
