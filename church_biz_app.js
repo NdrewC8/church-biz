@@ -1143,7 +1143,7 @@ function handleFile(file){
           pw:(String(r[2]||'').trim())||'1111',
           church:String(r[3]||'').trim(),role:String(r[4]||'성도').trim(),no:'',
           biz_cat:String(r[5]||'').trim(),biz_name:String(r[6]||'').trim(),
-          biz_addr:String(r[7]||'').trim(),biz_desc:String(r[8]||'').trim()};
+          biz_addr:String(r[7]||'').trim(),biz_desc:String(r[8]||'').trim(),web:String(r[9]||'').trim()};
       });
       showCsvPreview();
     }catch(err){alert('파일을 읽을 수 없어요: '+err);}
@@ -1199,11 +1199,16 @@ function doUpload(){
         var bbp=(b.bizPhone||'').replace(/[^0-9]/g,'');
         return b.ownerName===m.name&&(bp===np||bbp===np)&&b.name===m.biz_name&&b.cat===m.biz_cat;
       });
-      if(!exists){
-        var nb={id:Date.now()+Math.random(),name:m.biz_name,cat:m.biz_cat||'기타',type:'own',
+      var nb={id:Date.now()+Math.random(),name:m.biz_name,cat:m.biz_cat||'기타',type:'own',
           owner:m.name,ownerName:m.name,ownerPhone:m.phone||'',bizPhone:m.bizPhone||'',
           ownerRole:m.role,ownerChurch:m.church,
-          phone:m.phone||'',addr:m.biz_addr,regNo:'',web:'',kw:'',desc:m.biz_desc};
+          phone:m.phone||'',addr:m.biz_addr,regNo:'',web:m.web||'',kw:'',desc:m.biz_desc};
+      if(exists){
+        // 덮어쓰기 (web/addr/desc 업데이트)
+        Object.assign(exists, {addr:nb.addr,desc:nb.desc,web:nb.web,bizPhone:nb.bizPhone,ownerPhone:nb.ownerPhone});
+        var dupBiz=S.biz.find(function(b){return b.name===exists.name&&b.ownerName===exists.ownerName&&b.cat===exists.cat;});
+        if(dupBiz) Object.assign(dupBiz, {addr:nb.addr,desc:nb.desc,web:nb.web,bizPhone:nb.bizPhone,ownerPhone:nb.ownerPhone});
+      } else {
         S.bizDB.push(nb);
         var dupBiz=S.biz.find(function(b){return b.name===nb.name&&b.ownerName===nb.ownerName&&b.cat===nb.cat;});
         if(!dupBiz){S.biz.push(nb);addedB++;}
