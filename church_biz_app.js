@@ -1525,22 +1525,21 @@ function shareKakao(bizId){
     (b.web ? '🔗 ' + b.web + '\n' : '') +
     '\n👉 ' + appUrl;
   // 카카오 SDK 미설치 시 Web Share API 폴백
-  if(navigator.share){
-    navigator.share({ text: text });
-  } else if(window.Kakao && Kakao.isInitialized()){
-    Kakao.Share.sendDefault({
-      objectType: 'text',
-      text: text,
-      link: { mobileWebUrl: location.href, webUrl: location.href }
+  // 클립보드 복사 후 카카오톡 열기
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
+        window.location.href = 'kakaotalk://';
+        setTimeout(function(){
+          alert('복사 완료!\n카카오톡에 붙여넣기 해주세요 😊');
+        }, 1000);
+      } else {
+        alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
+      }
+    }).catch(function(){
+      prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
     });
   } else {
-    // 클립보드 복사
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(text).then(function(){
-        alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
-      });
-    } else {
-      prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
-    }
+    prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
   }
 }
