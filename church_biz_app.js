@@ -1526,7 +1526,7 @@ function shareKakao(bizId){
     '\n👉 ' + appUrl;
   // 카카오 SDK 미설치 시 Web Share API 폴백
   if(navigator.share){
-    navigator.share({ title: b.name, text: text });
+    navigator.share({ text: text });
   } else if(window.Kakao && Kakao.isInitialized()){
     Kakao.Share.sendDefault({
       objectType: 'text',
