@@ -1516,7 +1516,7 @@ document.addEventListener('click', function(e){
 function shareKakao(bizId){
   var b = S.biz.find(function(x){ return String(x.id)===String(bizId); });
   if(!b) return;
-  var appUrl = 'https://ndrewc8.github.io/church-biz/church_biz_app.html#biz='+bizId;
+  var appUrl = 'https://beloved-biz.kr/church_biz_app.html#biz='+bizId;
   var text = '[사랑하는교회 비즈니스 네트워크]\n\n' +
     '🏪 ' + b.name + '\n' +
     '📂 ' + b.cat + '\n' +

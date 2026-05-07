@@ -2,7 +2,7 @@ const CACHE = 'belovedc-biz-v1';
 const FILES = [
   './church_biz_app.html',
   './church_biz_app.js',
-  './logo.png'
+  './비즈넷로고3.png'
 ];
 
 self.addEventListener('install', function(e){
