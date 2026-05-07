@@ -579,10 +579,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 
 <script>
 history.pushState(null, '', location.href);
-window.addEventListener('popstate', function(){
-  history.pushState(null, '', location.href);
-  showExitPopup();
-});
+// popstate는 스와이프 스크립트에서 통합 처리
 function showExitPopup(){
   var p = document.getElementById('exitPopup');
   p.style.display = 'flex';
@@ -638,11 +635,17 @@ if('serviceWorker' in navigator){
 
 <script>
 // ── 뒤로가기 (back키) ──────────────────────
+// 뒤로가기: 상세페이지면 목록으로, 아니면 종료팝업
+window._popHandled = false;
 window.addEventListener('popstate', function(e){
+  if(window._popHandled){ window._popHandled=false; return; }
   var detail = document.getElementById('sc-detail');
   if(detail && detail.classList.contains('on')){
     goBack();
     history.pushState(null,'',location.href);
+  } else {
+    history.pushState(null,'',location.href);
+    showExitPopup();
   }
 });
 

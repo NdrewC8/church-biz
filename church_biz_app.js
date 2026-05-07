@@ -327,7 +327,7 @@ function showDetail(bizId) {
     '</div></div>'+
     (b.cat!=='지교회' && b.owner ? '<div class="det-row"><span class="dl">담당자</span><span class="dv">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</span></div>' : '')+
     (b.phone?'<div class="det-row"><span class="dl">휴대폰</span><span class="dv"><a href="tel:'+(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'')+'" style="color:var(--p)">'+(b.phone||b.ownerPhone||'')+'</a></span></div>':'')+
-    (b.bizPhone?'<div class="det-row"><span class="dl">사업체 전화</span><span class="dv"><a href="tel:'+btel+'" style="color:#2980b9">'+b.bizPhone+'</a></span></div>':'')+
+    (b.bizPhone?'<div class="det-row"><span class="dl">일반전화</span><span class="dv"><a href="tel:'+btel+'" style="color:#2980b9">'+b.bizPhone+'</a></span></div>':'')+
     (b.addr?'<div class="det-row map-addr-btn" data-mapid="'+b.id+'" style="cursor:pointer"><span class="dl">주소</span><span class="dv" style="color:var(--p);text-decoration:underline">'+b.addr+' 📍</span></div>':'')+
     (b.regNo?'<div class="det-row"><span class="dl">사업자번호</span><span class="dv">'+b.regNo+'</span></div>':'')+
     (b.web?'<div class="det-row"><span class="dl">홈페이지</span><a href="'+(b.web.startsWith('http')?b.web:'https://'+b.web)+'" target="_blank" style="font-size:14px;color:#185fa5;text-align:right;word-break:break-all;text-decoration:underline;cursor:pointer">'+b.web+' 🔗</a></div>':'')+
@@ -346,6 +346,11 @@ function showDetail(bizId) {
       html+='<a class="call-btn" href="tel:'+(tel||btel)+'" style="background:'+(tel?'#8bc34a':'var(--p)')+'">'+(tel?'<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:6px"><rect x="5" y="1" width="14" height="22" rx="3" ry="3" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="19" r="1.2" fill="#fff"/><rect x="9" y="3.5" width="6" height="1.2" rx="0.6" fill="#fff"/></svg>휴대폰':'<svg width="18" height="18" viewBox="0 0 24 24" style="margin-right:6px"><path d=\'M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z\' fill=\'#fff\'/></svg>사업체 전화')+'</a>';
     }
   }
+
+  // 카카오 공유 버튼
+  html+='<button onclick="shareKakao('+bizId+')" style="width:100%;padding:11px;background:#FAE100;color:#3A1D1D;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px">'+
+    '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.5 6.8L5.2 21l4.5-2.3c.7.1 1.5.2 2.3.2 5.5 0 10-3.6 10-8s-4.5-8-10-8z" fill="#3A1D1D"/></svg>'+
+    '카카오톡으로 공유하기</button>';
 
   html+='<div style="font-size:15px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
     (rvs.length?rvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty">아직 후기가 없어요</div>')+
@@ -1497,3 +1502,35 @@ document.addEventListener('click', function(e){
     if(mapid) openMapApp(mapid);
   }
 });
+
+function shareKakao(bizId){
+  var b = S.biz.find(function(x){ return String(x.id)===String(bizId); });
+  if(!b) return;
+  var text = '[사랑하는교회 비즈니스 네트워크]\n\n' +
+    '🏪 ' + b.name + '\n' +
+    '📂 ' + b.cat + '\n' +
+    (b.addr ? '📍 ' + b.addr + '\n' : '') +
+    (b.phone ? '📱 ' + b.phone + '\n' : '') +
+    (b.bizPhone ? '📞 ' + b.bizPhone + '\n' : '') +
+    (b.web ? '🔗 ' + b.web + '\n' : '') +
+    '\n👉 ' + location.href;
+  // 카카오 SDK 미설치 시 Web Share API 폴백
+  if(navigator.share){
+    navigator.share({ title: b.name, text: text, url: location.href });
+  } else if(window.Kakao && Kakao.isInitialized()){
+    Kakao.Share.sendDefault({
+      objectType: 'text',
+      text: text,
+      link: { mobileWebUrl: location.href, webUrl: location.href }
+    });
+  } else {
+    // 클립보드 복사
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){
+        alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
+      });
+    } else {
+      prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요:', text);
+    }
+  }
+}
