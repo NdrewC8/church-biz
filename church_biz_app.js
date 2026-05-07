@@ -134,6 +134,13 @@ async function loadFromFirebase(){
       S.biz.forEach(function(b){ if(b.cat==='종교'){b.cat='지교회';migrated=true;} });
       S.bizDB.forEach(function(b){ if(b.cat==='종교'){b.cat='지교회';migrated=true;} });
       if(migrated){ saveToFirebase(); console.log('업종 마이그레이션 완료'); }
+      // URL hash로 직접 진입 처리
+      var hash = location.hash;
+      if(hash && hash.indexOf('#biz=') === 0){
+        var hid = hash.replace('#biz=','');
+        var hb = S.biz.find(function(x){ return String(x.id)===String(hid); });
+        if(hb) setTimeout(function(){ showDetail(hb.id); }, 100);
+      }
       // 자동 로그인 복원
       try{
         var saved = localStorage.getItem('savedLogin');
@@ -241,6 +248,7 @@ function showTab(name, btn) {
 }
 
 function goBack() {
+  history.replaceState(null,'',location.pathname+location.search);
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   document.getElementById('sc-'+prevTab).classList.add('on');
@@ -292,9 +300,11 @@ function bizCardHtml(b) {
 
 // ── 상세 ─────────────────────────────────
 function showDetail(bizId) {
-  var b=S.biz.find(function(x){return x.id===bizId;});
+  var b=S.biz.find(function(x){return String(x.id)===String(bizId);});
   if(!b) return;
   S.curBiz=bizId;
+  // URL hash 업데이트
+  history.pushState(null,'','#biz='+bizId);
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
   document.getElementById('sc-detail').classList.add('on');
   document.getElementById('det-title').textContent=b.name;
@@ -1506,7 +1516,7 @@ document.addEventListener('click', function(e){
 function shareKakao(bizId){
   var b = S.biz.find(function(x){ return String(x.id)===String(bizId); });
   if(!b) return;
-  var appUrl = 'https://ndrewc8.github.io/church-biz/church_biz_app.html';
+  var appUrl = 'https://ndrewc8.github.io/church-biz/church_biz_app.html#biz='+bizId;
   var text = '[사랑하는교회 비즈니스 네트워크]\n\n' +
     '🏪 ' + b.name + '\n' +
     '📂 ' + b.cat + '\n' +
