@@ -1,4 +1,4 @@
-const CACHE = 'belovedc-biz-v1';
+const CACHE = 'belovedc-biz-v3';
 const FILES = [
   './church_biz_app.html',
   './church_biz_app.js',
