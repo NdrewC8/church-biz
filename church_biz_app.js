@@ -1506,6 +1506,7 @@ document.addEventListener('click', function(e){
 function shareKakao(bizId){
   var b = S.biz.find(function(x){ return String(x.id)===String(bizId); });
   if(!b) return;
+  var appUrl = 'https://ndrewc8.github.io/church-biz/church_biz_app.html';
   var text = '[사랑하는교회 비즈니스 네트워크]\n\n' +
     '🏪 ' + b.name + '\n' +
     '📂 ' + b.cat + '\n' +
@@ -1513,10 +1514,10 @@ function shareKakao(bizId){
     (b.phone ? '📱 ' + b.phone + '\n' : '') +
     (b.bizPhone ? '📞 ' + b.bizPhone + '\n' : '') +
     (b.web ? '🔗 ' + b.web + '\n' : '') +
-    '\n👉 ' + location.href;
+    '\n👉 ' + appUrl;
   // 카카오 SDK 미설치 시 Web Share API 폴백
   if(navigator.share){
-    navigator.share({ title: b.name, text: text, url: location.href });
+    navigator.share({ title: b.name, text: text });
   } else if(window.Kakao && Kakao.isInitialized()){
     Kakao.Share.sendDefault({
       objectType: 'text',
@@ -1530,7 +1531,7 @@ function shareKakao(bizId){
         alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
       });
     } else {
-      prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요:', text);
+      prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
     }
   }
 }
