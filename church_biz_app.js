@@ -1521,7 +1521,6 @@ function shareKakao(bizId){
   if(!b) return;
   var appUrl = 'https://beloved-biz.kr/church_biz_app.html#biz='+bizId;
   var text = '🏪 ' + b.name + '\n' +
-    '📂 ' + b.cat + '\n' +
     (b.addr ? '📍 ' + b.addr + '\n' : '') +
     (b.phone ? '📱 ' + b.phone + '\n' : '') +
     (b.bizPhone ? '📞 ' + b.bizPhone + '\n' : '') +
