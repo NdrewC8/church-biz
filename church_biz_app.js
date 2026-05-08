@@ -107,12 +107,17 @@ async function saveToFirebase(){
       biz: S.biz,
       bizDB: S.bizDB,
       reviews: S.reviews,
-      notices: S.notices,
       likes: S.likes,
       updatedAt: new Date().toISOString()
     });
+    // notices는 별도 doc에 저장 (크기 분리)
+    var noticesLite = S.notices.map(function(n){
+      return {id:n.id,title:n.title,content:n.content,pinned:n.pinned,author:n.author,
+        files:(n.files||[]).map(function(f){return {name:f.name,type:f.type,size:f.size,data:f.data};})};
+    });
+    await db.collection('data').doc('notices').set({ list: noticesLite, updatedAt: new Date().toISOString() });
     console.log('Firebase 저장 완료');
-  }catch(e){ console.error('Firebase 저장 실패:', e); }
+  }catch(e){ console.error('Firebase 저장 실패:', e); alert('저장 실패: '+e.message); }
 }
 
 async function loadFromFirebase(){
@@ -125,6 +130,11 @@ async function loadFromFirebase(){
       S.bizDB = data.bizDB || [];
       S.reviews = data.reviews || [];
       S.notices = data.notices || [];
+      // notices 별도 doc 로드
+      try{
+        var nDoc = await db.collection('data').doc('notices').get();
+        if(nDoc.exists && nDoc.data().list) S.notices = nDoc.data().list;
+      }catch(e){}
       S.likes = data.likes || [];
       console.log('Firebase 데이터 로드 완료');
       doFilter();
