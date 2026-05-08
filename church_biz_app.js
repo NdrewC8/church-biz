@@ -514,6 +514,13 @@ function openNoticeDetail(id){
       '<div style="font-size:18px;font-weight:700;margin-bottom:8px">'+escHtml(n.title)+'</div>'+
       '<div style="font-size:12px;color:#aaa;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bd)">'+fmtDate(n.id)+' · '+escHtml(n.author)+'</div>'+
       '<div style="font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--t)">'+escHtml(n.content)+'</div>'+
+      (n.files&&n.files.length?'<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:8px">📎 첨부파일 ('+n.files.length+'개)</div>'+
+      n.files.map(function(f){
+        var isImg=f.type&&f.type.startsWith('image/');
+        return (isImg?'<div style="margin-bottom:8px"><img src="'+f.data+'" style="max-width:100%;border-radius:8px;border:1px solid var(--bd)"></div>':'')+
+        '<a href="'+f.data+'" download="'+f.name+'" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--pl);border-radius:9px;text-decoration:none;color:var(--p);font-size:13px;font-weight:600;margin-bottom:6px">'+
+        '📄 '+f.name+' <span style="font-size:11px;color:#aaa;margin-left:auto">'+(f.size?(f.size/1024).toFixed(1)+'KB':'')+'</span></a>';
+      }).join('')+'</div>':'')+ 
     '</div>'+
     (admin?'<div style="display:flex;gap:8px;margin-top:12px">'+
       '<button onclick="openNoticeEdit('+n.id+')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">수정</button>'+
@@ -540,9 +547,15 @@ function showNoticeForm(n){
       '<input id="noticeTitleInput" value="'+escHtml(isEdit?n.title:'')+'" placeholder="제목을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;margin-bottom:12px;font-family:inherit">'+
       '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">내용</div>'+
       '<textarea id="noticeContentInput" placeholder="내용을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;min-height:160px;resize:vertical;font-family:inherit;line-height:1.7">'+escHtml(isEdit?n.content:'')+'</textarea>'+
-      '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:16px">'+
+      '<div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:10px">'+
         '<input type="checkbox" id="noticePinned" '+(isEdit&&n.pinned?'checked':'')+' style="width:16px;height:16px;cursor:pointer">'+
         '<label for="noticePinned" style="font-size:14px;cursor:pointer">📌 상단 고정 (중요 공지)</label>'+
+      '</div>'+
+      '<div style="margin-bottom:12px">'+
+        '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:5px">📎 파일/사진 첨부 (선택)</div>'+
+        '<input type="file" id="noticeFileInput" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.hwp,.txt" style="width:100%;padding:8px;border:1.5px dashed var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;cursor:pointer;background:var(--pl)">'+
+        '<div style="font-size:11px;color:#aaa;margin-top:4px">이미지, PDF, 워드, 엑셀, 파워포인트, 한글, 텍스트 파일 첨부 가능</div>'+
+        (isEdit&&n.files&&n.files.length?'<div style="margin-top:8px;font-size:12px;color:var(--t2)">기존 첨부파일: '+n.files.map(function(f){return f.name;}).join(', ')+'</div>':'')+ 
       '</div>'+
       '<button onclick="saveNotice('+(isEdit?n.id:'null')+')" style="width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer">'+(isEdit?'수정 완료':'등록하기')+'</button>'+
     '</div>';
@@ -553,11 +566,35 @@ function saveNotice(editId){
   var pinned=document.getElementById('noticePinned').checked;
   if(!title){alert('제목을 입력해주세요.');return;}
   if(!content){alert('내용을 입력해주세요.');return;}
+  var fileInput=document.getElementById('noticeFileInput');
+  var files=fileInput?Array.from(fileInput.files):[];
+  if(files.length>0){
+    // 파일을 base64로 변환 후 저장
+    var readers=[];
+    var done=0;
+    var fileData=[];
+    files.forEach(function(file){
+      var reader=new FileReader();
+      reader.onload=function(e){
+        fileData.push({name:file.name,type:file.type,size:file.size,data:e.target.result});
+        done++;
+        if(done===files.length) _saveNoticeData(editId,title,content,pinned,fileData);
+      };
+      reader.readAsDataURL(file);
+    });
+  } else {
+    _saveNoticeData(editId,title,content,pinned,null);
+  }
+}
+function _saveNoticeData(editId,title,content,pinned,newFiles){
   if(editId&&editId!==null){
     var n=S.notices.find(function(x){return x.id===editId;});
-    if(n){n.title=title;n.content=content;n.pinned=pinned;}
+    if(n){
+      n.title=title;n.content=content;n.pinned=pinned;
+      if(newFiles&&newFiles.length) n.files=newFiles;
+    }
   } else {
-    S.notices.push({id:Date.now(),title:title,content:content,pinned:pinned,author:S.user.name});
+    S.notices.push({id:Date.now(),title:title,content:content,pinned:pinned,author:S.user.name,files:newFiles||[]});
   }
   saveToFirebase();
   renderNotice();
