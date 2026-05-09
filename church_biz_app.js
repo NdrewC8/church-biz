@@ -713,7 +713,7 @@ function renderAdmin(){
     else if(mSort==='church-asc') mList.sort(function(a,b){return (a.church||'').localeCompare(b.church||'','ko');});
     else if(mSort==='church-desc') mList.sort(function(a,b){return (b.church||'').localeCompare(a.church||'','ko');});
     body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
-      '<input id="adminMemberKwInput" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" oninput="window.adminMemberKw=this.value;renderAdmin()" style="flex:1;padding:7px 10px;font-size:14px">'+
+      '<input id="adminMemberKwInput" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" oninput="window.adminMemberKw=this.value;_adminMemberListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
       '<select onchange="window.adminMemberSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(mSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
         '<option value="name-desc"'+(mSort==='name-desc'?' selected':'')+'>이름 ↓</option>'+
@@ -721,11 +721,12 @@ function renderAdmin(){
         '<option value="church-desc"'+(mSort==='church-desc'?' selected':'')+'>교회 ↓</option>'+
       '</select>'+
     '</div>'+
-    '<div style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+mList.length+'명 / 전체 '+S.members.length+'명</div>';
+    '<div id="adminMemberCount" style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+mList.length+'명 / 전체 '+S.members.length+'명</div>'+'<div id="adminMemberList">';
     mList.forEach(function(m){
       body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+' <span style="font-size:13px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
         '<button class="admin-del" onclick="adminDelMember(\''+m.phone+'\')">삭제</button></div>';
     });
+  body+='</div>';
   } else if(adminSection==='biz'){
     var bKw=(window.adminBizKw||'').toLowerCase();
     var bSort=window.adminBizSort||'name-asc';
@@ -737,7 +738,7 @@ function renderAdmin(){
     else if(bSort==='cat-asc') bList.sort(function(a,b){return (a.cat||'').localeCompare(b.cat||'','ko');});
     else if(bSort==='cat-desc') bList.sort(function(a,b){return (b.cat||'').localeCompare(a.cat||'','ko');});
     body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
-      '<input id="adminBizKwInput" class="fi" placeholder="업체명,업종,담당자 검색..." value="'+(bKw||'')+'" oninput="window.adminBizKw=this.value;renderAdmin()" style="flex:1;padding:7px 10px;font-size:14px">'+
+      '<input id="adminBizKwInput" class="fi" placeholder="업체명,업종,담당자 검색..." value="'+(bKw||'')+'" oninput="window.adminBizKw=this.value;_adminBizListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
       '<select onchange="window.adminBizSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(bSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
         '<option value="name-desc"'+(bSort==='name-desc'?' selected':'')+'>이름 ↓</option>'+
@@ -745,7 +746,7 @@ function renderAdmin(){
         '<option value="cat-desc"'+(bSort==='cat-desc'?' selected':'')+'>업종 ↓</option>'+
       '</select>'+
     '</div>'+
-    '<div style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+bList.length+'개 / 전체 '+S.biz.length+'개</div>';
+    '<div id="adminBizCount" style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+bList.length+'개 / 전체 '+S.biz.length+'개</div>'+'<div id="adminBizList">';
     bList.forEach(function(b){
       body+='<div class="admin-row"><div style="font-size:20px;margin-right:4px">'+(EM[b.cat]||'🏪')+'</div>'+
         '<div class="admin-row-info"><div class="admin-row-name">'+b.name+' <span style="font-size:12px;color:var(--p)">'+b.cat+'</span></div><div class="admin-row-sub">'+b.owner+' · '+(b.addr||b.region||'')+'</div></div>'+
@@ -799,6 +800,47 @@ function renderAdmin(){
   el.innerHTML=tabs+body;
 }
 
+
+function _adminMemberListOnly(){
+  var mKw=(window.adminMemberKw||'').toLowerCase();
+  var sortM=window.adminMemberSort||'name';
+  var list=S.members.filter(function(m){
+    return !mKw||m.name.toLowerCase().includes(mKw)||(m.phone||'').includes(mKw)||(m.church||'').includes(mKw);
+  });
+  list.sort(function(a,b){return sortM==='name'?(a.name||'').localeCompare(b.name||'','ko'):(b.id||0)-(a.id||0);});
+  var el=document.getElementById('adminMemberList');
+  if(!el) return;
+  el.innerHTML=list.map(function(m){
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;margin-bottom:5px">'+
+      '<div style="flex:1"><div style="font-size:14px;font-weight:600">'+m.name+' <span style="font-size:12px;color:var(--t2)">'+m.role+'</span></div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+(m.church||'')+'교회 · '+(m.phone||'')+'</div></div>'+
+      '<button onclick="adminDelMember(this.dataset.phone)" data-phone="'+m.phone+'" class="admin-del">삭제</button></div>';
+  }).join('');
+  var cnt=document.getElementById('adminMemberCount');
+  if(cnt) cnt.textContent='총 '+list.length+'명 / 전체 '+S.members.length+'명';
+}
+
+function _adminBizListOnly(){
+  var bKw=(window.adminBizKw||'').toLowerCase();
+  var sortB=window.adminBizSort||'name';
+  var list=S.biz.filter(function(b){
+    return !bKw||b.name.toLowerCase().includes(bKw)||(b.cat||'').includes(bKw)||(b.owner||'').includes(bKw)||(b.addr||'').toLowerCase().includes(bKw);
+  });
+  list.sort(function(a,b){return sortB==='name'?(a.name||'').localeCompare(b.name||'','ko'):(b.id||0)-(a.id||0);});
+  var el=document.getElementById('adminBizList');
+  if(!el) return;
+  el.innerHTML=list.map(function(b){
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;margin-bottom:5px">'+
+      '<div style="font-size:18px">'+(EM[b.cat]||'🏪')+'</div>'+
+      '<div style="flex:1"><div style="font-size:14px;font-weight:600">'+b.name+' <span style="font-size:12px;color:var(--p)">'+b.cat+'</span></div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+(b.owner||'')+' · '+(b.addr||'').slice(0,18)+'</div></div>'+
+      '<div style="display:flex;gap:5px">'+
+      '<button class="admin-edit" onclick="adminEditBiz('+b.id+')" style="padding:4px 10px;background:var(--pl);color:var(--p);border:1px solid var(--p);border-radius:7px;font-size:12px;cursor:pointer">수정</button>'+
+      '<button onclick="adminDelBiz('+b.id+')" class="admin-del">삭제</button></div></div>';
+  }).join('');
+  var cnt=document.getElementById('adminBizCount');
+  if(cnt) cnt.textContent='총 '+list.length+'개 / 전체 '+S.biz.length+'개';
+}
 function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});saveToFirebase();renderAdmin();}
 
 function adminEditBiz(id){
