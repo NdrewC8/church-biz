@@ -713,7 +713,7 @@ function renderAdmin(){
     else if(mSort==='church-asc') mList.sort(function(a,b){return (a.church||'').localeCompare(b.church||'','ko');});
     else if(mSort==='church-desc') mList.sort(function(a,b){return (b.church||'').localeCompare(a.church||'','ko');});
     body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
-      '<input id="adminMemberKwInput" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" oninput="window.adminMemberKw=this.value;_adminMemberListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
+      '<input id="adminMemberKwInput" type="search" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" autocomplete="off" readonly onfocus="this.removeAttribute(\'readonly\')" oninput="window.adminMemberKw=this.value;_adminMemberListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
       '<select onchange="window.adminMemberSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(mSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
         '<option value="name-desc"'+(mSort==='name-desc'?' selected':'')+'>이름 ↓</option>'+
@@ -738,7 +738,7 @@ function renderAdmin(){
     else if(bSort==='cat-asc') bList.sort(function(a,b){return (a.cat||'').localeCompare(b.cat||'','ko');});
     else if(bSort==='cat-desc') bList.sort(function(a,b){return (b.cat||'').localeCompare(a.cat||'','ko');});
     body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
-      '<input id="adminBizKwInput" class="fi" placeholder="업체명,업종,담당자 검색..." value="'+(bKw||'')+'" oninput="window.adminBizKw=this.value;_adminBizListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
+      '<input id="adminBizKwInput" type="search" class="fi" placeholder="업체명,업종,담당자 검색..." value="'+(bKw||'')+'" autocomplete="off" readonly onfocus="this.removeAttribute(\'readonly\')" oninput="window.adminBizKw=this.value;_adminBizListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
       '<select onchange="window.adminBizSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(bSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
         '<option value="name-desc"'+(bSort==='name-desc'?' selected':'')+'>이름 ↓</option>'+
@@ -802,6 +802,7 @@ function renderAdmin(){
 
 
 function _adminMemberListOnly(){
+  var active=document.activeElement;
   var mKw=(window.adminMemberKw||'').toLowerCase();
   var sortM=window.adminMemberSort||'name';
   var list=S.members.filter(function(m){
@@ -818,9 +819,11 @@ function _adminMemberListOnly(){
   }).join('');
   var cnt=document.getElementById('adminMemberCount');
   if(cnt) cnt.textContent='총 '+list.length+'명 / 전체 '+S.members.length+'명';
+  if(active&&active.id==='adminMemberKwInput') active.focus();
 }
 
 function _adminBizListOnly(){
+  var active=document.activeElement;
   var bKw=(window.adminBizKw||'').toLowerCase();
   var sortB=window.adminBizSort||'name';
   var list=S.biz.filter(function(b){
