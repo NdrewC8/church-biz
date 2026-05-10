@@ -401,6 +401,18 @@ function sortRv(rvs){
     return ap!==bp?bp-ap:new Date(b.date)-new Date(a.date);
   });
 }
+
+function _goToBizFromRv(bizId){
+  var b = S.biz.find(function(x){ return String(x.id)===String(bizId); });
+  if(!b){ alert('업체 정보를 찾을 수 없어요.'); return; }
+  showDetail(b.id);
+  // 목록 탭으로 전환
+  var listBtn = document.querySelector('.nb[onclick*=\"list\"]');
+  if(listBtn){
+    document.querySelectorAll('.nb').forEach(function(b){ b.classList.remove('on'); });
+    listBtn.classList.add('on');
+  }
+}
 function rvHtml(r,showDel){
   var p=isPastor(r.role);
   var del=(showDel&&S.user&&S.user.name===r.reviewer)?'<button class="del-btn" onclick="deleteReview('+r.id+')">삭제</button>':'';
@@ -408,7 +420,7 @@ function rvHtml(r,showDel){
     '<div class="rv-hd">'+
       '<div class="av'+(p?' av-p':'')+'">'+r.reviewer[0]+'</div>'+
       '<div style="flex:1"><div class="rn">'+(p?'★ ':'')+r.reviewer+(p?'<span class="badge-p">'+r.role+'님 추천</span>':'')+'</div>'+
-      '<div style="font-size:13px;color:var(--t2)">'+r.bizName+'</div></div>'+
+      '<div style="font-size:13px;color:var(--p);cursor:pointer;text-decoration:underline" onclick="_goToBizFromRv('+r.bizId+')">'+r.bizName+' →</div></div>'+
       '<div style="display:flex;align-items:center;gap:4px"><span style="font-size:15px;color:var(--ac)">'+'⭐'.repeat(r.stars)+'</span>'+del+'</div>'+
     '</div><div class="rt">'+r.text+'</div>'+
     (r.photos&&r.photos.length?'<div class="rv-photos">'+r.photos.map(function(src){return '<img src="'+src+'" onclick="openViewer(\''+src+'\')">'; }).join('')+'</div>':'')+
@@ -712,7 +724,10 @@ function renderAdmin(){
     else if(mSort==='name-desc') mList.sort(function(a,b){return (b.name||'').localeCompare(a.name||'','ko');});
     else if(mSort==='church-asc') mList.sort(function(a,b){return (a.church||'').localeCompare(b.church||'','ko');});
     else if(mSort==='church-desc') mList.sort(function(a,b){return (b.church||'').localeCompare(a.church||'','ko');});
-    body='<div style="display:flex;gap:6px;margin-bottom:10px">'+
+    body='<div style="display:flex;gap:6px;margin-bottom:8px">'+
+      '<button onclick="adminDelAllMembers()" style="padding:7px 13px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">🗑️ 전체삭제</button>'+
+    '</div>'+
+    '<div style="display:flex;gap:6px;margin-bottom:10px">'+
       '<input id="adminMemberKwInput" type="search" class="fi" placeholder="이름,전화,교회 검색..." value="'+(mKw||'')+'" autocomplete="off" readonly onfocus="this.removeAttribute(\'readonly\')" oninput="window.adminMemberKw=this.value;_adminMemberListOnly()" style="flex:1;padding:7px 10px;font-size:14px">'+
       '<select onchange="window.adminMemberSort=this.value;renderAdmin()" style="padding:7px;border:1px solid var(--bd);border-radius:8px;font-size:13px">'+
         '<option value="name-asc"'+(mSort==='name-asc'?' selected':'')+'>이름 ↑</option>'+
@@ -843,6 +858,17 @@ function _adminBizListOnly(){
   }).join('');
   var cnt=document.getElementById('adminBizCount');
   if(cnt) cnt.textContent='총 '+list.length+'개 / 전체 '+S.biz.length+'개';
+}
+
+function adminDelAllMembers(){
+  if(!confirm('⚠️ 전체 회원을 삭제하시겠어요?\n\n총 '+S.members.length+'명이 삭제됩니다.\n사업체 데이터는 유지됩니다.\n\n삭제 전 백업을 권장합니다!')) return;
+  var name = prompt('정말 삭제하려면 "전체삭제"를 입력해주세요.');
+  if(name !== '전체삭제'){ alert('취소되었습니다.'); return; }
+  S.members = [];
+  S.likes = [];
+  saveToFirebase();
+  renderAdmin();
+  alert('✅ 전체 회원이 삭제되었습니다.\n사업체 데이터는 그대로 유지됩니다.');
 }
 function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});saveToFirebase();renderAdmin();}
 
