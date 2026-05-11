@@ -267,26 +267,15 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
       </div>
     <div class="chips" id="chips"></div>
     </div>
-    <!-- 쿠팡 바로가기 버튼 -->
-    <button onclick="showExitPopup()"
-      style="display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 13px 4px;padding:13px 16px;background:#E99923;color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:700;width:calc(100% - 26px);cursor:pointer;box-shadow:0 3px 10px rgba(233,153,35,0.35)">
-      쇼핑이 선교가 된다고?  여기를 클릭하세요! 🛒
-    </button>
-    <p style="font-size:11px;color:#aaa;text-align:center;margin:3px 0 6px">이 링크는 쿠팡 파트너스 활동의 일환으로, 일정액의 수수료를 제공받습니다.</p>
+    <!-- 쿠팡 광고 배너 -->
+    <div style="margin:8px 13px 4px;text-align:center;overflow:hidden">
+      <script src="https://ads-partners.coupang.com/g.js"></script>
+      <script>new PartnersCoupang.G({"id":987895,"template":"banner","trackingCode":"AF7978099","width":"320","height":"50"});</script>
+    </div>
     <div class="bl" id="bizList"></div>
     
 
-    <!-- 쿠팡 아프리카 후원 배너 -->
-    <div style="margin:16px 12px 20px;border:1.5px solid #f0c8d0;border-radius:14px;overflow:hidden;background:#fff">
-      <div style="padding:14px 15px">
-        <p style="font-size:13px;color:#6b7280;line-height:1.8;margin-bottom:11px;font-weight:700;text-align:center">이 포스팅은 쿠팡 파트너스 활동의 일환으로,<br>이에 따른 일정액의 수수료를 제공받습니다.</p>
-        <a href="https://link.coupang.com/a/eADPS5" target="_blank"
-          style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:#C8185A;color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;box-sizing:border-box;margin-bottom:11px">
-          🛒 쿠팡에서 쇼핑하고 아프리카 후원하기
-        </a>
-        <p style="font-size:13px;color:#6b7280;line-height:1.7;text-align:center;font-weight:700">🌍 쇼핑금액의 1%를 아프리카선교헌금으로 쓰입니다.</p>
-      </div>
-    </div>
+
   </div>
 
   <!-- 상세 -->
@@ -561,51 +550,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   </script>
   <script src="church_biz_app.js"></script>
 
-<!-- 종료 팝업 -->
-<div id="exitPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center">
-  <div style="background:#fff;border-radius:18px;width:88%;max-width:340px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.22)">
-    <!-- 헤더 -->
-    <div style="background:var(--p);padding:13px 18px;display:flex;align-items:center;justify-content:space-between">
-      <span style="color:#fff;font-size:15px;font-weight:700">안내</span>
-      <button onclick="closeExitPopup()" style="background:transparent;border:none;color:rgba(255,255,255,0.9);font-size:20px;cursor:pointer;line-height:1;padding:0">✕</button>
-    </div>
-    <!-- 연분홍 배너 -->
-    <div style="background:var(--pl);padding:20px 20px 18px">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <!-- 왼쪽: 텍스트 + 바로가기 -->
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center">
-          <div>
-            <div style="font-size:13px;font-weight:800;color:var(--p);line-height:1.5;margin-bottom:7px">쿠팡쇼핑으로<br>아프리카 선교하기</div>
-            <div style="font-size:13px;color:#a0546e;line-height:1.6;font-weight:600">🌍 쇼핑금액의 1%를<br>선교헌금으로 보냅니다.</div>
-          </div>
-          <a href="https://link.coupang.com/a/eADPS5" target="_blank" onclick="closeExitPopup()" style="padding:10px 18px;background:var(--p);color:#fff;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">쿠팡바로가기</a>
-        </div>
-        <!-- 오른쪽: 로고 -->
-        <img src="data:image/png;base64,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" style="width:130px;height:130px;object-fit:contain;margin-left:14px;flex-shrink:0;border-radius:14px">
-      </div>
-    </div>
-    <!-- 쿠파스 공정성 문구 -->
-    <div style="padding:10px 20px 16px;text-align:center">
-      <p style="font-size:11px;color:#aaa;line-height:1.6;margin:0">
-        이 포스팅은 쿠팡 파트너스 활동의 일환으로,<br>
-        이에 따른 일정액의 수수료를 제공받습니다.
-      </p>
-      <button onclick="closeExitPopup()" style="margin-top:10px;padding:9px 32px;background:#f0f0f0;color:#888;border:none;border-radius:10px;font-size:13px;cursor:pointer">닫기</button>
-    </div>
-  </div>
-</div>
 
-<script>
-history.pushState(null, '', location.href);
-// popstate는 스와이프 스크립트에서 통합 처리
-function showExitPopup(){
-  var p = document.getElementById('exitPopup');
-  p.style.display = 'flex';
-}
-function closeExitPopup(){
-  document.getElementById('exitPopup').style.display = 'none';
-}
-</script>
 
 
 <!-- 지도앱 선택 팝업 -->

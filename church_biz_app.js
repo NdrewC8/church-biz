@@ -860,15 +860,19 @@ function _adminBizListOnly(){
   if(cnt) cnt.textContent='총 '+list.length+'개 / 전체 '+S.biz.length+'개';
 }
 
-function adminDelAllMembers(){
+async function adminDelAllMembers(){
   if(!confirm('⚠️ 전체 회원을 삭제하시겠어요?\n\n총 '+S.members.length+'명이 삭제됩니다.\n사업체 데이터는 유지됩니다.\n\n삭제 전 백업을 권장합니다!')) return;
   var name = prompt('정말 삭제하려면 "전체삭제"를 입력해주세요.');
   if(name !== '전체삭제'){ alert('취소되었습니다.'); return; }
   S.members = [];
   S.likes = [];
-  saveToFirebase();
+  try{
+    await saveToFirebase();
+    alert('✅ 전체 회원이 삭제되었습니다.\n사업체 데이터는 그대로 유지됩니다.');
+  }catch(e){
+    alert('❌ 저장 실패: '+e.message);
+  }
   renderAdmin();
-  alert('✅ 전체 회원이 삭제되었습니다.\n사업체 데이터는 그대로 유지됩니다.');
 }
 function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});saveToFirebase();renderAdmin();}
 
