@@ -889,6 +889,7 @@ function shareJob(id){
   if(!j) return;
   var b = S.biz.find(function(x){ return String(x.id)===String(j.bizId); });
   var appUrl = 'https://beloved-biz.kr/church_biz_app.html';
+  var title = (b?b.name+' · ':'')+j.title;
   var text =
     '[사랑하는교회 Biz-net 구인공고]\n\n'+
     '📋 '+j.title+'\n'+
@@ -897,37 +898,33 @@ function shareJob(id){
     (j.salary?'💰 '+j.salary+'\n':'')+
     (j.location?'📍 '+j.location+'\n':'')+
     (j.deadline?'📅 마감: '+j.deadline+'\n':'')+
-    '\n'+j.desc.slice(0,100)+(j.desc.length>100?'...':'')+
+    '\n'+j.desc.slice(0,150)+(j.desc.length>150?'...':'')+
     '\n\n👉 '+appUrl;
-  function _doCopy(){
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(text).then(function(){
-        _afterCopy();
-      }).catch(function(){ _fallbackCopy(); });
-    } else {
-      _fallbackCopy();
-    }
+
+  // Web Share API (시스템 공유 시트)
+  if(navigator.share){
+    navigator.share({
+      title: title,
+      text: text,
+      url: appUrl
+    }).catch(function(){});
+    return;
   }
-  function _afterCopy(){
-    if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
-      window.location.href = 'kakaotalk://';
-      setTimeout(function(){ alert('복사 완료!\n카카오톡에 붙여넣기 해주세요 😊'); }, 800);
-    } else {
-      alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
-    }
+
+  // fallback - 클립보드 복사
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try{
+    document.execCommand('copy');
+    alert('공유 내용이 복사되었어요!\n원하는 앱에 붙여넣기 해주세요.');
+  }catch(e){
+    prompt('아래 내용을 복사하세요.', text);
   }
-  function _fallbackCopy(){
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    try{ document.execCommand('copy'); _afterCopy(); }
-    catch(e){ prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text); }
-    document.body.removeChild(ta);
-  }
-  _doCopy();
+  document.body.removeChild(ta);
 }
 
 async function deleteJob(id){
