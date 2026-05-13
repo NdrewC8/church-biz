@@ -641,10 +641,10 @@ function renderJobs(){
     var bop=(b.ownerPhone||'').replace(/[^0-9]/g,'');
     return bp===up||bop===up;
   }) : [];
-  var canPost = myBiz.length > 0;
+  var canPost = !!S.user;
 
   var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
-    '<div style="font-size:18px;font-weight:700">💼 구인구직</div>'+
+    '<div style="font-size:18px;font-weight:700">구인구직</div>'+
     (canPost ? '<button onclick="openJobWrite()" style="padding:7px 14px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">+ 공고 등록</button>' : '')+
   '</div>';
 
@@ -696,13 +696,15 @@ function openJobWrite(){
     var up=(S.user.phone||'').replace(/[^0-9]/g,'');
     return (b.phone||'').replace(/[^0-9]/g,'')===up||(b.ownerPhone||'').replace(/[^0-9]/g,'')===up;
   });
-  if(!myBiz.length){ alert('등록된 사업체가 있어야 공고를 올릴 수 있어요.'); return; }
+  if(!myBiz.length && !isAdmin()){ alert('사업체를 먼저 등록해야 공고를 올릴 수 있어요.\n마이페이지에서 사업체를 등록해주세요.'); return; }
   var el = document.getElementById('jobsContent');
 
-  var bizOptions = myBiz.map(function(b){
+  var allBiz = isAdmin() && myBiz.length===0 ? S.biz : myBiz;
+  var bizOptions = allBiz.map(function(b){
     return '<option value="'+b.id+'">'+b.name+'</option>';
   }).join('');
 
+  if(!bizOptions){ alert('등록된 사업체가 없어요.'); return; }
   el.innerHTML =
     '<button onclick="renderJobs()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 취소</button>'+
     '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:16px">'+
