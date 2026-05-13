@@ -172,14 +172,16 @@ async function loadFromFirebase(){
         if(saved){
           var cred = JSON.parse(saved);
           var m = S.members.find(function(x){ return x.phone===cred.phone && x.pw===cred.pw; });
+          if(!m) m = S.members.find(function(x){ return x.phone===cred.phone; }); // 비번 변경된 경우 대비
           if(m){
             S.user = m;
+            // localStorage 최신 정보로 갱신
+            try{ localStorage.setItem('savedLogin', JSON.stringify({phone:m.phone, pw:m.pw})); }catch(e){}
             document.getElementById('loginBtn').textContent = m.name+' '+m.role;
             checkAdminTab();
             renderMypage();
-          } else {
-            localStorage.removeItem('savedLogin');
           }
+          // 못 찾아도 localStorage는 유지 (네트워크 지연 등의 이유일 수 있음)
         }
       }catch(e){}
     } else {
@@ -694,7 +696,7 @@ function renderJobs(){
         // 하단 버튼
         '<div style="display:flex;gap:7px;align-items:center">'+
           (b?'<button onclick="showDetail('+j.bizId+')" style="flex:1;padding:9px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">🏪 사업체 보기</button>':'')+ 
-          '<button class="share-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:#FAE100;color:#3A1D1D;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">💬 공유</button>'+
+          '<button onclick="shareJob(\"'+j.id+'\")" style="padding:9px 13px;background:#FAE100;color:#3A1D1D;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">💬 공유</button>'+
           (canDel?'<button class="edit-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-size:13px;cursor:pointer">수정</button>':'')+
           (canDel?'<button class="del-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:10px;font-size:13px;cursor:pointer">삭제</button>':'')+
         '</div>'+
@@ -897,18 +899,35 @@ function shareJob(id){
     (j.deadline?'📅 마감: '+j.deadline+'\n':'')+
     '\n'+j.desc.slice(0,100)+(j.desc.length>100?'...':'')+
     '\n\n👉 '+appUrl;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(text).then(function(){
-      if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
-        window.location.href = 'kakaotalk://';
-        setTimeout(function(){ alert('복사 완료!\n카카오톡에 붙여넣기 해주세요 😊'); }, 1000);
-      } else {
-        alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
-      }
-    });
-  } else {
-    prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
+  function _doCopy(){
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){
+        _afterCopy();
+      }).catch(function(){ _fallbackCopy(); });
+    } else {
+      _fallbackCopy();
+    }
   }
+  function _afterCopy(){
+    if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
+      window.location.href = 'kakaotalk://';
+      setTimeout(function(){ alert('복사 완료!\n카카오톡에 붙여넣기 해주세요 😊'); }, 800);
+    } else {
+      alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
+    }
+  }
+  function _fallbackCopy(){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try{ document.execCommand('copy'); _afterCopy(); }
+    catch(e){ prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text); }
+    document.body.removeChild(ta);
+  }
+  _doCopy();
 }
 
 async function deleteJob(id){

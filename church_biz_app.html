@@ -236,6 +236,26 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="사랑하는교회 Biz-net">
+
+<style>
+  /* 풀다운 새로고침 방지 */
+  html, body { overscroll-behavior-y: contain; }
+</style>
+<script>
+// 풀다운 새로고침 방지 (모바일)
+var _lastY = 0;
+document.addEventListener('touchstart', function(e){
+  _lastY = e.touches[0].clientY;
+}, {passive:true});
+document.addEventListener('touchmove', function(e){
+  var y = e.touches[0].clientY;
+  var el = document.scrollingElement || document.documentElement;
+  if(el.scrollTop === 0 && y > _lastY){
+    e.preventDefault();
+  }
+}, {passive:false});
+</script>
+
 </head>
 <body>
 <div class="app">
@@ -553,7 +573,7 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
     });
     var db = firebase.firestore();
   </script>
-  <script src="church_biz_app.js?v=1778646889"></script>
+  <script src="church_biz_app.js?v=1778648292"></script>
 
 
 
