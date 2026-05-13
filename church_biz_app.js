@@ -61,20 +61,34 @@ function closeMapAppPopup(){
 function goMapApp(app){
   var addr = window._pendingAddr || '';
   var enc = encodeURIComponent(addr);
-  var url = '';
-  if(app==='naver')  url = 'nmap://search?query='+enc+'&appname=com.belovedc.biz';
-  if(app==='kakao')  url = 'kakaomap://search?q='+enc;
-  if(app==='tmap')   url = 'tmap://search?name='+enc;
-  // 앱 실행 시도
-  var fallback = {
+  var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // iOS 사파리는 앱 스킴 막힘 → 웹 URL로만 열기
+  var webUrl = {
     naver: 'https://map.naver.com/v5/search/'+enc,
     kakao: 'https://map.kakao.com/?q='+enc,
     tmap:  'https://tmap.life/search?name='+enc
   };
-  var win = window.open(url, '_blank');
-  setTimeout(function(){
-    window.open(fallback[app], '_blank');
-  }, 1500);
+  var appUrl = {
+    naver: 'nmap://search?query='+enc+'&appname=com.belovedc.biz',
+    kakao: 'kakaomap://search?q='+enc,
+    tmap:  'tmap://search?name='+enc
+  };
+
+  if(isIOS){
+    // iOS: 웹 URL로 바로 열기
+    window.open(webUrl[app], '_blank');
+  } else {
+    // 안드로이드: 앱 스킴 시도 → 1.5초 후 웹 fallback
+    var iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = appUrl[app];
+    document.body.appendChild(iframe);
+    setTimeout(function(){
+      document.body.removeChild(iframe);
+      window.open(webUrl[app], '_blank');
+    }, 1500);
+  }
   closeMapAppPopup();
 }
 
