@@ -696,7 +696,6 @@ function renderJobs(){
         // 하단 버튼
         '<div style="display:flex;gap:7px;align-items:center">'+
           (b?'<button onclick="showDetail('+j.bizId+')" style="flex:1;padding:9px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">🏪 사업체 보기</button>':'')+ 
-          '<button onclick="shareJob(\"'+j.id+'\")" style="padding:9px 13px;background:#FAE100;color:#3A1D1D;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">💬 공유</button>'+
           (canDel?'<button class="edit-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-size:13px;cursor:pointer">수정</button>':'')+
           (canDel?'<button class="del-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:10px;font-size:13px;cursor:pointer">삭제</button>':'')+
         '</div>'+
@@ -883,48 +882,6 @@ async function saveJobEdit(){
   alert('✅ 수정되었습니다!');
 }
 
-function shareJob(id){
-  var j = S.jobs.find(function(x){ return String(x.id)===String(id); });
-  if(!j) return;
-  var b = S.biz.find(function(x){ return String(x.id)===String(j.bizId); });
-  var appUrl = 'https://beloved-biz.kr/church_biz_app.html';
-  var title = (b?b.name+' · ':'')+j.title;
-  var text =
-    '[사랑하는교회 Biz-net 구인공고]\n\n'+
-    '📋 '+j.title+'\n'+
-    (b?'🏪 '+b.name+'\n':'')+
-    (j.type?'📌 '+j.type+'\n':'')+
-    (j.salary?'💰 '+j.salary+'\n':'')+
-    (j.location?'📍 '+j.location+'\n':'')+
-    (j.deadline?'📅 마감: '+j.deadline+'\n':'')+
-    '\n'+j.desc.slice(0,150)+(j.desc.length>150?'...':'')+
-    '\n\n👉 '+appUrl;
-
-  // Web Share API (시스템 공유 시트)
-  if(navigator.share){
-    navigator.share({
-      title: title,
-      text: text,
-      url: appUrl
-    }).catch(function(){});
-    return;
-  }
-
-  // fallback - 클립보드 복사
-  var ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.focus(); ta.select();
-  try{
-    document.execCommand('copy');
-    alert('공유 내용이 복사되었어요!\n원하는 앱에 붙여넣기 해주세요.');
-  }catch(e){
-    prompt('아래 내용을 복사하세요.', text);
-  }
-  document.body.removeChild(ta);
-}
 
 async function deleteJob(id){
   if(!confirm('이 공고를 삭제하시겠어요?')) return;
@@ -1940,8 +1897,6 @@ document.addEventListener('click', function(e){
   if(jdel){ deleteJob(jdel.getAttribute('data-jid')); return; }
   var jedit = e.target.closest('.edit-job-btn');
   if(jedit){ openJobEdit(jedit.getAttribute('data-jid')); return; }
-  var jshare = e.target.closest('.share-job-btn');
-  if(jshare){ shareJob(jshare.getAttribute('data-jid')); return; }
   var btn = e.target.closest('.map-addr-btn');
   if(btn){
     e.stopPropagation();
