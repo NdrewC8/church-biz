@@ -153,6 +153,15 @@ async function loadFromFirebase(){
         var hb = S.biz.find(function(x){ return String(x.id)===String(hid); });
         if(hb) setTimeout(function(){ showDetail(hb.id); }, 100);
       }
+      // 10일 지난 공고 자동 삭제
+      var TEN_DAYS = 10 * 24 * 60 * 60 * 1000;
+      var now = Date.now();
+      var expired = S.jobs.filter(function(j){ return (now - j.id) > TEN_DAYS; });
+      if(expired.length > 0){
+        S.jobs = S.jobs.filter(function(j){ return (now - j.id) <= TEN_DAYS; });
+        saveToFirebase();
+        console.log('만료 공고 '+expired.length+'개 자동 삭제');
+      }
       // 현재 탭이 jobs면 재렌더
       if(document.getElementById('sc-jobs') && document.getElementById('sc-jobs').classList.contains('on')){
         renderJobs();
@@ -685,7 +694,9 @@ function renderJobs(){
         // 하단 버튼
         '<div style="display:flex;gap:7px;align-items:center">'+
           (b?'<button onclick="showDetail('+j.bizId+')" style="flex:1;padding:9px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">🏪 사업체 보기</button>':'')+ 
-          (canDel?'<button onclick="deleteJob('+j.id+')" style="padding:9px 13px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:10px;font-size:13px;cursor:pointer">삭제</button>':'')+
+          '<button class="share-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:#FAE100;color:#3A1D1D;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">💬 공유</button>'+
+          (canDel?'<button class="edit-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-size:13px;cursor:pointer">수정</button>':'')+
+          (canDel?'<button class="del-job-btn" data-jid="'+j.id+'" style="padding:9px 13px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:10px;font-size:13px;cursor:pointer">삭제</button>':'')+
         '</div>'+
         '<div style="font-size:11px;color:#bbb;margin-top:8px">'+fmtDate(j.id)+' · '+escHtml(j.authorName)+'</div>'+
       '</div>';
@@ -787,10 +798,123 @@ function saveJob(){
   alert('✅ 구인공고가 등록되었습니다!');
 }
 
-function deleteJob(id){
+async 
+function openJobEdit(id){
+  var j = S.jobs.find(function(x){ return String(x.id)===String(id); });
+  if(!j) return;
+  window._editJobId = id;
+  var el = document.getElementById('jobsContent');
+  var b = S.biz.find(function(x){ return String(x.id)===String(j.bizId); });
+
+  el.innerHTML =
+    '<button onclick="renderJobs()" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:transparent;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--t2)">← 취소</button>'+
+    '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:16px">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
+        '<div style="font-size:16px;font-weight:700">구인공고 수정</div>'+
+        '<div style="font-size:11px;color:#aaa;background:#f4f4f4;padding:3px 9px;border-radius:20px">📅 게시기간 10일</div>'+
+      '</div>'+
+      '<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">사업체</div>'+
+      '<div style="padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;background:#f9f9f9">'+(b?b.name:'')+'</div></div>'+
+
+      '<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">공고 제목 <span style="color:var(--p)">*</span></div>'+
+      '<input id="editJobTitle" value="'+escHtml(j.title)+'" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit"></div>'+
+
+      '<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">고용 형태</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        ['정규직','계약직','아르바이트','프리랜서'].map(function(t){
+          return '<label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="editJobType" value="'+t+'"'+(j.type===t?' checked':'')+'> '+t+'</label>';
+        }).join('')+
+      '</div></div>'+
+
+      '<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:600;color:var(--p);margin-bottom:6px">📋 공고 내용</div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">담당업무 <span style="color:var(--p)">*</span></div>'+
+        '<textarea id="editJobWork" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:80px;resize:vertical;font-family:inherit;line-height:1.7">'+escHtml(_jobSection(j.desc,'담당업무'))+'</textarea></div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">지원자격</div>'+
+        '<textarea id="editJobQual" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:80px;resize:vertical;font-family:inherit;line-height:1.7">'+escHtml(_jobSection(j.desc,'지원자격'))+'</textarea></div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">우대사항</div>'+
+        '<textarea id="editJobPrefer" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:60px;resize:vertical;font-family:inherit;line-height:1.7">'+escHtml(_jobSection(j.desc,'우대사항'))+'</textarea></div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">근무조건</div>'+
+        '<textarea id="editJobCond" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:80px;resize:vertical;font-family:inherit;line-height:1.7">'+escHtml(_jobSection(j.desc,'근무조건'))+'</textarea></div>'+
+      '</div>'+
+
+      '<div style="display:flex;gap:8px;margin-bottom:10px">'+
+        '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">급여</div>'+
+        '<input id="editJobSalary" value="'+escHtml(j.salary||'')+'" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;font-family:inherit"></div>'+
+        '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">마감일</div>'+
+        '<input id="editJobDeadline" type="date" value="'+escHtml(j.deadline||'')+'" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;font-family:inherit"></div>'+
+      '</div>'+
+      '<div style="margin-bottom:14px"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">근무지역</div>'+
+      '<input id="editJobLocation" value="'+escHtml(j.location||'')+'" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;font-family:inherit"></div>'+
+
+      '<button onclick="saveJobEdit()" style="width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer">수정 완료</button>'+
+    '</div>';
+}
+
+function _jobSection(desc, section){
+  if(!desc) return '';
+  var idx = desc.indexOf('['+section+']');
+  if(idx === -1) return '';
+  var start = idx + section.length + 2;
+  var next = desc.indexOf('[', start);
+  return (next === -1 ? desc.slice(start) : desc.slice(start, next)).trim();
+}
+
+async function saveJobEdit(){
+  var id = window._editJobId;
+  var j = S.jobs.find(function(x){ return String(x.id)===String(id); });
+  if(!j) return;
+  var title = (document.getElementById('editJobTitle').value||'').trim();
+  var work  = (document.getElementById('editJobWork').value||'').trim();
+  var qual  = (document.getElementById('editJobQual').value||'').trim();
+  var prefer= (document.getElementById('editJobPrefer').value||'').trim();
+  var cond  = (document.getElementById('editJobCond').value||'').trim();
+  var typeEl= document.querySelector('input[name="editJobType"]:checked');
+  if(!title){ alert('제목을 입력해주세요.'); return; }
+  if(!work){  alert('담당업무를 입력해주세요.'); return; }
+  j.title   = title;
+  j.type    = typeEl ? typeEl.value : '';
+  j.desc    = (work?'[담당업무]\n'+work:'')+(qual?'\n\n[지원자격]\n'+qual:'')+(prefer?'\n\n[우대사항]\n'+prefer:'')+(cond?'\n\n[근무조건]\n'+cond:'');
+  j.salary  = (document.getElementById('editJobSalary').value||'').trim();
+  j.deadline= (document.getElementById('editJobDeadline').value||'').trim();
+  j.location= (document.getElementById('editJobLocation').value||'').trim();
+  await saveToFirebase();
+  renderJobs();
+  alert('✅ 수정되었습니다!');
+}
+
+function shareJob(id){
+  var j = S.jobs.find(function(x){ return String(x.id)===String(id); });
+  if(!j) return;
+  var b = S.biz.find(function(x){ return String(x.id)===String(j.bizId); });
+  var appUrl = 'https://beloved-biz.kr/church_biz_app.html';
+  var text =
+    '[사랑하는교회 Biz-net 구인공고]\n\n'+
+    '📋 '+j.title+'\n'+
+    (b?'🏪 '+b.name+'\n':'')+
+    (j.type?'📌 '+j.type+'\n':'')+
+    (j.salary?'💰 '+j.salary+'\n':'')+
+    (j.location?'📍 '+j.location+'\n':'')+
+    (j.deadline?'📅 마감: '+j.deadline+'\n':'')+
+    '\n'+j.desc.slice(0,100)+(j.desc.length>100?'...':'')+
+    '\n\n👉 '+appUrl;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
+        window.location.href = 'kakaotalk://';
+        setTimeout(function(){ alert('복사 완료!\n카카오톡에 붙여넣기 해주세요 😊'); }, 1000);
+      } else {
+        alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
+      }
+    });
+  } else {
+    prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
+  }
+}
+
+async function deleteJob(id){
   if(!confirm('이 공고를 삭제하시겠어요?')) return;
-  S.jobs = S.jobs.filter(function(j){ return j.id !== id; });
-  saveToFirebase();
+  S.jobs = S.jobs.filter(function(j){ return String(j.id) !== String(id); });
+  await saveToFirebase();
   renderJobs();
 }
 
@@ -1797,6 +1921,12 @@ function filterMapList(){
 
 // 주소 버튼 이벤트 위임
 document.addEventListener('click', function(e){
+  var jdel = e.target.closest('.del-job-btn');
+  if(jdel){ deleteJob(jdel.getAttribute('data-jid')); return; }
+  var jedit = e.target.closest('.edit-job-btn');
+  if(jedit){ openJobEdit(jedit.getAttribute('data-jid')); return; }
+  var jshare = e.target.closest('.share-job-btn');
+  if(jshare){ shareJob(jshare.getAttribute('data-jid')); return; }
   var btn = e.target.closest('.map-addr-btn');
   if(btn){
     e.stopPropagation();
