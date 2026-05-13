@@ -153,6 +153,10 @@ async function loadFromFirebase(){
         var hb = S.biz.find(function(x){ return String(x.id)===String(hid); });
         if(hb) setTimeout(function(){ showDetail(hb.id); }, 100);
       }
+      // 현재 탭이 jobs면 재렌더
+      if(document.getElementById('sc-jobs') && document.getElementById('sc-jobs').classList.contains('on')){
+        renderJobs();
+      }
       // 자동 로그인 복원
       try{
         var saved = localStorage.getItem('savedLogin');
@@ -255,7 +259,7 @@ function showTab(name, btn) {
   if(name==='rec'){ showSkeletons('recList',4); setTimeout(function(){renderRec();},200); }
   if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
   if(name==='notice') renderNotice();
-  if(name==='jobs') renderJobs();
+  if(name==='jobs'){ showLoading('jobsContent','구인공고 불러오는 중...'); setTimeout(function(){renderJobs();},300); }
   if(name==='mypage') renderMypage();
   if(name==='admin') renderAdmin();
 }
