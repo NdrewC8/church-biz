@@ -460,7 +460,7 @@ function doFilter(){
   var cat=document.getElementById('catSel').value;
   var region=document.getElementById('regionInput').value.trim().toLowerCase();
   var list=S.biz.filter(function(b){
-    var mk=!kw||(b.name.toLowerCase().includes(kw)||(b.kw||'').toLowerCase().includes(kw)||(b.addr||'').toLowerCase().includes(kw)||(b.desc||'').toLowerCase().includes(kw)||(b.owner||'').toLowerCase().includes(kw)||(b.cat||'').toLowerCase().includes(kw));
+    var mk=!kw||(b.name.toLowerCase().includes(kw)||(b.owner||'').toLowerCase().includes(kw)||(b.kw||'').toLowerCase().includes(kw)||(b.cat||'').toLowerCase().includes(kw)||(b.addr||'').toLowerCase().includes(kw)||(b.desc||'').toLowerCase().includes(kw));
     var mr=!region||((b.addr||'').toLowerCase().includes(region)||(b.ownerChurch||'').toLowerCase().includes(region));
     return mk&&mr&&(!cat||b.cat===cat);
   });
@@ -469,7 +469,7 @@ function doFilter(){
   var chips='';
   if(kw) chips+='<div class="chip">🔍 "'+kw+'" <span class="cx" onclick="clKw()">×</span></div>';
   if(cat) chips+='<div class="chip">📂 '+cat+' <span class="cx" onclick="clCat()">×</span></div>';
-  if(region) chips+='<div class="chip">📍 '+region+' <span class="cx" onclick="clReg()">×</span></div>';
+  if(region) chips+='<div class="chip">⛪ '+region+' <span class="cx" onclick="clReg()">×</span></div>';
   document.getElementById('chips').innerHTML=chips;
 }
 function clKw(){document.getElementById('kwInput').value='';doFilter();}
@@ -648,9 +648,7 @@ function renderJobs(){
     (canPost ? '<button onclick="openJobWrite()" style="padding:7px 14px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">+ 공고 등록</button>' : '')+
   '</div>';
 
-  if(!S.user){
-    html += '<div class="empty" style="padding:30px 0">로그인 후 구인구직 공고를 확인할 수 있어요</div>';
-  } else if(!jobs.length){
+  if(!jobs.length){
     html += '<div class="empty" style="padding:40px 0">등록된 구인공고가 없어요</div>';
   } else {
     jobs.forEach(function(j){
@@ -723,8 +721,16 @@ function openJobWrite(){
         }).join('')+
       '</div></div>'+
 
-      '<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">공고 내용 <span style="color:var(--p)">*</span></div>'+
-      '<textarea id="jobDesc" placeholder="[담당업무]\n- \n\n[지원자격]\n- \n\n[우대사항]\n- \n\n[근무조건]\n- 근무시간:\n- 근무장소:" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:220px;resize:vertical;font-family:inherit;line-height:1.7"></textarea></div>'+
+      '<div style="margin-bottom:10px"><div style="font-size:13px;font-weight:600;color:var(--p);margin-bottom:6px">📋 공고 내용</div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">담당업무 <span style="color:var(--p)">*</span></div>'+
+        '<textarea id="jobWork" placeholder="예) - 매장 청소 및 정리\n- 주방 보조\n- 고객 응대" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:80px;resize:vertical;font-family:inherit;line-height:1.7"></textarea></div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">지원자격</div>'+
+        '<textarea id="jobQual" placeholder="예) - 경력 무관\n- 성실하고 책임감 있는 분\n- 관련 자격증 보유자 우대" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:80px;resize:vertical;font-family:inherit;line-height:1.7"></textarea></div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">우대사항</div>'+
+        '<textarea id="jobPrefer" placeholder="예) - 유사 업무 경험자\n- 즉시 출근 가능한 분" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:60px;resize:vertical;font-family:inherit;line-height:1.7"></textarea></div>'+
+        '<div style="margin-bottom:8px"><div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px">근무조건</div>'+
+        '<textarea id="jobCond" placeholder="예) - 근무시간: 오전 9시~오후 6시\n- 주 5일 근무\n- 근무장소: 매장 내" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;box-sizing:border-box;min-height:80px;resize:vertical;font-family:inherit;line-height:1.7"></textarea></div>'+
+      '</div>'+
 
       '<div style="display:flex;gap:8px;margin-bottom:10px">'+
         '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px">급여</div>'+
@@ -743,7 +749,12 @@ function openJobWrite(){
 function saveJob(){
   var bizId = document.getElementById('jobBizSel').value;
   var title = (document.getElementById('jobTitle').value||'').trim();
-  var desc  = (document.getElementById('jobDesc').value||'').trim();
+  var work   = (document.getElementById('jobWork').value||'').trim();
+  var qual   = (document.getElementById('jobQual').value||'').trim();
+  var prefer = (document.getElementById('jobPrefer').value||'').trim();
+  var cond   = (document.getElementById('jobCond').value||'').trim();
+  var desc = (work?'[담당업무]\n'+work:'') + (qual?'\n\n[지원자격]\n'+qual:'') + (prefer?'\n\n[우대사항]\n'+prefer:'') + (cond?'\n\n[근무조건]\n'+cond:'');
+  desc = desc.trim();
   var salary= (document.getElementById('jobSalary').value||'').trim();
   var deadline=(document.getElementById('jobDeadline').value||'').trim();
   var location=(document.getElementById('jobLocation').value||'').trim();
@@ -751,7 +762,7 @@ function saveJob(){
   var type  = typeEl ? typeEl.value : '';
 
   if(!title){ alert('공고 제목을 입력해주세요.'); return; }
-  if(!desc){  alert('공고 내용을 입력해주세요.'); return; }
+  if(!work){  alert('담당업무를 입력해주세요.'); return; }
 
   S.jobs.push({
     id: Date.now(),
