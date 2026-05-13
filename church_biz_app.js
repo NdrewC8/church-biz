@@ -391,7 +391,7 @@ function showDetail(bizId) {
   // 카카오 공유 버튼
   html+='<button onclick="shareKakao('+bizId+')" style="width:100%;padding:11px;background:#FAE100;color:#3A1D1D;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px">'+
     '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.5 6.8L5.2 21l4.5-2.3c.7.1 1.5.2 2.3.2 5.5 0 10-3.6 10-8s-4.5-8-10-8z" fill="#3A1D1D"/></svg>'+
-    '카카오톡으로 공유하기</button>';
+    '공유하기</button>';
 
   html+='<div style="font-size:15px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
     (rvs.length?rvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty">아직 후기가 없어요</div>')+
@@ -1955,27 +1955,27 @@ function shareKakao(bizId){
   if(!b) return;
   var appUrl = 'https://beloved-biz.kr/church_biz_app.html#biz='+bizId;
   var text = '🏪 ' + b.name + '\n' +
+    (b.cat ? '📂 ' + b.cat + '\n' : '') +
     (b.addr ? '📍 ' + b.addr + '\n' : '') +
     (b.phone ? '📱 ' + b.phone + '\n' : '') +
     (b.bizPhone ? '📞 ' + b.bizPhone + '\n' : '') +
-    (b.web ? '🔗 ' + b.web + '\n' : '') +
-    '\n👉 ' + appUrl;
-  // 카카오 SDK 미설치 시 Web Share API 폴백
-  // 클립보드 복사 후 카카오톡 열기
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(text).then(function(){
-      if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
-        window.location.href = 'kakaotalk://';
-        setTimeout(function(){
-          alert('복사 완료!\n카카오톡에 붙여넣기 해주세요 😊');
-        }, 1000);
-      } else {
-        alert('공유 내용이 복사되었어요!\n카카오톡에 붙여넣기 해주세요.');
-      }
-    }).catch(function(){
-      prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
-    });
-  } else {
-    prompt('아래 내용을 복사해서 카카오톡에 붙여넣기 하세요.', text);
+    (b.web ? '🔗 ' + b.web + '\n' : '');
+
+  if(navigator.share){
+    navigator.share({
+      title: b.name + ' - 사랑하는교회 Biz-net',
+      text: text,
+      url: appUrl
+    }).catch(function(){});
+    return;
   }
+  // fallback - 클립보드
+  var ta = document.createElement('textarea');
+  ta.value = text + '\n👉 ' + appUrl;
+  ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try{ document.execCommand('copy'); alert('복사되었어요!\n원하는 앱에 붙여넣기 해주세요.'); }
+  catch(e){ prompt('복사해서 붙여넣기 해주세요.', ta.value); }
+  document.body.removeChild(ta);
 }
