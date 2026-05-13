@@ -800,8 +800,7 @@ function saveJob(){
   alert('✅ 구인공고가 등록되었습니다!');
 }
 
-async 
-function openJobEdit(id){
+async function openJobEdit(id){
   var j = S.jobs.find(function(x){ return String(x.id)===String(id); });
   if(!j) return;
   window._editJobId = id;
