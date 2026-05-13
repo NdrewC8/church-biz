@@ -661,8 +661,8 @@ function renderJobs(){
         (b.phone||'').replace(/[^0-9]/g,'') === (S.user.phone||'').replace(/[^0-9]/g,'') ||
         (b.ownerPhone||'').replace(/[^0-9]/g,'') === (S.user.phone||'').replace(/[^0-9]/g,'')
       );
-      var isAdmin = window.isAdmin ? isAdmin() : false;
-      var canDel = isOwner || isAdmin;
+      var _isAdmin = typeof isAdmin === 'function' ? isAdmin() : false;
+      var canDel = isOwner || _isAdmin;
 
       html += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:12px">'+
         // 헤더
@@ -700,10 +700,10 @@ function openJobWrite(){
     var up=(S.user.phone||'').replace(/[^0-9]/g,'');
     return (b.phone||'').replace(/[^0-9]/g,'')===up||(b.ownerPhone||'').replace(/[^0-9]/g,'')===up;
   });
-  if(!myBiz.length && !isAdmin()){ alert('사업체를 먼저 등록해야 공고를 올릴 수 있어요.\n마이페이지에서 사업체를 등록해주세요.'); return; }
+  if(!myBiz.length && !(typeof isAdmin === 'function' && isAdmin())){ alert('사업체를 먼저 등록해야 공고를 올릴 수 있어요.\n마이페이지에서 사업체를 등록해주세요.'); return; }
   var el = document.getElementById('jobsContent');
 
-  var allBiz = isAdmin() && myBiz.length===0 ? S.biz : myBiz;
+  var allBiz = (typeof isAdmin === 'function' && isAdmin()) && myBiz.length===0 ? S.biz : myBiz;
   var bizOptions = allBiz.map(function(b){
     return '<option value="'+b.id+'">'+b.name+'</option>';
   }).join('');
