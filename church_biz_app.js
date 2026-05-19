@@ -274,10 +274,39 @@ function showSkeletons(id, n) {
 }
 
 // ── 탭 ───────────────────────────────────
+var _TABS_ORDER = ['notice','list','reviews','jobs','mypage','admin'];
+var _curTab = 'list';
+
 function showTab(name, btn) {
-  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  if(name === _curTab) return;
+  var curEl = document.getElementById('sc-'+_curTab);
+  var nextEl = document.getElementById('sc-'+name);
+  if(!nextEl) return;
+
+  // 방향 결정
+  var curIdx = _TABS_ORDER.indexOf(_curTab);
+  var nextIdx = _TABS_ORDER.indexOf(name);
+  var goRight = nextIdx > curIdx;
+
+  // 현재 탭 나가는 방향
+  if(curEl){
+    curEl.classList.add(goRight ? 'slide-left' : 'slide-right');
+    setTimeout(function(){
+      curEl.classList.remove('on','slide-left','slide-right');
+    }, 280);
+  }
+
+  // 다음 탭 들어오는 방향
+  nextEl.style.transition = 'none';
+  nextEl.classList.remove('on','slide-left','slide-right');
+  nextEl.classList.add(goRight ? 'slide-right' : 'slide-left');
+  nextEl.offsetHeight; // reflow
+  nextEl.style.transition = '';
+  nextEl.classList.remove('slide-left','slide-right');
+  nextEl.classList.add('on');
+
+  _curTab = name;
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
-  document.getElementById('sc-'+name).classList.add('on');
   btn.classList.add('on');
   if(name!=='detail') prevTab=name;
   if(name==='list'){ showSkeletons('bizList',4); setTimeout(function(){doFilter();},200); }
