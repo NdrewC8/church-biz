@@ -50,24 +50,16 @@ body{font-family:'Apple SD Gothic Neo','-apple-system',BlinkMacSystemFont,'Malgu
 .nav::-webkit-scrollbar{display:none}
 .nb{flex:1;min-width:60px;padding:10px 4px;border:none;background:transparent;font-size:13px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 .nb.on{color:var(--p);border-bottom-color:var(--p);font-weight:600}
-.sc{
-  position:absolute;
-  top:0;left:0;width:100%;
-  transform:translateX(100%);
-  opacity:0;
-  pointer-events:none;
-  transition:transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease;
-  will-change:transform;
-  min-height:100%;
-}
-.sc.on{
-  transform:translateX(0);
-  opacity:1;
-  pointer-events:auto;
-  position:relative;
-}
-.sc.slide-left{transform:translateX(-30%);opacity:0;}
-.sc.slide-right{transform:translateX(30%);opacity:0;}
+.sc{display:none}
+.sc.on{display:block}
+.sc.slide-left{animation:slideOutLeft 0.28s ease forwards;}
+.sc.slide-right{animation:slideOutRight 0.28s ease forwards;}
+.sc.slide-in-left{animation:slideInLeft 0.28s ease forwards;}
+.sc.slide-in-right{animation:slideInRight 0.28s ease forwards;}
+@keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-25%)}}
+@keyframes slideOutRight{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(25%)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(25%)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(-25%)}to{opacity:1;transform:translateX(0)}}
 /* 검색 */
 .sw{background:var(--bg2);border-bottom:1px solid var(--bd);padding:14px 14px 10px}
 .kwr{display:flex;gap:6px;margin-bottom:8px}
@@ -295,7 +287,7 @@ document.addEventListener('touchmove', function(e){
     <button class="nb" id="adminTab" style="display:none" onclick="showTab('admin',this)">관리자</button>
   </div>
 
-  <div id="scWrap" style="position:relative;overflow:hidden;">
+  <div id="scWrap">
   <!-- 목록 -->
   <div class="sc on" id="sc-list">
     <div class="sw">
@@ -592,7 +584,7 @@ document.addEventListener('touchmove', function(e){
     });
     var db = firebase.firestore();
   </script>
-  <script src="church_biz_app.js?v=1779179253"></script>
+  <script src="church_biz_app.js?v=1779537238"></script>
 
 
 

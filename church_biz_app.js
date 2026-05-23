@@ -288,22 +288,21 @@ function showTab(name, btn) {
   var nextIdx = _TABS_ORDER.indexOf(name);
   var goRight = nextIdx > curIdx;
 
-  // 현재 탭 나가는 방향
-  if(curEl){
+  // 현재 탭 나가는 애니메이션
+  if(curEl && curEl.classList.contains('on')){
     curEl.classList.add(goRight ? 'slide-left' : 'slide-right');
     setTimeout(function(){
       curEl.classList.remove('on','slide-left','slide-right');
     }, 280);
   }
 
-  // 다음 탭 들어오는 방향
-  nextEl.style.transition = 'none';
-  nextEl.classList.remove('on','slide-left','slide-right');
-  nextEl.classList.add(goRight ? 'slide-right' : 'slide-left');
-  nextEl.offsetHeight; // reflow
-  nextEl.style.transition = '';
-  nextEl.classList.remove('slide-left','slide-right');
+  // 다음 탭 들어오는 애니메이션
+  nextEl.classList.remove('slide-left','slide-right','slide-in-left','slide-in-right');
   nextEl.classList.add('on');
+  nextEl.classList.add(goRight ? 'slide-in-left' : 'slide-in-right');
+  setTimeout(function(){
+    nextEl.classList.remove('slide-in-left','slide-in-right');
+  }, 280);
 
   _curTab = name;
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
