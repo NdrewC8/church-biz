@@ -1,21 +1,986 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=church_biz_app.html">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>사랑하는교회 Biz-net</title>
-  <meta property="og:title" content="사랑하는교회 Biz-net">
-  <meta property="og:description" content="사랑하는교회 성도 비즈니스 네트워크">
-  <meta property="og:image" content="https://beloved-biz.kr/비즈넷로고3.png">
-  <meta property="og:url" content="https://beloved-biz.kr">
-  <style>
-    body { margin:0; background:#C8185A; display:flex; align-items:center; justify-content:center; height:100vh; }
-    p { color:#fff; font-family:sans-serif; font-size:16px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>매매주</title>
+<meta name="theme-color" content="#0D0B08">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="매매주">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:rgba(201,168,76,0.15);
+  --deep:#0D0B08;--dark:#1A1712;--card:#211E18;--card2:#2A2620;
+  --text:#F0EBE0;--text-dim:#9A9080;--border:rgba(201,168,76,0.2);--radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--deep);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+.site-header{position:relative;background:linear-gradient(160deg,#1a1208,#0D0B08,#12100A);padding:20px 24px 20px;border-bottom:1px solid var(--border);}
+.site-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(201,168,76,.1),transparent 70%);pointer-events:none;}
+.site-title{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,38px);font-weight:700;color:var(--gold-light);letter-spacing:.02em;}
+.site-subtitle{font-size:11px;color:var(--text-dim);margin-top:6px;letter-spacing:.15em;}
+.admin-toggle{position:absolute;top:14px;right:14px;background:rgba(201,168,76,.1);border:1px solid var(--border);color:var(--text-dim);font-size:11px;padding:6px 12px;border-radius:20px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;z-index:10;}
+.admin-toggle:hover{background:rgba(201,168,76,.2);color:var(--gold);}
+.admin-toggle.on{background:rgba(37,99,235,.2);border-color:rgba(37,99,235,.4);color:#93c5fd;}
+
+
+/* LOGO BTN */
+.logo-btn{background:none;border:none;cursor:pointer;padding:0;width:52px;height:52px;border-radius:14px;overflow:hidden;transition:transform .2s;flex-shrink:0;}
+.logo-btn:hover{transform:scale(1.08);}
+.logo-btn img{width:100%;height:100%;object-fit:cover;}
+.header-inner{display:flex;align-items:center;justify-content:center;gap:14px;position:relative;}
+/* NAV */
+.nav-wrapper{position:sticky;top:0;z-index:100;background:rgba(13,11,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 6px;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{flex-shrink:0;padding:12px 14px;font-size:12px;font-weight:500;color:var(--text-dim);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .25s;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.nav-tab .tab-icon{font-size:16px;}
+.nav-tab:hover{color:var(--gold-light);}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* SECTIONS */
+.page-section{display:none;min-height:60vh;padding:20px 16px 80px;max-width:640px;margin:0 auto;position:relative;}
+.page-section.active{display:block;}
+
+/* ADMIN BAR */
+.admin-bar{display:none;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.25);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;font-size:12px;color:#93c5fd;align-items:center;gap:8px;}
+.admin-bar.show{display:flex;}
+
+/* ADD BTN */
+.add-btn{display:none;width:100%;background:rgba(37,99,235,.08);border:1px dashed rgba(37,99,235,.3);color:#93c5fd;font-size:13px;padding:13px;border-radius:var(--radius);cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:12px;transition:background .2s;align-items:center;justify-content:center;gap:6px;}
+.add-btn:hover{background:rgba(37,99,235,.15);}
+body.admin-on .add-btn{display:flex;}
+
+/* EDIT BTN */
+.edit-btn{display:none;background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);color:#93c5fd;font-size:10px;padding:3px 9px;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;}
+body.admin-on .edit-btn{display:inline-flex;align-items:center;gap:3px;}
+
+/* ORDER BTNS */
+.order-btns{display:none;position:absolute;left:8px;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px;z-index:2;}
+body.admin-on .order-btns{display:flex;}
+.order-btn{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:11px;width:22px;height:22px;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+.order-btn:hover{background:rgba(201,168,76,.35);}
+
+/* PLAYLIST CARD (YouTube) */
+.yt-wrap{margin-bottom:18px;}
+.playlist-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;position:relative;}
+.playlist-card:hover{border-color:rgba(201,168,76,.4);}
+body.admin-on .playlist-card{padding-left:36px;}
+.pc-thumb{width:100%;aspect-ratio:16/9;background:#111;position:relative;overflow:hidden;cursor:pointer;}
+.pc-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.pc-thumb-placeholder{width:100%;height:100%;background:linear-gradient(135deg,#1a1712,#2a2218);display:flex;align-items:center;justify-content:center;font-size:40px;}
+.pc-play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);}
+.pc-play-btn{width:54px;height:54px;background:rgba(201,168,76,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--deep);transition:transform .2s;}
+.pc-play-btn:hover{transform:scale(1.1);}
+.pc-iframe-wrap{width:100%;aspect-ratio:16/9;display:none;}
+.pc-iframe-wrap iframe{width:100%;height:100%;border:none;}
+.pc-info{padding:12px 14px;}
+.pc-title{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.pc-sub{font-size:11px;color:var(--text-dim);}
+
+/* YT EXTERNAL BTN */
+.yt-ext-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.2);border-top:none;color:#ff6b6b;font-size:13px;font-weight:600;border-radius:0 0 var(--radius) var(--radius);text-decoration:none;transition:all .2s;font-family:'Noto Sans KR',sans-serif;}
+.yt-ext-btn:hover{background:rgba(255,0,0,.16);color:#ff3333;}
+
+/* COUPANG BTN */
+.coupang-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:#fff;border:none;border-radius:var(--radius);color:#333;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;text-decoration:none;margin-top:6px;cursor:pointer;transition:filter .2s;}
+.coupang-btn:hover{filter:brightness(.95);}
+.coupang-btn-icon{width:28px;height:28px;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.coupang-btn-icon img{width:100%;height:100%;object-fit:cover;border-radius:6px;}
+
+/* LINK CARD */
+.link-card{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;text-decoration:none;color:var(--text);transition:all .2s;position:relative;}
+.link-card:hover{border-color:rgba(201,168,76,.4);transform:translateX(3px);}
+body.admin-on .link-card{padding-left:44px;}
+.lc-icon{width:44px;height:44px;border-radius:10px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
+.lc-icon img{width:100%;height:100%;object-fit:cover;}
+.lc-body{flex:1;min-width:0;}
+.lc-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;margin-bottom:3px;}
+.lc-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.lc-sub{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lc-arrow{color:var(--gold);font-size:18px;opacity:.6;flex-shrink:0;}
+
+/* NOTICE CARD */
+.notice-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;transition:border-color .2s;}
+.notice-card:hover{border-color:rgba(201,168,76,.4);}
+.notice-card-header{display:flex;justify-content:space-between;align-items:center;padding:16px;cursor:pointer;gap:10px;}
+.notice-card-title{font-size:16px;font-weight:600;color:var(--text);line-height:1.4;flex:1;}
+.notice-card-meta{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.notice-card-date{font-size:11px;color:var(--gold);opacity:.8;}
+.notice-card-arrow{color:var(--text-dim);font-size:14px;transition:transform .25s;}
+.notice-card.open .notice-card-arrow{transform:rotate(180deg);}
+.notice-card-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border);margin-top:0;}
+.notice-card.open .notice-card-body{display:block;}
+.notice-card-text{font-size:16px;color:var(--text-dim);line-height:1.9;margin-top:14px;white-space:pre-wrap;}
+.notice-card-img{width:100%;border-radius:10px;margin-top:12px;display:block;}
+.notice-edit-btn{display:none;background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);color:#93c5fd;font-size:10px;padding:3px 9px;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:10px;}
+body.admin-on .notice-edit-btn{display:inline-flex;align-items:center;gap:3px;}
+
+/* KAKAO BTN */
+.kakao-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:#FEE500;border:none;border-radius:var(--radius);color:#3A1D1D;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;text-decoration:none;margin-top:16px;cursor:pointer;transition:filter .2s;}
+.kakao-btn:hover{filter:brightness(.95);}
+
+/* COUPANG BANNER */
+.coupang-banner{margin-top:14px;width:100%;overflow:hidden;border-radius:var(--radius);}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:18px 0;}
+
+/* EMPTY */
+.empty-msg{color:var(--text-dim);font-size:13px;text-align:center;padding:16px 0;}
+
+/* BRANCH */
+.branch-search{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;padding:12px 16px;border-radius:var(--radius);outline:none;margin-bottom:14px;}
+.branch-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+.branch-card:hover{border-color:rgba(201,168,76,.4);}
+.branch-name{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;color:var(--gold-light);margin-bottom:5px;}
+.branch-addr{font-size:12px;color:var(--text-dim);margin-bottom:8px;line-height:1.6;}
+.branch-note{font-size:11px;color:rgba(201,168,76,.6);margin-bottom:8px;line-height:1.5;font-style:italic;}
+.branch-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.branch-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;font-family:'Noto Sans KR',sans-serif;text-decoration:none;transition:all .2s;border:1px solid;}
+.branch-btn.call{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:#4ade80;}
+.branch-btn.map{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.3);color:var(--gold);}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--dark);border:1px solid var(--border);border-radius:20px;padding:24px 20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;animation:fadeIn .25s ease both;}
+.modal-title{font-family:'Noto Serif KR',serif;font-size:16px;font-weight:700;color:var(--gold-light);margin-bottom:14px;}
+.modal label{font-size:11px;color:var(--text-dim);display:block;margin-bottom:4px;letter-spacing:.05em;}
+.modal input,.modal textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:13px;padding:10px 12px;border-radius:10px;margin-bottom:10px;outline:none;transition:border-color .2s;}
+.modal input:focus,.modal textarea:focus{border-color:rgba(201,168,76,.5);}
+.modal textarea{resize:vertical;min-height:70px;}
+.modal-btns{display:flex;gap:8px;margin-top:6px;}
+.modal-btn{flex:1;padding:11px;border-radius:10px;border:none;font-size:13px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;}
+.modal-btn.primary{background:var(--gold);color:var(--deep);font-weight:700;}
+.modal-btn.primary:hover{background:var(--gold-light);}
+.modal-btn.cancel{background:var(--card);color:var(--text-dim);border:1px solid var(--border);}
+.modal-btn.danger{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+
+/* IMAGE PREVIEW */
+.img-preview-wrap{margin-bottom:10px;}
+.img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:10px;display:none;margin-top:6px;}
+.img-preview.show{display:block;}
+
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;transition:opacity .4s;}
+.loading-overlay.hide{opacity:0;pointer-events:none;}
+.loading-cross{font-size:36px;color:var(--gold);margin-bottom:16px;animation:pulse 1.2s ease infinite;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);color:var(--text);font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all .3s;z-index:3000;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* FOOTER */
+.site-footer{text-align:center;padding:24px 20px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;letter-spacing:.1em;}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+</style>
 </head>
 <body>
-  <p>잠시만 기다려주세요...</p>
-  <script>window.location.replace('church_biz_app.html');</script>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-cross">✝</div>
+  <div style="font-size:13px;color:var(--text-dim)">불러오는 중...</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<header class="site-header">
+  <button class="admin-toggle" id="adminToggleBtn" onclick="openLoginModal()">⚙ 관리</button>
+  <div class="header-inner">
+    <button class="logo-btn" id="logoBtn" onclick="installApp()" title="앱 설치">
+      <img src="logo.png" alt="매매주 로고"/>
+    </button>
+    <div>
+      <h1 class="site-title">매일 매일을 주님께</h1>
+      <p class="site-subtitle">EVERYDAY WITH JESUS</p>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-wrapper">
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" onclick="switchTab('notice',this)"><span class="tab-icon">📢</span>공지</button>
+    <button class="nav-tab" onclick="switchTab('prayer',this)"><span class="tab-icon">🙏</span>기도</button>
+    <button class="nav-tab" onclick="switchTab('praise',this)"><span class="tab-icon">🎵</span>찬양</button>
+    <button class="nav-tab" onclick="switchTab('bible',this)"><span class="tab-icon">📖</span>성경</button>
+    <button class="nav-tab" onclick="switchTab('sermon',this)"><span class="tab-icon">🎤</span>설교</button>
+    <button class="nav-tab" onclick="switchTab('books',this)"><span class="tab-icon">📗</span>저서별설교</button>
+    <button class="nav-tab" onclick="switchTab('healing',this)"><span class="tab-icon">🕊️</span>치유</button>
+    <button class="nav-tab" onclick="switchTab('links',this)"><span class="tab-icon">🔗</span>바로가기</button>
+    <button class="nav-tab" onclick="switchTab('branch',this)"><span class="tab-icon">⛪</span>지교회</button>
+    <button class="nav-tab" onclick="switchTab('truth',this)"><span class="tab-icon">✝</span>진실의 방</button>
+  </div>
+</nav>
+
+<!-- SECTIONS -->
+<section id="tab-notice" class="page-section active">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-notices"></div>
+  <button class="add-btn" onclick="openAdd('notices','notice')">＋ 공지 추가</button>
+  <a class="kakao-btn" href="https://open.kakao.com/o/sbqrs0jh" target="_blank" rel="noopener">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.477 3 2 6.477 2 10.5c0 2.688 1.627 5.04 4.09 6.385L5.1 20.4a.5.5 0 0 0 .72.548l4.54-2.63c.54.082 1.09.132 1.64.132 5.523 0 10-3.477 10-7.5S17.523 3 12 3z"/></svg>
+    카톡으로 문의하기
+  </a>
+  <div class="coupang-banner">
+    <script src="https://ads-partners.coupang.com/g.js"></script>
+    <script>new PartnersCoupang.G({"id":991902,"template":"carousel","trackingCode":"AF7978099","width":"100%","height":"140","tsource":""});</script>
+  </div>
+</section>
+
+<section id="tab-prayer" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-prayer"></div>
+  <button class="add-btn" onclick="openAdd('prayer','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-praise" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-praise"></div>
+  <button class="add-btn" onclick="openAdd('praise','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-bible" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-bible"></div>
+  <button class="add-btn" onclick="openAdd('bible','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-sermon" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-sermon"></div>
+  <button class="add-btn" onclick="openAdd('sermon','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-books" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-books"></div>
+  <button class="add-btn" onclick="openAdd('books','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-healing" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-healing"></div>
+  <button class="add-btn" onclick="openAdd('healing','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-links" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-links"></div>
+  <button class="add-btn" onclick="openAdd('links','link')">＋ 항목 추가</button>
+</section>
+
+<section id="tab-branch" class="page-section">
+  <input class="branch-search" placeholder="🔍 지역명 또는 주소 검색..." oninput="filterBranch(this.value)"/>
+  <div id="branch-list"></div>
+</section>
+
+<section id="tab-truth" class="page-section">
+  <div class="admin-bar"><span>✏️</span> 관리자 모드</div>
+  <div id="list-truth"></div>
+  <button class="add-btn" onclick="openAdd('truth','link')">＋ 항목 추가</button>
+</section>
+
+<footer class="site-footer">© 2025 Everyday with Jesus · everydaywjesus.com</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal">
+    <div class="modal-title">🔐 관리자 로그인</div>
+    <label>이메일</label>
+    <input id="loginEmail" type="email" value="fnplus@naver.com" autocomplete="email"/>
+    <label>비밀번호</label>
+    <input id="loginPw" type="password" autocomplete="current-password"/>
+    <div style="font-size:12px;color:#f87171;min-height:18px;margin-bottom:8px" id="loginError"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeLoginModal()">취소</button>
+      <button class="modal-btn primary" onclick="doLogin()">로그인</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <div class="modal-title" id="editModalTitle">항목</div>
+    <div id="editModalBody"></div>
+    <div class="modal-btns">
+      <button class="modal-btn danger" id="editDeleteBtn" style="display:none" onclick="deleteItem()">삭제</button>
+      <button class="modal-btn cancel" onclick="closeEditModal()">취소</button>
+      <button class="modal-btn primary" onclick="saveItem()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBwbzl-zkuv1cH5c3Lu6ucrnYQuoJ97c8Q",
+  authDomain:"church-biz.firebaseapp.com",
+  projectId:"church-biz",
+  storageBucket:"church-biz.firebasestorage.app",
+  messagingSenderId:"913903248333",
+  appId:"1:913903248333:web:92e694cbf45c5358221a84"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const auth = getAuth(app);
+
+const COL = k => 'ewj_' + k;
+let adminOn = false;
+let editCtx = null;
+const cache = {};
+
+/* ── SEED DATA ── */
+const SEED = {
+  notices: [],
+  prayer: [
+    {title:'매일 기도 플레이리스트',url:'https://www.youtube.com/playlist?list=PLNFQy-3DVkT-CsYiuJi_roaTSGO6ds4y1',sub:'YouTube 재생목록',order:0},
+    {title:'기도할 때 듣는 찬양',url:'https://youtube.com/playlist?list=PLkwxjHscKmIlCRcXpqmussbtEIbYDNaiL',sub:'YouTube 재생목록',order:1}
+  ],
+  praise: [
+    {title:'주일 찬양 재생목록',url:'https://www.youtube.com/playlist?list=PLs-cSqzK9QvUCVWP5B8o4kX62Ze6YhAYx',sub:'YouTube 재생목록',order:0}
+  ],
+  bible: [
+    {title:'구약 성경 통독',url:'https://www.youtube.com/playlist?list=PLkwxjHscKmIlrRNkDvp1Yj2vWH4SEpUyO',sub:'YouTube 재생목록',order:0},
+    {title:'신약 성경 통독',url:'https://www.youtube.com/playlist?list=PLkwxjHscKmIlWy8N59dtWS8WGY-xj_YX9',sub:'YouTube 재생목록',order:1}
+  ],
+  sermon: [],
+  books: [],
+  healing: [
+    {title:'치유 간증 쇼츠',url:'https://youtube.com/playlist?list=PLNFQy-3DVkT9_Q6XJyDz7w4fXV9O-z98-',sub:'YouTube 재생목록',order:0},
+    {title:'질병명으로 간증 찾기',icon:'🔍',url:'https://www.youtube.com/@healing_n_testimony',sub:'YouTube 채널',order:1}
+  ],
+  links: [
+    {title:'사랑하는교회 홈페이지',icon:'🏠',url:'https://www.belovedc.com',sub:'www.belovedc.com',label:'공식 홈페이지',order:0},
+    {title:'사랑하는교회 다음카페',icon:'☕',url:'https://cafe.daum.net/Bigchurch',sub:'cafe.daum.net/Bigchurch',label:'다음 카페',order:1},
+    {title:'사랑하는교회 유튜브',icon:'📺',url:'https://www.youtube.com/@belovedch',sub:'@belovedch',label:'유튜브',order:2},
+    {title:'MP3 자료실',icon:'🎧',url:'https://holyvirus1225.wixsite.com/belovedc',sub:'holyvirus1225.wixsite.com',label:'MP3',order:3}
+  ],
+  truth: [
+    {title:'듣는 귀가 필요한 분께',url:'https://www.youtube.com/playlist?list=PLkwxjHscKmInX9yzNHQZgleuyUDG-Gp9r',sub:'YouTube 재생목록',order:0}
+  ]
+};
+
+/* ── MIGRATE: 구버전 컬렉션 → 새 컬렉션 ── */
+async function migrate(oldKeys, newKey) {
+  try {
+    const newSnap = await getDocs(collection(db, COL(newKey)));
+    if (!newSnap.empty) return;
+    let order = 0;
+    for (const k of oldKeys) {
+      try {
+        const snap = await getDocs(collection(db, COL(k)));
+        for (const d of snap.docs) {
+          await addDoc(collection(db, COL(newKey)), {...d.data(), order:order++, createdAt:serverTimestamp()});
+        }
+      } catch(e){}
+    }
+  } catch(e){}
+}
+
+/* ── FETCH ── */
+async function fetchCol(key) {
+  try {
+    const snap = await getDocs(collection(db, COL(key)));
+    let items = snap.docs.map(d=>({id:d.id,...d.data()}));
+    items.sort((a,b)=>(a.order||0)-(b.order||0));
+    cache[key] = items.length ? items : (SEED[key]||[]);
+  } catch(e) {
+    cache[key] = SEED[key]||[];
+  }
+}
+
+async function seedIfEmpty(key) {
+  try {
+    const snap = await getDocs(collection(db, COL(key)));
+    if (snap.empty && SEED[key]?.length) {
+      for (const item of SEED[key]) {
+        await addDoc(collection(db, COL(key)), {...item, createdAt:serverTimestamp()});
+      }
+    }
+  } catch(e){}
+}
+
+/* ── INIT ── */
+async function init() {
+  const t = setTimeout(()=>{renderAll();hide();}, 10000);
+  try {
+    // 구버전 이전
+    await migrate(['sermon1','sermon2','sermon3','sermon4'], 'sermon');
+    await migrate(['prayer1','prayer2'], 'prayer');
+    await migrate(['bible1','bible2'], 'bible');
+    await migrate(['healing1','healing2'], 'healing');
+    await migrate(['books1','books2','books3','books4'], 'books');
+
+    const keys = Object.keys(SEED);
+    await Promise.all(keys.map(seedIfEmpty));
+    await Promise.all(keys.map(fetchCol));
+  } catch(e){ console.error(e); }
+  clearTimeout(t);
+  renderAll();
+  hide();
+}
+function hide(){ document.getElementById('loadingOverlay').classList.add('hide'); }
+
+/* ── RENDER ALL ── */
+function renderAll() {
+  renderNotices();
+  ['prayer','praise','bible','sermon','books','healing','links','truth'].forEach(renderLinks);
+  renderBranch('');
+}
+
+/* ── ESC ── */
+function esc(s){ return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
+
+/* ── RENDER NOTICES ── */
+function renderNotices() {
+  const items = [...(cache['notices']||[])].reverse(); // 최신순 (접힌 상태)
+  const el = document.getElementById('list-notices');
+  if (!el) return;
+  if (!items.length){ el.innerHTML='<p class="empty-msg">공지사항이 없습니다</p>'; return; }
+  el.innerHTML = items.map((item,i)=>`
+    <div class="notice-card" id="nc-${item.id}">
+      <div class="notice-card-header" onclick="toggleNotice('${item.id}')">
+        <span class="notice-card-title">${esc(item.title)}</span>
+        <div class="notice-card-meta">
+          <span class="notice-card-date">${esc(item.date||'')}</span>
+          <span class="notice-card-arrow">▼</span>
+        </div>
+      </div>
+      <div class="notice-card-body">
+        ${item.body?`<div class="notice-card-text">${esc(item.body)}</div>`:''}
+        ${item.imageUrl?`<img class="notice-card-img" src="${esc(item.imageUrl)}" alt="공지 이미지"/>`:''}
+        <button class="notice-edit-btn" onclick="openEdit('notices','${item.id}','notice')">✏ 수정</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.toggleNotice = (id) => {
+  const card = document.getElementById('nc-'+id);
+  if (card) card.classList.toggle('open');
+};
+
+/* ── YOUTUBE HELPERS ── */
+function getVid(url){ if(!url)return null; const m=url.match(/(?:youtu\.be\/|[?&]v=)([^&?#]+)/); return m?m[1]:null; }
+function getPid(url){ if(!url)return null; const m=url.match(/[?&]list=([^&]+)/); return m?m[1]:null; }
+function isYT(url){ return url&&(url.includes('youtube.com')||url.includes('youtu.be')); }
+function isChannel(url){ return url&&(url.includes('/@')||url.includes('/channel/')); }
+function embedUrl(url){
+  const v=getVid(url),p=getPid(url);
+  if(v&&p)return`https://www.youtube.com/embed/${v}?list=${p}&autoplay=1`;
+  if(v)return`https://www.youtube.com/embed/${v}?autoplay=1`;
+  if(p)return`https://www.youtube.com/embed/videoseries?list=${p}&autoplay=1`;
+  return null;
+}
+
+const thumbCache={};
+async function fetchPidThumb(pid){
+  if(thumbCache[pid])return thumbCache[pid];
+  try{
+    const r=await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/playlist?list=${pid}&format=json`);
+    const d=await r.json();
+    const m=d.thumbnail_url?.match(/\/vi\/([^/]+)\//);
+    if(m){const t=`https://img.youtube.com/vi/${m[1]}/mqdefault.jpg`;thumbCache[pid]=t;return t;}
+  }catch(e){}
+  return null;
+}
+
+/* ── RENDER LINKS ── */
+function renderLinks(key) {
+  const items = cache[key]||[];
+  const el = document.getElementById('list-'+key);
+  if (!el) return;
+  if (!items.length){ el.innerHTML=''; return; }
+
+  const isLinksTab = key==='links';
+
+  el.innerHTML = items.map((item,idx)=>{
+    const forceLink = isLinksTab || isChannel(item.url) || !isYT(item.url);
+    const cardId = 'card-'+item.id;
+
+    if (!forceLink) {
+      // YouTube 카드
+      const v=getVid(item.url), p=getPid(item.url);
+      const thumb = v?`https://img.youtube.com/vi/${v}/mqdefault.jpg`:'';
+      const emb = embedUrl(item.url)||'';
+      const isBooks = key==='books';
+      return `
+        <div class="yt-wrap">
+          <div class="playlist-card" id="${cardId}">
+            <div class="order-btns">
+              <button class="order-btn" onclick="moveItem('${key}','${item.id}',-1)">▲</button>
+              <button class="order-btn" onclick="moveItem('${key}','${item.id}',1)">▼</button>
+            </div>
+            <div class="pc-thumb" onclick="playVideo('${cardId}','${emb.replace(/'/g,"\\'")}')">
+              <img id="thumb-${cardId}" src="${thumb}" style="${thumb?'':'display:none'}"
+                onerror="this.style.display='none';document.getElementById('ph-${cardId}').style.display='flex'">
+              <div id="ph-${cardId}" class="pc-thumb-placeholder" style="${thumb?'display:none':''}">🎵</div>
+              <div class="pc-play-overlay"><div class="pc-play-btn">▶</div></div>
+            </div>
+            <div class="pc-iframe-wrap" id="iframe-${cardId}"></div>
+            <div class="pc-info">
+              <div class="pc-title">${esc(item.title)}</div>
+              <div class="pc-sub">${esc(item.sub||'YouTube')}</div>
+            </div>
+            <button class="edit-btn" onclick="event.stopPropagation();openEdit('${key}','${item.id}','link')">✏ 수정</button>
+          </div>
+          <a class="yt-ext-btn" href="${esc(item.url||'#')}" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+            YouTube에서 보기
+          </a>
+          ${(isBooks&&item.coupang)?`
+          <a class="coupang-btn" href="${esc(item.coupang)}" target="_blank" rel="noopener">
+            <div class="coupang-btn-icon">
+              ${item.iconUrl?`<img src="${esc(item.iconUrl)}">`:(item.icon||'📗')}
+            </div>
+            저서 구매 바로가기
+          </a>`:''}
+        </div>
+      `;
+      // 플레이리스트 썸네일 비동기 로딩
+      if(!v&&p) setTimeout(()=>fetchPidThumb(p).then(t=>{
+        if(!t)return;
+        const img=document.getElementById('thumb-'+cardId);
+        const ph=document.getElementById('ph-'+cardId);
+        if(img){img.src=t;img.style.display='block';if(ph)ph.style.display='none';}
+      }),0);
+    } else {
+      // 링크 카드
+      const iconHtml = item.iconUrl
+        ?`<img src="${esc(item.iconUrl)}">`
+        :(item.icon||'🔗');
+      return `
+        <a class="link-card" href="${esc(item.url||'#')}" target="_blank" rel="noopener">
+          <div class="order-btns">
+            <button class="order-btn" onclick="event.preventDefault();event.stopPropagation();moveItem('${key}','${item.id}',-1)">▲</button>
+            <button class="order-btn" onclick="event.preventDefault();event.stopPropagation();moveItem('${key}','${item.id}',1)">▼</button>
+          </div>
+          <div class="lc-icon">${iconHtml}</div>
+          <div class="lc-body">
+            <div class="lc-label">${esc(item.label||'')}</div>
+            <div class="lc-title">${esc(item.title)}</div>
+            <div class="lc-sub">${esc(item.sub||'')}</div>
+          </div>
+          <span class="lc-arrow">›</span>
+          <button class="edit-btn" style="position:absolute;bottom:10px;right:10px;transform:none" onclick="event.preventDefault();event.stopPropagation();openEdit('${key}','${item.id}','link')">✏ 수정</button>
+        </a>
+      `;
+    }
+  }).join('');
+
+  // 플레이리스트 썸네일 비동기 로딩 (렌더 후)
+  items.forEach(item => {
+    if (isLinksTab || isChannel(item.url) || !isYT(item.url)) return;
+    const v=getVid(item.url), p=getPid(item.url);
+    if (!v && p) {
+      const cardId='card-'+item.id;
+      fetchPidThumb(p).then(t=>{
+        if(!t)return;
+        const img=document.getElementById('thumb-'+cardId);
+        const ph=document.getElementById('ph-'+cardId);
+        if(img){img.src=t;img.style.display='block';if(ph)ph.style.display='none';}
+      });
+    }
+  });
+}
+
+/* ── PLAY VIDEO ── */
+window.playVideo = (cardId, emb) => {
+  const card=document.getElementById(cardId);
+  if(!card||!emb)return;
+  const thumb=card.querySelector('.pc-thumb');
+  const iw=document.getElementById('iframe-'+cardId);
+  if(!iw)return;
+  thumb.style.display='none';
+  iw.style.display='block';
+  iw.innerHTML=`<iframe src="${emb}" allowfullscreen allow="autoplay;encrypted-media"></iframe>`;
+};
+
+/* ── MOVE ITEM ── */
+window.moveItem = (key, id, dir) => {
+  const items=[...(cache[key]||[])];
+  const idx=items.findIndex(i=>i.id===id);
+  if(idx<0)return;
+  const ni=idx+dir;
+  if(ni<0||ni>=items.length)return;
+  [items[idx],items[ni]]=[items[ni],items[idx]];
+  items.forEach((item,i)=>item.order=i);
+  cache[key]=items;
+  renderLinks(key);
+  Promise.all(items.map((item,i)=>updateDoc(doc(db,COL(key),item.id),{order:i}))).catch(console.error);
+};
+
+/* ── BRANCH ── */
+const BRANCHES=[
+  {name:'강릉 사랑하는교회',addr:'강원 강릉시 율곡로 2745 3층',tel:'033-644-3079',note:'건물 뒤편 주차장 이용 가능',map:'https://naver.me/G9ppxWBX'},
+  {name:'경주 사랑하는교회',addr:'경북 경주시 양정로 269 금학빌딩 3층',tel:'054-773-3079',note:'',map:'https://naver.me/xdMfWVdr'},
+  {name:'광주 사랑하는교회',addr:'광주 북구 신임로32번길 35 2층',tel:'0507-1339-3079',note:'',map:'https://naver.me/xa5SbndH'},
+  {name:'구미 사랑하는교회',addr:'경북 구미시 인동26길 28 3층',tel:'0507-1340-3079',note:'',map:'https://naver.me/IDkoq1L3'},
+  {name:'남양주 사랑하는교회',addr:'경기 남양주시 미금로 180 2층',tel:'0507-1357-3079',note:'중앙선 도농역 1번출구 도보 15분',map:'https://naver.me/GA88zh3D'},
+  {name:'대구 사랑하는교회',addr:'대구 동구 메디밸리로 5-25 대림빌딩 4층',tel:'053-961-3079',note:'',map:'https://naver.me/xAF8Uc1I'},
+  {name:'대전 사랑하는교회',addr:'대전 동구 대전로 742 5층',tel:'0507-1336-3079',note:'',map:'https://naver.me/FINN24LV'},
+  {name:'목포 사랑하는교회',addr:'전남 목포시 비파로 31 인암빌딩 4층',tel:'061-282-3079',note:'목포 신협 본점 옆 건물',map:'https://naver.me/x9Bk0MYy'},
+  {name:'부산 사랑하는교회',addr:'부산 수영구 장대골로 35',tel:'051-505-3093',note:'',map:'https://naver.me/5OQ2nvIc'},
+  {name:'부천 사랑하는교회',addr:'경기 부천시 원미구 부흥로303번길 50',tel:'0507-1333-3079',note:'',map:'https://naver.me/xhz5egSL'},
+  {name:'서울 사랑하는교회',addr:'서울 송파구 위례성대로22길 27-22',tel:'02-586-3079',note:'',map:'http://www.belovedc.com/'},
+  {name:'수원 사랑하는교회',addr:'경기 수원시 장안구 송원로 39 월드타워 6층',tel:'031-258-3079',note:'',map:'https://naver.me/F1rVY445'},
+  {name:'순천 사랑하는교회',addr:'전남 순천시 유동1길 29-10',tel:'061-722-3079',note:'',map:'https://naver.me/xaff4a4E'},
+  {name:'안동 사랑하는교회',addr:'경북 안동시 은행나무로 103 2층',tel:'0507-1337-3079',note:'',map:'https://naver.me/GO6zM6hS'},
+  {name:'안산 사랑하는교회',addr:'경기 안산시 상록구 광덕산2로 4 3층',tel:'031-414-3079',note:'',map:'https://naver.me/GCgfqOMs'},
+  {name:'안양 사랑하는교회',addr:'경기 안양시 만안구 안양로329번길 108 2층',tel:'0507-1328-3072',note:'',map:'https://naver.me/5r9WLudg'},
+  {name:'양산 사랑하는교회',addr:'경남 양산시 양산역로 103 6층',tel:'055-383-3079',note:'',map:'https://naver.me/FgTTp9fB'},
+  {name:'용인 사랑하는교회',addr:'경기 용인시 처인구 금령로 135',tel:'0507-1345-3079',note:'',map:'https://naver.me/GgWnPMIY'},
+  {name:'울산 사랑하는교회',addr:'울산 중구 함월16길 69',tel:'052-287-3079',note:'',map:'https://naver.me/xXwCX12s'},
+  {name:'의정부 사랑하는교회',addr:'경기 의정부시 능곡로 13 추동아파트상가 2층',tel:'0507-1344-3079',note:'',map:'https://naver.me/FCrLkAYf'},
+  {name:'익산 사랑하는교회',addr:'전북 익산시 부송로 103 사파이어빌딩 5층',tel:'063-833-3079',note:'',map:'https://naver.me/GYDcF9GZ'},
+  {name:'인천 사랑하는교회',addr:'인천 남동구 남동대로733번길 17',tel:'0507-1316-1925',note:'',map:'https://naver.me/Fdq7Ut4w'},
+  {name:'일산 사랑하는교회',addr:'경기 고양시 일산서구 중앙로 1471 대우레시티상가 2층',tel:'031-906-3079',note:'',map:'https://naver.me/x1VHzEc6'},
+  {name:'전주 사랑하는교회',addr:'전북 전주시 덕진구 백제대로 820',tel:'0507-1341-3079',note:'',map:'https://naver.me/x7jtjm63'},
+  {name:'제주 사랑하는교회',addr:'제주 제주시 과원북4길 5 4층',tel:'0507-1401-3079',note:'',map:'https://naver.me/GlJAK3gg'},
+  {name:'제천 사랑하는교회',addr:'충북 제천시 용두대로 119 2층',tel:'043-643-3079',note:'',map:'https://naver.me/GUTt5dku'},
+  {name:'창원 사랑하는교회',addr:'경남 창원시 성산구 용지로169번길 13 10층',tel:'0507-1334-3079',note:'',map:'https://naver.me/5JGPDVhk'},
+  {name:'천안 사랑하는교회',addr:'충남 천안시 동남구 신촌4로 25 3층',tel:'0507-1368-3079',note:'',map:'https://naver.me/FMTsE3ac'},
+  {name:'청주 사랑하는교회',addr:'충북 청주시 흥덕구 2순환로1167번길 4 호인리더스빌딩 7층',tel:'0507-1347-3079',note:'',map:'https://naver.me/FkLW2WxZ'},
+  {name:'춘천 사랑하는교회',addr:'강원 춘천시 금강로 106 운교프라자 4층',tel:'0507-1349-3079',note:'',map:'https://naver.me/G1wfyNR6'},
+  {name:'통영 사랑하는교회',addr:'경남 통영시 광도면 죽림2로 49-31 동진빌딩 6층',tel:'0507-1352-3079',note:'',map:'https://naver.me/GvWd5IKz'},
+  {name:'평택 사랑하는교회',addr:'경기 평택시 평택로 180',tel:'031-654-3079',note:'',map:'https://naver.me/GFBxnAjz'},
+  {name:'포항 사랑하는교회',addr:'경북 포항시 북구 장량로 254',tel:'054-244-3079',note:'',map:'https://naver.me/59UeOlpX'},
+  {name:'화성 사랑하는교회',addr:'경기 화성시 향남읍 평3길 19 6층',tel:'0507-1464-0768',note:'향남역 1번 출구 도보 8분',map:'https://naver.me/5CW6SZGL'},
+];
+
+window.filterBranch = q => renderBranch(q);
+function renderBranch(q) {
+  const el=document.getElementById('branch-list');
+  if(!el)return;
+  const filtered = q ? BRANCHES.filter(b=>b.name.includes(q)||b.addr.includes(q)||b.note.includes(q)) : BRANCHES;
+  if(!filtered.length){el.innerHTML='<p class="empty-msg">검색 결과가 없습니다</p>';return;}
+  el.innerHTML=filtered.map(b=>`
+    <div class="branch-card">
+      <div class="branch-name">⛪ ${esc(b.name)}</div>
+      <div class="branch-addr">📍 ${esc(b.addr)}</div>
+      ${b.note?`<div class="branch-note">💡 ${esc(b.note)}</div>`:''}
+      <div class="branch-btns">
+        <a class="branch-btn call" href="tel:${esc(b.tel)}">📞 ${esc(b.tel)}</a>
+        <a class="branch-btn map" href="${esc(b.map)}" target="_blank">🗺 지도 보기</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── AUTH ── */
+onAuthStateChanged(auth, user => toggleAdmin(!!user));
+
+window.openLoginModal = () => {
+  if (adminOn){ if(confirm('로그아웃 하시겠습니까?')) signOut(auth); return; }
+  document.getElementById('loginError').textContent='';
+  document.getElementById('loginPw').value='';
+  document.getElementById('loginModal').classList.add('show');
+  setTimeout(()=>document.getElementById('loginPw').focus(),100);
+};
+window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('show');
+window.doLogin = async () => {
+  const email=document.getElementById('loginEmail').value.trim();
+  const pw=document.getElementById('loginPw').value;
+  try {
+    await signInWithEmailAndPassword(auth,email,pw);
+    closeLoginModal();
+    showToast('관리자 로그인 완료 ✓');
+  } catch(e) {
+    document.getElementById('loginError').textContent='이메일 또는 비밀번호가 틀렸습니다';
+  }
+};
+document.getElementById('loginPw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function toggleAdmin(on) {
+  adminOn=on;
+  document.body.classList.toggle('admin-on',on);
+  const btn=document.getElementById('adminToggleBtn');
+  btn.classList.toggle('on',on);
+  btn.textContent=on?'✓ 관리중 (로그아웃)':'⚙ 관리';
+  document.querySelectorAll('.admin-bar').forEach(el=>el.classList.toggle('show',on));
+}
+
+/* ── EDIT MODAL ── */
+window.openAdd = (key, type) => {
+  editCtx={key,type,id:null};
+  document.getElementById('editModalTitle').textContent = type==='notice'?'공지 추가':'항목 추가';
+  document.getElementById('editDeleteBtn').style.display='none';
+  document.getElementById('editModalBody').innerHTML = type==='notice'?noticeForm({}):linkForm({},key);
+  document.getElementById('editModal').classList.add('show');
+};
+window.openEdit = (key, id, type) => {
+  const item=(cache[key]||[]).find(i=>i.id===id);
+  if(!item)return;
+  editCtx={key,type,id};
+  document.getElementById('editModalTitle').textContent = type==='notice'?'공지 수정':'항목 수정';
+  document.getElementById('editDeleteBtn').style.display='block';
+  document.getElementById('editModalBody').innerHTML = type==='notice'?noticeForm(item):linkForm(item,key);
+  document.getElementById('editModal').classList.add('show');
+};
+window.closeEditModal = () => {document.getElementById('editModal').classList.remove('show');editCtx=null;};
+document.getElementById('editModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEditModal();});
+document.getElementById('loginModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLoginModal();});
+
+function noticeForm(item) {
+  return `
+    <label>제목</label><input id="ef-title" value="${esc(item.title||'')}" placeholder="공지 제목"/>
+    <label>내용</label><textarea id="ef-body">${esc(item.body||'')}</textarea>
+    <label>날짜 (예: 2025.05)</label><input id="ef-date" value="${esc(item.date||'')}" placeholder="2025.05"/>
+    <label>이미지 첨부 (선택)</label>
+    <div class="img-preview-wrap">
+      <input type="file" id="ef-img-file" accept="image/*" onchange="previewNoticeImg(this)" style="font-size:12px;color:var(--text-dim)"/>
+      <img id="ef-img-preview" class="img-preview ${item.imageUrl?'show':''}" src="${esc(item.imageUrl||'')}"/>
+    </div>
+    <input type="hidden" id="ef-img-url" value="${esc(item.imageUrl||'')}"/>
+  `;
+}
+
+function linkForm(item, key) {
+  const hasImg = item.iconUrl?.startsWith('data:');
+  const isBooks = key==='books';
+  return `
+    <label>이름</label><input id="ef-title" value="${esc(item.title||'')}" placeholder="예: 주일 설교 플레이리스트"/>
+    <label>URL</label><input id="ef-url" value="${esc(item.url||'')}" placeholder="https://..."/>
+    <label>설명 (부제목)</label><input id="ef-sub" value="${esc(item.sub||'')}" placeholder="예: YouTube 재생목록"/>
+    <label>라벨 (선택)</label><input id="ef-label" value="${esc(item.label||'')}" placeholder="예: 공식 홈페이지"/>
+    <label>아이콘 이미지 또는 이모지</label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div id="icon-preview" style="width:40px;height:40px;border-radius:10px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0">
+        ${hasImg?`<img src="${esc(item.iconUrl)}" style="width:100%;height:100%;object-fit:cover">`:(esc(item.icon||'🔗'))}
+      </div>
+      <div style="flex:1">
+        <input type="file" id="ef-icon-file" accept="image/*" style="font-size:11px;color:var(--text-dim)" onchange="previewIcon(this)"/>
+        <input id="ef-icon" value="${hasImg?'':esc(item.icon||'')}" placeholder="이모지" maxlength="4" style="margin-top:6px"/>
+      </div>
+    </div>
+    <input type="hidden" id="ef-icon-url" value="${esc(item.iconUrl||'')}"/>
+    ${isBooks?`<label style="color:var(--gold)">📗 쿠팡 구매 링크 (선택)</label>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input id="ef-coupang" value="${esc(item.coupang||'')}" placeholder="https://link.coupang.com/..." style="margin-bottom:0;flex:1"/>
+      <button type="button" onclick="fetchCoupangImg()" style="background:var(--gold-dim);border:1px solid var(--border);color:var(--gold);font-size:12px;padding:0 12px;border-radius:10px;cursor:pointer;white-space:nowrap;font-family:'Noto Sans KR',sans-serif">이미지 가져오기</button>
+    </div>
+    <div id="coupang-img-preview" style="display:${item.coupang&&item.iconUrl?'flex':'none'};align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--text-dim)">
+      <img id="coupang-img-thumb" src="${esc((item.coupang&&item.iconUrl)?item.iconUrl:'')}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"/>
+      <span>상품 이미지 자동 적용됨</span>
+    </div>`:''}
+  `;
+}
+
+window.fetchCoupangImg = async () => {
+  const url = document.getElementById('ef-coupang')?.value.trim();
+  if (!url) { alert('쿠팡 링크를 먼저 입력해주세요'); return; }
+
+  const btn = event.target;
+  btn.textContent = '가져오는 중...';
+  btn.disabled = true;
+
+  try {
+    // allorigins 프록시로 쿠팡 페이지 HTML 가져오기
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const res = await fetch(proxyUrl);
+    const data = await res.json();
+    const html = data.contents || '';
+
+    // OG image 추출
+    let imgUrl = '';
+    const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+                 || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    if (ogMatch) imgUrl = ogMatch[1];
+
+    // 못 찾으면 첫 번째 상품 이미지 시도
+    if (!imgUrl) {
+      const imgMatch = html.match(/https:\/\/thumbnail\d*\.coupangcdn\.com[^"'>\s]+/);
+      if (imgMatch) imgUrl = imgMatch[0];
+    }
+
+    if (imgUrl) {
+      // iconUrl에 저장
+      document.getElementById('ef-icon-url').value = imgUrl;
+      document.getElementById('ef-icon').value = '';
+      // 아이콘 미리보기 업데이트
+      document.getElementById('icon-preview').innerHTML =
+        `<img src="${imgUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+      // 쿠팡 이미지 미리보기
+      const preview = document.getElementById('coupang-img-preview');
+      const thumb = document.getElementById('coupang-img-thumb');
+      if (preview && thumb) { thumb.src = imgUrl; preview.style.display = 'flex'; }
+      showToast('상품 이미지를 가져왔어요 ✓');
+    } else {
+      showToast('이미지를 찾지 못했어요. 직접 업로드해주세요');
+    }
+  } catch(e) {
+    showToast('이미지 가져오기 실패. 직접 업로드해주세요');
+  } finally {
+    btn.textContent = '이미지 가져오기';
+    btn.disabled = false;
+  }
+};
+
+window.previewNoticeImg = (input) => {
+  if(!input.files?.[0])return;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('ef-img-url').value=e.target.result;
+    const prev=document.getElementById('ef-img-preview');
+    prev.src=e.target.result;
+    prev.classList.add('show');
+  };
+  r.readAsDataURL(input.files[0]);
+};
+
+window.previewIcon = (input) => {
+  if(!input.files?.[0])return;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('ef-icon-url').value=e.target.result;
+    document.getElementById('ef-icon').value='';
+    document.getElementById('icon-preview').innerHTML=`<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+  };
+  r.readAsDataURL(input.files[0]);
+};
+
+/* ── SAVE / DELETE ── */
+window.saveItem = async () => {
+  if(!editCtx)return;
+  const {key,type,id}=editCtx;
+  let data={};
+
+  if(type==='notice'){
+    const title=document.getElementById('ef-title').value.trim();
+    if(!title){alert('제목을 입력하세요');return;}
+    data={title,body:document.getElementById('ef-body').value.trim(),date:document.getElementById('ef-date').value.trim(),imageUrl:document.getElementById('ef-img-url').value};
+  } else {
+    const title=document.getElementById('ef-title').value.trim();
+    if(!title){alert('이름을 입력하세요');return;}
+    const items=cache[key]||[];
+    const coupangEl=document.getElementById('ef-coupang');
+    data={
+      title,
+      url:document.getElementById('ef-url').value.trim(),
+      sub:document.getElementById('ef-sub').value.trim(),
+      label:document.getElementById('ef-label').value.trim(),
+      icon:document.getElementById('ef-icon').value.trim(),
+      iconUrl:document.getElementById('ef-icon-url')?.value||'',
+      coupang:coupangEl?coupangEl.value.trim():'',
+      order:id?((items.find(i=>i.id===id)||{}).order||0):items.length
+    };
+  }
+
+  try {
+    if(id){
+      await updateDoc(doc(db,COL(key),id),data);
+      cache[key]=(cache[key]||[]).map(i=>i.id===id?{...i,...data}:i);
+    } else {
+      const ref=await addDoc(collection(db,COL(key)),{...data,createdAt:serverTimestamp()});
+      cache[key]=[...(cache[key]||[]),{id:ref.id,...data}];
+    }
+    type==='notice'?renderNotices():renderLinks(key);
+    closeEditModal();
+    showToast('저장됐습니다 ✓');
+  } catch(e){alert('저장 실패: '+e.message);}
+};
+
+window.deleteItem = async () => {
+  if(!editCtx?.id)return;
+  if(!confirm('삭제하시겠습니까?'))return;
+  const {key,type,id}=editCtx;
+  cache[key]=(cache[key]||[]).filter(i=>i.id!==id);
+  type==='notice'?renderNotices():renderLinks(key);
+  closeEditModal();
+  showToast('삭제됐습니다');
+  deleteDoc(doc(db,COL(key),id)).catch(console.error);
+};
+
+/* ── TAB ── */
+const TAB_ORDER=['notice','prayer','praise','bible','sermon','books','healing','links','branch','truth'];
+let currentTabIdx=0;
+
+window.switchTab = (name, btn) => {
+  const prevEl=document.querySelector('.page-section.active');
+  const nextEl=document.getElementById('tab-'+name);
+  const newIdx=TAB_ORDER.indexOf(name);
+  const dir = newIdx>currentTabIdx?1:-1;
+
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  (btn||document.querySelectorAll('.nav-tab')[newIdx])?.classList.add('active');
+
+  if(prevEl&&prevEl!==nextEl){
+    prevEl.style.cssText=`transition:transform .28s ease,opacity .28s ease;transform:translateX(${dir*-100}%);opacity:0`;
+    setTimeout(()=>{prevEl.classList.remove('active');prevEl.style.cssText='';},290);
+  }
+  nextEl.style.cssText=`transform:translateX(${dir*100}%);opacity:0;transition:none`;
+  nextEl.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    nextEl.style.cssText='transition:transform .28s ease,opacity .28s ease;transform:translateX(0);opacity:1';
+    setTimeout(()=>nextEl.style.cssText='',300);
+  }));
+
+  currentTabIdx=newIdx;
+  const activeBtn=btn||document.querySelectorAll('.nav-tab')[newIdx];
+  activeBtn?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+};
+
+// 스와이프
+let tx=0,ty=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){
+    const ni=Math.max(0,Math.min(TAB_ORDER.length-1,currentTabIdx+(dx<0?1:-1)));
+    if(ni!==currentTabIdx) switchTab(TAB_ORDER[ni],null);
+  }
+},{passive:true});
+
+/* ── TOAST ── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+init();
+</script>
+
+<script>
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('logoBtn')?.classList.remove('hide');
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+});
+window.installApp = async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  } else {
+    // iOS 안내
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua)) {
+      alert('Safari 하단의 공유 버튼 → "홈 화면에 추가"를 눌러 앱을 설치하세요 📱');
+    } else {
+      alert('브라우저 메뉴에서 "홈 화면에 추가" 또는 "앱 설치"를 눌러 설치하세요 📱');
+    }
+  }
+};
+</script>
 </body>
 </html>
