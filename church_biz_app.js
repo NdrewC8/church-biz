@@ -518,6 +518,12 @@ function doFilter(){
   var cat=document.getElementById('catSel').value;
   var region=document.getElementById('regionInput').value.trim().toLowerCase();
   var list=S.biz.filter(function(b){
+    var catMatch = true;
+    if(cat){
+      var subCats = CAT_MAP[cat];
+      if(subCats) catMatch = subCats.indexOf(b.cat||'') !== -1;
+      else catMatch = (b.cat||'') === cat;
+    }
     var mk=!kw||(b.name.toLowerCase().includes(kw)||(b.owner||'').toLowerCase().includes(kw)||(b.kw||'').toLowerCase().includes(kw)||(b.cat||'').toLowerCase().includes(kw)||(b.addr||'').toLowerCase().includes(kw)||(b.desc||'').toLowerCase().includes(kw));
     var mr=!region||((b.addr||'').toLowerCase().includes(region)||(b.ownerChurch||'').toLowerCase().includes(region));
     return mk&&mr&&(!cat||b.cat===cat);
@@ -688,6 +694,24 @@ function deleteNotice(id){
   saveToFirebase();
   renderNotice();
 }
+
+
+// 업종 대분류 매핑
+var CAT_MAP = {
+  '식음료':       ['식품/음식점','카페'],
+  '쇼핑/유통':    ['판매','유통','온라인판매','귀금속/예물','꽃집'],
+  '의료/건강':    ['병원/의료','요양시설'],
+  '교육':         ['교육'],
+  '생활/서비스':  ['서비스','이미용','인테리어','숙박','간판/광고'],
+  '자동차/운수':  ['자동차','운수','렌탈'],
+  '건설/시설':    ['건축/건설','설비','제조'],
+  '비즈니스':     ['보험','법률/세무','부동산'],
+  'IT/정보통신':  ['정보통신/컴퓨터'],
+  '농수산':       ['농업/임업/축산업'],
+  '여가/숙박':    ['숙박','스포츠'],
+  '지교회':       ['지교회'],
+  '기타':         ['그 외','기타']
+};
 
 // ── 구인구직 ──────────────────────────────
 function renderJobs(){
