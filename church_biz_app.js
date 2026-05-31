@@ -1110,8 +1110,14 @@ function renderAdmin(){
     '</div>'+
     '<div id="adminMemberCount" style="font-size:14px;color:var(--t2);margin-bottom:8px">총 '+mList.length+'명 / 전체 '+S.members.length+'명</div>'+'<div id="adminMemberList">';
     mList.forEach(function(m){
-      body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+' <span style="font-size:13px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
-        '<button class="admin-del" onclick="adminDelMember(\''+m.phone+'\')">삭제</button></div>';
+      var approvedBadge = m.approved
+        ? '<span style="background:#dcfce7;color:#166534;font-size:11px;padding:2px 7px;border-radius:10px;margin-left:5px">✅ 승인</span>'
+        : '<span style="background:#fee2e2;color:#dc2626;font-size:11px;padding:2px 7px;border-radius:10px;margin-left:5px">⏳ 미승인</span>';
+      var approveBtn = m.approved
+        ? '<button onclick="adminRevokeApproval(\''+m.phone+'\')" style="padding:4px 8px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:7px;font-size:12px;cursor:pointer;flex-shrink:0">승인취소</button>'
+        : '<button onclick="adminApprove(\''+m.phone+'\')" style="padding:4px 8px;background:#dcfce7;color:#166534;border:1px solid #86efac;border-radius:7px;font-size:12px;cursor:pointer;flex-shrink:0">승인</button>';
+      body+='<div class="admin-row"><div class="admin-row-info"><div class="admin-row-name">'+m.name+approvedBadge+' <span style="font-size:13px;color:var(--t2)">'+m.role+'</span></div><div class="admin-row-sub">'+m.church+'교회 · '+m.phone+'</div></div>'+
+        '<div style="display:flex;gap:5px;flex-shrink:0">'+approveBtn+'<button class="admin-del" onclick="adminDelMember(\''+m.phone+'\')">삭제</button></div></div>';
     });
   body+='</div>';
   } else if(adminSection==='biz'){
