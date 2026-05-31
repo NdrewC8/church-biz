@@ -154,7 +154,6 @@ async function loadFromFirebase(){
       S.likes = data.likes || [];
       console.log('Firebase 데이터 로드 완료');
       doFilter();
-      renderAllRv();
       // 업종 마이그레이션: 세부업종 → 대분류
       var migrated = false;
       S.biz.forEach(function(b){
@@ -257,6 +256,20 @@ function formatPhone(input) {
   }
 }
 
+
+// ── 권한 체크 ─────────────────────────────
+function isApproved(){
+  return S.user && (S.user.approved === true || isAdmin());
+}
+function requireApproval(actionName){
+  if(!S.user){ openM('choiceM'); return false; }
+  if(!isApproved()){
+    alert('⚠️ ' + (actionName||'이 기능') + '은\n운영자 승인 후 이용 가능합니다.\n\n마이페이지에서 승인 신청을 확인해주세요.');
+    return false;
+  }
+  return true;
+}
+
 function initSelects() {
   ['jChurch','epChurch'].forEach(function(id) {
     var el = document.getElementById(id);
@@ -283,7 +296,7 @@ function showSkeletons(id, n) {
 }
 
 // ── 탭 ───────────────────────────────────
-var _TABS_ORDER = ['notice','list','reviews','jobs','mypage','admin'];
+var _TABS_ORDER = ['notice','list','jobs','mypage','admin'];
 var _curTab = 'list';
 
 function showTab(name, btn) {
@@ -318,8 +331,6 @@ function showTab(name, btn) {
   btn.classList.add('on');
   if(name!=='detail') prevTab=name;
   if(name==='list'){ showSkeletons('bizList',4); setTimeout(function(){doFilter();},200); }
-  if(name==='rec'){ showSkeletons('recList',4); setTimeout(function(){renderRec();},200); }
-  if(name==='reviews'){ showLoading('rvListAll','후기 불러오는 중...'); setTimeout(function(){renderAllRv();},200); }
   if(name==='notice') renderNotice();
   if(name==='jobs'){ showLoading('jobsContent','구인공고 불러오는 중...'); setTimeout(function(){renderJobs();},300); }
   if(name==='mypage') renderMypage();
@@ -340,15 +351,12 @@ function goBack() {
 
 // ── 업체 카드 HTML ───────────────────────
 function bizCardHtml(b) {
-  var rvs = S.reviews.filter(function(r){return r.bizId===b.id;});
-  var avg = rvs.length ? Math.round(rvs.reduce(function(s,r){return s+r.stars;},0)/rvs.length*10)/10 : 0;
+  var avg = 0;
   var kws = b.kw ? b.kw.split(',').filter(function(k){return k;}).map(function(k){return '<span class="tg">'+k.trim()+'</span>';}).join('') : '';
   var tel  = (b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
   var btel = (b.bizPhone||'').replace(/[^0-9]/g,'');
   var liked = isLiked(b.id);
-  var typeBadge = b.type==='own'
-    ? '<span class="type-badge badge-own">운영</span>'
-    : '<span class="type-badge badge-rec">추천</span>';
+  var typeBadge = '';
   var desc = b.desc ? '<div class="biz-desc">'+b.desc+'</div>' : '';
   var cardThumb = (b.photos&&b.photos.length)
     ? '<div class="bi" style="background:none;padding:0;overflow:hidden"><img src="'+b.photos[0]+'" style="width:100%;height:100%;object-fit:cover;border-radius:11px"></div>'
@@ -369,7 +377,7 @@ function bizCardHtml(b) {
     (kws ? '<div class="tgs">'+kws+'</div>' : '')+
     desc+
     '<div class="bf">'+
-      '<span style="color:var(--ac);font-size:14px">'+('⭐'.repeat(Math.round(avg))||'☆☆☆☆☆')+' <span style="font-size:13px;color:var(--t2)">'+rvs.length+'개 후기</span></span>'+
+      '<span></span>'+
       '<div style="display:flex;align-items:center;gap:5px">'+
         telBtns+
         '<button id="like-'+b.id+'" class="like-btn'+(liked?' on':'')+'" onclick="toggleLike('+b.id+',event)">'+(liked?'❤️':'🤍')+'</button>'+
@@ -400,19 +408,18 @@ function showDetail(bizId) {
       '<button onclick="deleteBiz('+bizId+')" style="background:rgba(255,0,0,.25);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer">삭제</button>';
   } else { eb.innerHTML=''; }
 
-  var rvs=sortRv(S.reviews.filter(function(r){return r.bizId===bizId;}));
-  var avg=rvs.length?Math.round(rvs.reduce(function(s,r){return s+r.stars;},0)/rvs.length*10)/10:0;
+  var avg=0;
   var kws=b.kw?b.kw.split(',').filter(function(k){return k;}).map(function(k){return '<span class="tg">'+k.trim()+'</span>';}).join(''):'';
   var tel=(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'');
   var btel=(b.bizPhone||'').replace(/[^0-9]/g,'');
-  var tp=b.type==='own'?'<span class="type-badge badge-own" style="position:static;display:inline-block;margin-left:6px">운영</span>':'<span class="type-badge badge-rec" style="position:static;display:inline-block;margin-left:6px">추천</span>';
+  var tp='';
 
   var html='<div class="det-card">'+
     '<div style="display:flex;align-items:center;gap:13px;margin-bottom:13px">'+
       '<div style="width:52px;height:52px;border-radius:13px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px">'+(EM[b.cat]||'🏪')+'</div>'+
       '<div><div style="font-size:19px;font-weight:700">'+b.name+tp+'</div>'+
       '<div style="font-size:14px;font-weight:600;color:var('+catColor(b.cat)+');margin-top:3px">'+b.cat+'</div>'+
-      '<div style="font-size:14px;color:var(--ac)">'+'⭐'.repeat(Math.round(avg))+(avg?'<span style="color:var(--t2);font-size:13px"> '+avg+'점 ('+rvs.length+'개)</span>':'<span style="color:var(--t2);font-size:13px"> 후기없음</span>')+'</div>'+
+
     '</div></div>'+
     (b.cat!=='지교회' && b.owner ? '<div class="det-row"><span class="dl">담당자</span><span class="dv">'+(b.ownerChurch||b.church||'')+'교회 '+b.owner+' '+(b.ownerRole||'')+'</span></div>' : '')+
     (b.phone?'<div class="det-row"><span class="dl">휴대폰</span><span class="dv"><a href="tel:'+(b.phone||b.ownerPhone||'').replace(/[^0-9]/g,'')+'" style="color:var(--p)">'+(b.phone||b.ownerPhone||'')+'</a></span></div>':'')+
@@ -444,9 +451,7 @@ function showDetail(bizId) {
     '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.5 6.8L5.2 21l4.5-2.3c.7.1 1.5.2 2.3.2 5.5 0 10-3.6 10-8s-4.5-8-10-8z" fill="#3A1D1D"/></svg>'+
     '공유하기</button>';
 
-  html+='<div style="font-size:15px;font-weight:600;color:var(--t2);margin:4px 0 9px">후기 '+rvs.length+'개</div>'+
-    (rvs.length?rvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty">아직 후기가 없어요</div>')+
-    '<button onclick="openReviewFromDetail('+bizId+')" style="width:100%;padding:11px;background:var(--pl);color:var(--p);border:1px solid var(--bd);border-radius:11px;font-size:15px;cursor:pointer;margin-top:5px;font-weight:600">✏️ 후기 작성하기</button>';
+
 
   document.getElementById('det-body').innerHTML=html;
   // 사진 갤러리
@@ -522,6 +527,10 @@ function getLikedBiz(){
 
 // ── 필터/렌더 ────────────────────────────
 function doFilter(){
+  if(!S.user){
+    document.getElementById('bizList').innerHTML='<div class="gate" style="margin:20px auto;max-width:320px"><div style="font-size:32px;margin-bottom:10px">🔒</div><div style="font-size:16px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:18px">성도 비즈니스 네트워크는<br>회원 전용 서비스예요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
+    return;
+  }
   var kw=document.getElementById('kwInput').value.trim().toLowerCase();
   var cat=document.getElementById('catSel').value;
   var region=document.getElementById('regionInput').value.trim().toLowerCase();
@@ -563,6 +572,10 @@ function renderAllRv(){
 // ── 공지 ─────────────────────────────────
 function renderNotice(){
   var el = document.getElementById('noticeContent');
+  if(!S.user){
+    el.innerHTML='<div class="gate" style="margin:20px auto;max-width:320px"><div style="font-size:32px;margin-bottom:10px">🔒</div><div style="font-size:16px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:18px">공지사항은 회원만 볼 수 있어요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
+    return;
+  }
   var admin = isAdmin();
   var notices = (S.notices||[]).slice().sort(function(a,b){ return b.id - a.id; });
   var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">' +
@@ -718,7 +731,7 @@ var CAT_MIGRATE = {
   '보험':'비즈니스','법률/세무':'비즈니스','부동산':'비즈니스',
   '정보통신/컴퓨터':'IT/정보통신',
   '농업/임업/축산업':'농수산',
-  '숙박':'여가/숙박','스포츠':'여가/숙박',
+  '숙박':'여가/숙박','스포츠':'여가/숙박','휴양관':'여가/숙박',
   '지교회':'지교회',
   '그 외':'기타','기타':'기타'
 };
@@ -735,7 +748,7 @@ var CAT_MAP = {
   '비즈니스':     ['보험','법률/세무','부동산'],
   'IT/정보통신':  ['정보통신/컴퓨터'],
   '농수산':       ['농업/임업/축산업'],
-  '여가/숙박':    ['숙박','스포츠'],
+  '여가/숙박':    ['숙박','스포츠','휴양관'],
   '지교회':       ['지교회'],
   '기타':         ['그 외','기타']
 };
@@ -743,6 +756,10 @@ var CAT_MAP = {
 // ── 구인구직 ──────────────────────────────
 function renderJobs(){
   var el = document.getElementById('jobsContent');
+  if(!S.user){
+    el.innerHTML='<div class="gate" style="margin:20px auto;max-width:320px"><div style="font-size:32px;margin-bottom:10px">🔒</div><div style="font-size:16px;font-weight:700;margin-bottom:7px">로그인이 필요해요</div><div style="font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:18px">구인구직은 회원만 볼 수 있어요</div><button class="bp" style="max-width:200px;margin:0 auto" onclick="openM(\'choiceM\')">로그인 / 회원가입</button></div>';
+    return;
+  }
   var jobs = (S.jobs||[]).slice().sort(function(a,b){ return b.id - a.id; });
   var myBiz = S.user ? S.biz.filter(function(b){
     var up=(S.user.phone||'').replace(/[^0-9]/g,'');
@@ -801,7 +818,7 @@ function renderJobs(){
 }
 
 function openJobWrite(){
-  if(!S.user){ alert('로그인이 필요해요.'); return; }
+  if(!requireApproval('구인공고 등록')) return;
   var myBiz = S.biz.filter(function(b){
     var up=(S.user.phone||'').replace(/[^0-9]/g,'');
     return (b.phone||'').replace(/[^0-9]/g,'')===up||(b.ownerPhone||'').replace(/[^0-9]/g,'')===up;
@@ -997,13 +1014,13 @@ function renderMypage(){
     var bop=(b.ownerPhone||'').replace(/[^0-9]/g,'');
     return (bp&&bp===up)||(bop&&bop===up)||(b.ownerName===S.user.name&&(bp===up||bop===up||(!bp&&!bop)));
   });
-  var myRvs=S.reviews.filter(function(r){return r.reviewer===S.user.name;});
+  var myRvs=[];
   var liked=getLikedBiz();
   var warn=S.user.pw==='1111'?'<div class="pw-warn">⚠️ 초기 비밀번호(1111) 사용 중 <button onclick="openM(\'changePwM\')" style="background:var(--p);color:#fff;border:none;border-radius:8px;padding:3px 10px;font-size:13px;cursor:pointer;margin-left:6px">변경하기</button></div>':'';
   var html=warn+
     '<div class="pc"><div class="prow">'+
       '<div class="pav">'+S.user.name[0]+'</div>'+
-      '<div style="flex:1"><div style="font-size:18px;font-weight:700">'+S.user.name+'</div><div style="font-size:14px;color:var(--t2);margin-top:3px">'+S.user.role+' · 사랑하는교회 '+S.user.church+'</div></div>'+
+      '<div style="flex:1"><div style="font-size:18px;font-weight:700">'+S.user.name+'</div><div style="font-size:14px;color:var(--t2);margin-top:3px">'+S.user.role+' · 사랑하는교회 '+S.user.church+'</div>'+(S.user.approved?'<div style="font-size:12px;background:#dcfce7;color:#166534;display:inline-block;padding:2px 9px;border-radius:10px;margin-top:4px">✅ 쓰기 승인됨</div>':'<div style="font-size:12px;background:#fef9c3;color:#854d0e;display:inline-block;padding:2px 9px;border-radius:10px;margin-top:4px">⏳ 읽기 전용 (운영자 승인 대기)</div>')+'</div>'+
       '<div style="display:flex;gap:5px">'+
         '<button onclick="loadEdit();openM(\'editM\')" style="padding:5px 10px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">편집</button>'+
         '<button onclick="openM(\'changePwM\')" style="padding:5px 10px;background:var(--ac);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600">🔑</button>'+
@@ -1023,13 +1040,11 @@ function renderMypage(){
       '</div></div>';
     }).join(''):'<div class="empty" style="padding:10px">등록된 사업체 없음</div>')+
     '<div style="display:flex;gap:8px;margin-top:8px;margin-bottom:4px">'+
-      '<button onclick="openAddBiz(\'own\')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">🏪 운영업체 추가</button>'+
-      '<button onclick="openAddBiz(\'rec\')" style="flex:1;padding:10px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">⭐ 추천업체 추가</button>'+
+      '<button onclick="openAddBiz(\'own\')" style="flex:1;padding:10px;background:var(--pl);color:var(--p);border:1.5px solid var(--p);border-radius:11px;font-size:14px;cursor:pointer;font-weight:600">🏪 사업체 등록</button>'+
     '</div>'+
     '<div style="font-size:15px;font-weight:600;color:var(--t2);margin:13px 0 9px">❤️ 찜한 사업체 ('+liked.length+'개)</div>'+
     (liked.length?liked.map(function(b){return '<div class="bc" onclick="showDetail('+b.id+')"><div class="bh"><div class="bi">'+(EM[b.cat]||'🏪')+'</div><div style="flex:1"><div class="bn">'+b.name+'</div><div class="bct">'+b.cat+'</div></div></div></div>';}).join(''):'<div class="empty" style="padding:10px">찜한 사업체 없음</div>')+
-    '<div style="font-size:15px;font-weight:600;color:var(--t2);margin:13px 0 9px">내 후기 ('+myRvs.length+'개)</div>'+
-    (myRvs.length?myRvs.map(function(r){return rvHtml(r,true);}).join(''):'<div class="empty" style="padding:13px">작성한 후기 없음</div>')+
+
     '<a href="https://open.kakao.com/o/sf0Mu1si" target="_blank" style="display:block;width:100%;padding:10px;background:#FAE100;color:#3A1D1D;border-radius:11px;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box;margin-top:10px">💬 카카오 오픈채팅으로 문의하기</a>'+
     '<button onclick="doLogout()" style="width:100%;padding:10px;background:transparent;color:#a32d2d;border:1.5px solid #a32d2d;border-radius:11px;font-size:15px;cursor:pointer;margin-top:8px;font-weight:500">로그아웃</button>'+
     '<button onclick="confirmWithdraw()" style="width:100%;padding:10px;background:transparent;color:#bbb;border:1.5px solid #e0e0e0;border-radius:11px;font-size:13px;cursor:pointer;margin-top:6px;font-weight:400">회원탈퇴</button>';
@@ -1047,7 +1062,7 @@ function checkAdminTab(){
 function renderAdmin(){
   if(!isAdmin()){document.getElementById('adminContent').innerHTML='<div class="empty">관리자 권한이 없습니다</div>';return;}
   var el=document.getElementById('adminContent');
-  var secs=[['stats','📊 통계'],['members','👥 회원'],['biz','🏪 사업체'],['reviews','💬 후기'],['csv','📥 업로드'],['backup','💾 백업']];
+  var secs=[['stats','📊 통계'],['members','👥 회원'],['biz','🏪 사업체'],['csv','📥 업로드'],['backup','💾 백업']];
   var tabs='<div class="admin-tab">';
   secs.forEach(function(s){
     tabs+='<button class="at'+(adminSection===s[0]?' on':'')+'" onclick="adminSection=\''+s[0]+'\';renderAdmin()">'+s[1]+'</button>';
@@ -1231,6 +1246,22 @@ async function adminDelAllMembers(){
   }
   renderAdmin();
 }
+
+function adminApprove(phone){
+  var m = S.members.find(function(x){ return x.phone===phone; });
+  if(!m) return;
+  m.approved = true;
+  saveToFirebase();
+  renderAdmin();
+}
+function adminRevokeApproval(phone){
+  var m = S.members.find(function(x){ return x.phone===phone; });
+  if(!m) return;
+  m.approved = false;
+  saveToFirebase();
+  renderAdmin();
+}
+
 function adminDelMember(phone){if(!confirm('회원을 삭제하시겠어요?'))return;S.members=S.members.filter(function(m){return m.phone!==phone;});saveToFirebase();renderAdmin();}
 
 function adminEditBiz(id){
@@ -1428,7 +1459,7 @@ function doJoin(){
   if(!document.getElementById('tc-4').classList.contains('on')){err.textContent='만 14세 이상 확인에 동의해주세요';err.style.display='block';return;}
   if(S.members.find(function(m){return m.phone===phone;})){err.textContent='이미 가입된 전화번호입니다';err.style.display='block';return;}
   err.style.display='none';
-  var m={name:name,phone:phone,pw:pw,church:church,role:role,no:no};
+  var m={name:name,phone:phone,pw:pw,church:church,role:role,no:no,approved:false};
   S.members.push(m); S.user=m;
   document.getElementById('loginBtn').textContent=name+' '+role;
   checkAdminTab();
@@ -1514,7 +1545,7 @@ function requireLogin(type){
     document.getElementById('gateDesc').textContent=type==='biz'?'회원가입 후 내 사업을 소개해보세요!':'회원가입 후 경험을 공유해주세요!';
     openM('gateM');return;
   }
-  if(type==='biz'||type==='rec'){openAddBiz(type==='rec'?'rec':'own');}
+  if(type==='biz'||type==='rec'){openAddBiz('own');}
   else{
     // 검색창 초기화
     document.getElementById('rvBizSearch').value='';
@@ -1652,6 +1683,7 @@ function onBizTypeChange(){
   }
 }
 function openAddBiz(defaultType){
+  if(!requireApproval('사업체 등록')) return;
   document.getElementById('bizModalTitle').textContent='사업체 등록';
   document.getElementById('editBizId').value='';
   ['bName','bPhone','bBizPhone','bRegNo','bAddr','bWeb','bKw','bDesc'].forEach(function(id){document.getElementById(id).value='';});

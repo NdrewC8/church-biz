@@ -294,7 +294,6 @@ document.addEventListener('touchmove', function(e){
   <div class="nav">
     <button class="nb" onclick="showTab('notice',this)">📢 공지</button>
     <button class="nb on" onclick="showTab('list',this)">목록</button>
-    <button class="nb" onclick="showTab('reviews',this)">후기</button>
     <button class="nb" onclick="showTab('jobs',this)">구인구직</button>
     <button class="nb" onclick="showTab('mypage',this)">마이페이지</button>
     <button class="nb" id="adminTab" style="display:none" onclick="showTab('admin',this)">관리자</button>
@@ -309,7 +308,7 @@ document.addEventListener('touchmove', function(e){
         <input class="kwi" id="kwInput" placeholder="성도명, 업체명, 지역, 업종 검색" oninput="doFilter()" autocomplete="off">
       </div>
       <div class="fr">
-        <select class="fsel" id="catSel" onchange="doFilter()"><option value="">업종 전체</option><option value="식음료">🍽️ 식음료</option><option value="쇼핑/유통">🛍️ 쇼핑/유통</option><option value="의료/건강">🏥 의료/건강</option><option value="교육">🎓 교육</option><option value="생활/서비스">🏠 생활/서비스</option><option value="자동차/운수">🚗 자동차/운수</option><option value="건설/시설">🏗️ 건설/시설</option><option value="비즈니스">💼 비즈니스</option><option value="IT/정보통신">💻 IT/정보통신</option><option value="농수산">🌾 농수산</option><option value="여가/숙박">🏨 여가/숙박</option><option value="지교회">⛪ 지교회</option><option value="기타">📦 기타</option></select>
+        <select class="fsel" id="catSel" onchange="doFilter()"><option value="">업종 전체</option><option value="식음료">🍽️ 식음료</option><option value="쇼핑/유통">🛍️ 쇼핑/유통</option><option value="의료/건강">🏥 의료/건강</option><option value="교육">🎓 교육</option><option value="생활/서비스">🏠 생활/서비스</option><option value="자동차/운수">🚗 자동차/운수</option><option value="건설/시설">🏗️ 건설/시설</option><option value="비즈니스">💼 비즈니스</option><option value="IT/정보통신">💻 IT/정보통신</option><option value="농수산">🌾 농수산</option><option value="여가/숙박">🏨 여가/숙박</option><option value="휴양관">🏖️ 휴양관</option><option value="지교회">⛪ 지교회</option><option value="기타">📦 기타</option></select>
         <input class="fsel" id="regionInput" placeholder="지교회 검색" oninput="doFilter()" style="cursor:text;min-width:0;max-width:100%">
       </div>
     <div class="chips" id="chips"></div>
@@ -332,12 +331,6 @@ document.addEventListener('touchmove', function(e){
     <div class="det-body" id="det-body"></div>
   </div>
 
-
-  <!-- 후기 -->
-  <div class="sc" id="sc-reviews">
-    <div style="padding:13px" id="rvListAll"></div>
-    
-  </div>
 
   <!-- 구인구직 -->
   <div class="sc" id="sc-jobs">
@@ -482,12 +475,10 @@ document.addEventListener('touchmove', function(e){
     <div class="mt" id="bizModalTitle">사업체 등록</div>
     <div class="ms">내 사업을 성도들에게 소개해요</div>
     <input type="hidden" id="editBizId" value="">
-    <div class="fg"><label class="fl">등록 유형 <span class="req">필수</span></label>
-      <select class="fs" id="bType" onchange="onBizTypeChange()"><option value="own">운영 사업체</option><option value="rec">추천 사업체</option></select>
-    </div>
+    <input type="hidden" id="bType" value="own">
     <div class="sdiv">필수 정보</div>
     <div class="fg"><label class="fl">상호명 <span class="req">필수</span></label><input class="fi" id="bName" placeholder="예: 은혜 꽃집"></div>
-    <div class="fg"><label class="fl">업종 <span class="req">필수</span></label><select class="fs" id="bCat"><option value="">선택해주세요</option><option value="식음료">🍽️ 식음료</option><option value="쇼핑/유통">🛍️ 쇼핑/유통</option><option value="의료/건강">🏥 의료/건강</option><option value="교육">🎓 교육</option><option value="생활/서비스">🏠 생활/서비스</option><option value="자동차/운수">🚗 자동차/운수</option><option value="건설/시설">🏗️ 건설/시설</option><option value="비즈니스">💼 비즈니스</option><option value="IT/정보통신">💻 IT/정보통신</option><option value="농수산">🌾 농수산</option><option value="여가/숙박">🏨 여가/숙박</option><option value="지교회">⛪ 지교회</option><option value="기타">📦 기타</option></select></div>
+    <div class="fg"><label class="fl">업종 <span class="req">필수</span></label><select class="fs" id="bCat"><option value="">선택해주세요</option><option value="식음료">🍽️ 식음료</option><option value="쇼핑/유통">🛍️ 쇼핑/유통</option><option value="의료/건강">🏥 의료/건강</option><option value="교육">🎓 교육</option><option value="생활/서비스">🏠 생활/서비스</option><option value="자동차/운수">🚗 자동차/운수</option><option value="건설/시설">🏗️ 건설/시설</option><option value="비즈니스">💼 비즈니스</option><option value="IT/정보통신">💻 IT/정보통신</option><option value="농수산">🌾 농수산</option><option value="여가/숙박">🏨 여가/숙박</option><option value="휴양관">🏖️ 휴양관</option><option value="지교회">⛪ 지교회</option><option value="기타">📦 기타</option></select></div>
     <div class="fg" id="fgBizPhone"><label class="fl" id="lblBizPhone">사업체 전화 <span class="opt-l">일반전화 · 선택</span></label><input class="fi" id="bBizPhone" placeholder="02-000-0000 (사무실·매장 번호)" oninput="formatPhone(this)"></div>
     <div class="fg" id="fgPhone"><label class="fl" id="lblPhone">담당자 휴대폰 <span class="req">필수</span></label><input class="fi" id="bPhone" placeholder="010-0000-0000" oninput="formatPhone(this)"></div>
     <div class="fg"><label class="fl">주소 <span class="req">필수</span></label><input class="fi" id="bAddr" placeholder="주소를 입력해주세요"></div>
@@ -508,35 +499,6 @@ document.addEventListener('touchmove', function(e){
     <div id="bizErr" class="err"></div>
     <button class="bp" onclick="saveBiz()">저장하기</button>
     <button class="bs" onclick="closeM('addBizM')">닫기</button>
-  </div>
-</div>
-
-<!-- 후기작성 -->
-<div class="ov" id="addRvM">
-  <div class="modal"><div class="mh"></div>
-    <div class="mt">후기 작성</div><div class="ms">이용한 사업체에 후기를 남겨주세요</div>
-    <div class="fg" style="position:relative">
-      <label class="fl">사업체 <span class="req">필수</span></label>
-      <input class="fi" id="rvBizSearch" placeholder="업체명을 입력해서 검색하세요" autocomplete="off" oninput="rvBizSearchInput()" onfocus="rvBizSearchInput()">
-      <input type="hidden" id="rvBiz">
-      <div id="rvBizDrop" style="display:none;position:absolute;left:0;right:0;background:#fff;border:1px solid var(--bd);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;max-height:200px;overflow-y:auto;margin-top:2px"></div>
-      <div id="rvBizSelected" style="display:none;margin-top:6px;padding:7px 11px;background:var(--pl);border-radius:8px;font-size:13px;color:var(--p);font-weight:600;display:flex;align-items:center;justify-content:space-between"></div>
-    </div>
-    <div class="fg"><label class="fl">별점 <span class="req">필수</span></label>
-      <select class="fs" id="rvStars"><option value="5">⭐⭐⭐⭐⭐ 최고예요</option><option value="4">⭐⭐⭐⭐ 좋아요</option><option value="3">⭐⭐⭐ 보통이에요</option><option value="2">⭐⭐ 별로예요</option><option value="1">⭐ 나빠요</option></select>
-    </div>
-    <div class="fg"><label class="fl">후기 내용 <span class="req">필수</span></label><input class="fi" id="rvText" placeholder="이용 경험을 공유해주세요"></div>
-    <div class="fg">
-      <label class="fl">후기 사진 <span class="opt-l">선택 · 최대 3장</span></label>
-      <div class="photo-preview-wrap" id="rvPhotoPreview"></div>
-      <div class="photo-upload-area" onclick="document.getElementById('rvPhotoInput').click()">
-        <div style="font-size:22px;margin-bottom:3px">📷</div>
-        <div style="font-size:13px;color:var(--t2)">클릭해서 사진 추가</div>
-      </div>
-      <input type="file" id="rvPhotoInput" accept="image/*" multiple style="display:none" onchange="addRvPhotos(this.files)">
-    </div>
-    <button class="bp" onclick="addReview()">등록하기</button>
-    <button class="bs" onclick="closeM('addRvM')">닫기</button>
   </div>
 </div>
 
@@ -663,7 +625,7 @@ window.addEventListener('popstate', function(e){
 
 // ── 좌우 스와이프로 탭 이동 ──────────────────
 (function(){
-  var TABS = ['notice','list','reviews','jobs','mypage'];
+  var TABS = ['notice','list','jobs','mypage'];
   var startX = 0, startY = 0, moved = false;
 
   document.addEventListener('touchstart', function(e){
