@@ -155,11 +155,19 @@ async function loadFromFirebase(){
       console.log('Firebase 데이터 로드 완료');
       doFilter();
       renderAllRv();
-      // 업종 마이그레이션: 종교 → 지교회
+      // 업종 마이그레이션: 세부업종 → 대분류
       var migrated = false;
-      S.biz.forEach(function(b){ if(b.cat==='종교'){b.cat='지교회';migrated=true;} });
-      S.bizDB.forEach(function(b){ if(b.cat==='종교'){b.cat='지교회';migrated=true;} });
-      if(migrated){ saveToFirebase(); console.log('업종 마이그레이션 완료'); }
+      S.biz.forEach(function(b){
+        if(b.cat && CAT_MIGRATE[b.cat]){
+          b.cat = CAT_MIGRATE[b.cat]; migrated = true;
+        }
+      });
+      S.bizDB.forEach(function(b){
+        if(b.cat && CAT_MIGRATE[b.cat]){
+          b.cat = CAT_MIGRATE[b.cat]; migrated = true;
+        }
+      });
+      if(migrated){ saveToFirebase(); console.log('업종 대분류 마이그레이션 완료'); }
       // URL hash로 직접 진입 처리
       var hash = location.hash;
       if(hash && hash.indexOf('#biz=') === 0){
@@ -695,6 +703,25 @@ function deleteNotice(id){
   renderNotice();
 }
 
+
+// 업종 마이그레이션: 세부업종 → 대분류
+var CAT_MIGRATE = {
+  '식품/음식점':'식음료','카페':'식음료',
+  '판매':'쇼핑/유통','유통':'쇼핑/유통','온라인판매':'쇼핑/유통',
+  '귀금속/예물':'쇼핑/유통','꽃집':'쇼핑/유통',
+  '병원/의료':'의료/건강','요양시설':'의료/건강',
+  '교육':'교육',
+  '서비스':'생활/서비스','이미용':'생활/서비스',
+  '인테리어':'생활/서비스','간판/광고':'생활/서비스',
+  '자동차':'자동차/운수','운수':'자동차/운수','렌탈':'자동차/운수',
+  '건축/건설':'건설/시설','설비':'건설/시설','제조':'건설/시설',
+  '보험':'비즈니스','법률/세무':'비즈니스','부동산':'비즈니스',
+  '정보통신/컴퓨터':'IT/정보통신',
+  '농업/임업/축산업':'농수산',
+  '숙박':'여가/숙박','스포츠':'여가/숙박',
+  '지교회':'지교회',
+  '그 외':'기타','기타':'기타'
+};
 
 // 업종 대분류 매핑
 var CAT_MAP = {
