@@ -1331,7 +1331,7 @@ function saveAdminEditBiz(){
   renderAdmin();
 }
 
-function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});saveToFirebase();renderAdmin();doFilter();}
+function adminDelBiz(id){if(!confirm('사업체를 삭제하시겠어요?'))return;S.biz=S.biz.filter(function(b){return b.id!==id;});S.bizDB=S.bizDB.filter(function(b){return b.id!==id;});saveToFirebase();renderAdmin();doFilter();}
 function adminDelReview(id){if(!confirm('후기를 삭제하시겠어요?'))return;S.reviews=S.reviews.filter(function(r){return r.id!==id;});saveToFirebase();renderAdmin();renderAllRv();}
 
 function doBackup(){
@@ -1758,6 +1758,8 @@ function saveBiz(){
 function deleteBiz(bizId){
   if(!confirm('사업체를 삭제하시겠어요?'))return;
   S.biz=S.biz.filter(function(b){return b.id!==bizId;});
+  S.bizDB=S.bizDB.filter(function(b){return b.id!==bizId;});
+  saveToFirebase();
   goBack();
 }
 function addReview(){
