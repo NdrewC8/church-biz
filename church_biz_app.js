@@ -191,7 +191,8 @@ async function loadFromFirebase(){
             S.user = m;
             // localStorage 최신 정보로 갱신
             try{ localStorage.setItem('savedLogin', JSON.stringify({phone:m.phone, pw:m.pw})); }catch(e){}
-            document.getElementById('loginBtn').textContent = m.name+' '+m.role;
+            document.getElementById('loginBtn').textContent = m.name+' '+m.role+'님 환영합니다';
+            document.getElementById('loginBtn').style.fontSize = '13px';
             checkAdminTab();
             renderMypage();
           }
@@ -1975,4 +1976,25 @@ function shareKakao(bizId){
   try{ document.execCommand('copy'); alert('복사되었어요!\n원하는 앱에 붙여넣기 해주세요.'); }
   catch(e){ prompt('복사해서 붙여넣기 해주세요.', ta.value); }
   document.body.removeChild(ta);
+}
+
+function shareCurrentPage(){
+  var url = 'https://beloved-biz.kr';
+  var title = '사랑하는교회 Biz-net';
+  var text = '사랑하는교회 성도 비즈니스 네트워크\n함께 거래하고 함께 성장해요!\n\n' + url;
+  // 모바일: 시스템 공유 시트
+  if(navigator.share){
+    navigator.share({ title:title, text:text, url:url }).catch(function(){});
+    return;
+  }
+  // PC/기타: 클립보드 복사
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      alert('주소가 복사되었어요!\n카카오톡, 문자 등에 붙여넣기 해주세요.\n\n' + url);
+    }).catch(function(){
+      prompt('아래 주소를 복사해서 공유하세요.', url);
+    });
+  } else {
+    prompt('아래 주소를 복사해서 공유하세요.', url);
+  }
 }
