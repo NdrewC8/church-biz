@@ -270,6 +270,33 @@ function requireApproval(actionName){
   return true;
 }
 
+
+// ── 관리자 알림 ───────────────────────────────────
+var _notifUnsub = null;
+function listenAdminNotifs(){
+  if(!isAdmin()) return;
+  if(_notifUnsub) _notifUnsub();
+  _notifUnsub = db.collection('notifications')
+    .where('read','==',false)
+    .onSnapshot(function(snap){
+      var cnt = snap.size;
+      var btn = document.getElementById('adminTab');
+      if(!btn) return;
+      if(cnt > 0){
+        btn.innerHTML = '관리자 <span id="notifBadge" style="background:#dc2626;color:#fff;border-radius:10px;font-size:11px;padding:1px 6px;margin-left:3px">'+cnt+'</span>';
+      } else {
+        btn.innerHTML = '관리자';
+      }
+    });
+}
+function markNotifsRead(){
+  db.collection('notifications').where('read','==',false).get().then(function(snap){
+    snap.forEach(function(doc){ doc.ref.update({read:true}); });
+    var btn = document.getElementById('adminTab');
+    if(btn) btn.innerHTML = '관리자';
+  });
+}
+
 function initSelects() {
   ['jChurch','epChurch'].forEach(function(id) {
     var el = document.getElementById(id);
@@ -1053,6 +1080,9 @@ function renderMypage(){
 
 // ── 관리자 ───────────────────────────────
 var adminSection='stats';
+function isAdminPhone(phone){
+  return phone === '010-8388-0848';
+}
 function isAdmin(){return S.user&&S.user.phone==='010-8388-0848';}
 function checkAdminTab(){
   var t=document.getElementById('adminTab');
@@ -1096,7 +1126,14 @@ function renderAdmin(){
     else if(mSort==='name-desc') mList.sort(function(a,b){return (b.name||'').localeCompare(a.name||'','ko');});
     else if(mSort==='church-asc') mList.sort(function(a,b){return (a.church||'').localeCompare(b.church||'','ko');});
     else if(mSort==='church-desc') mList.sort(function(a,b){return (b.church||'').localeCompare(a.church||'','ko');});
-    body='<div style="display:flex;gap:6px;margin-bottom:8px">'+
+    var unapproved = S.members.filter(function(m){ return !m.approved && !isAdminPhone(m.phone); }).length;
+    body=(unapproved > 0
+      ? '<div style="background:#fef9c3;border:1px solid #fde047;border-radius:11px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:8px">'+
+          '<span style="font-size:18px">🔔</span>'+
+          '<div style="flex:1"><div style="font-size:14px;font-weight:600;color:#854d0e">승인 대기 회원 '+unapproved+'명</div>'+
+          '<div style="font-size:12px;color:#92400e;margin-top:2px">아래 목록에서 승인 버튼을 눌러주세요</div></div></div>'
+      : '')+
+    '<div style="display:flex;gap:6px;margin-bottom:8px">'+
       '<button onclick="adminDelAllMembers()" style="padding:7px 13px;background:#fee2e2;color:#dc2626;border:1.5px solid #dc2626;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">🗑️ 전체삭제</button>'+
     '</div>'+
     '<div style="display:flex;gap:6px;margin-bottom:10px">'+
@@ -1487,7 +1524,18 @@ function doJoin(){
   closeM('joinM');
   resetTerms();
   saveToFirebase();
-  saveToFirebase();
+  // 관리자 알림 저장 (신규 회원가입)
+  try {
+    db.collection('notifications').add({
+      type: 'new_member',
+      name: name,
+      phone: phone,
+      church: church,
+      role: role,
+      createdAt: new Date().toISOString(),
+      read: false
+    });
+  } catch(e){ console.log('알림 저장 실패', e); }
   var msg='가입 완료! '+name+' '+role+'님 환영합니다!';
   if(linked>0) msg+='\n\n🏪 사업체 '+linked+'개가 자동으로 연결되었습니다!';
   alert(msg);
@@ -1506,7 +1554,7 @@ function doLogin(){
     err.style.display='none';S.user=m;
     try{localStorage.setItem('savedLogin',JSON.stringify({phone:phone,pw:pw}));}catch(e){}
     document.getElementById('loginBtn').textContent=m.name+' '+m.role;
-    checkAdminTab();closeM('loginM');renderMypage();doFilter();
+    checkAdminTab();closeM('loginM');renderMypage();doFilter();listenAdminNotifs();
   });
 }
 
